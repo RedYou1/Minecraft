@@ -181,7 +181,14 @@ namespace BiblioMinecraft.Entities
 
         public void Eat(Food food)
         {
-            hunger += food.Food_Restored();
+            if (inventaire.Contains(food)) {
+                hunger += food.Food_Restored();
+                if (hunger > 20)
+                {
+                    hunger = 20;
+                }
+                inventaire.RemoveItem(food);
+            }
         }
 
         public override string ToString()
@@ -192,7 +199,7 @@ namespace BiblioMinecraft.Entities
         }
 
         public Inventaire Inventaire { get => inventaire.Clone(); }
-        public float Hunger { get => hunger; }
+        public float Hunger { get => hunger; set => hunger = value; }
         public Helmet Helmet { get => helmet; }
         public ChestPlate ChestPlate { get => chestPlate; }
         public Legging Legging { get => legging; }
