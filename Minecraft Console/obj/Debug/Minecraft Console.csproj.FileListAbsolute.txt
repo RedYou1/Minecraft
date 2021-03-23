@@ -1,0 +1,10 @@
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\bin\Debug\Minecraft Console.exe.config
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\bin\Debug\Minecraft Console.exe
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\bin\Debug\Minecraft Console.pdb
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\bin\Debug\BiblioMinecraft.dll
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\bin\Debug\BiblioMinecraft.pdb
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\obj\Debug\Minecraft Console.csproj.CoreCompileInputs.cache
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\obj\Debug\Minecraft Console.csproj.CopyComplete
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\obj\Debug\Minecraft Console.exe
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\obj\Debug\Minecraft Console.pdb
+C:\Users\jcdem\source\repos\Minecraft\Minecraft Console\obj\Debug\Minecraft Console.csprojAssemblyReference.cache
