@@ -133,7 +133,7 @@ namespace BiblioMinecraft.Entities
             }
             foreach (Item_Entity item in ie)
             {
-                World_System.World.RemoveEntity(item);
+                item.Die();
             }
         }
 

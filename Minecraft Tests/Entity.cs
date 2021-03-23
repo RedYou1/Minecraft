@@ -6,6 +6,7 @@ using BiblioMinecraft.Items.Foods;
 using BiblioMinecraft.Entities;
 using BiblioMinecraft.Attributes;
 using BiblioMinecraft.Damages;
+using BiblioMinecraft.World_System;
 
 namespace Minecraft_Tests
 {
@@ -33,6 +34,14 @@ namespace Minecraft_Tests
             player.Eat(nsteak);
             Assert.AreEqual(player.Inventaire.GetIndex(nsteak), -1);
             Assert.AreEqual(player.Hunger, 20);
+
+            Steak nnsteak = new Steak();
+            player.AddItem(nnsteak);
+            Assert.AreEqual(player.Inventaire.GetIndex(nnsteak), 0);
+            player.DropItem(nnsteak);
+            Assert.AreEqual(player.Inventaire.GetIndex(nnsteak), -1);
+            Assert.AreEqual(World.Entities.Length, 1);
+            Assert.AreEqual(World.Entities[0].id(), "Item_Entity Steak");
 
             Helmet helmet = new Diamond_Helmet();
             player.AddItem(helmet);
@@ -95,20 +104,20 @@ namespace Minecraft_Tests
             Assert.AreEqual(player.Boots, iboots);
 
             bool a = player.Equipe(iboots);
-            Assert.AreEqual(a,false);
+            Assert.AreEqual(a, false);
 
             player.TakeDamage(new PhysicalDamage(2));
-            Assert.AreEqual(player.Hp,20);
+            Assert.AreEqual(player.Hp, 20);
             player.TakeDamage(new PhysicalDamage(10));
             Assert.AreEqual(player.Hp, 18);
             player.TakeDamage(new PhysicalDamage(26));
             Assert.AreEqual(player.Hp, 0);
 
-            Player np = new Player(0,0,0);
+            Player np = new Player(0, 0, 0);
             np.TakeItemAroundHim();
-            Assert.AreEqual(np.Inventaire.Items.Length,8);
+            Assert.AreEqual(np.Inventaire.Items.Length, 9);
             np.RemoveItem(iboots);
-            Assert.AreEqual(np.Inventaire.Items.Length, 7);
+            Assert.AreEqual(np.Inventaire.Items.Length, 8);
         }
     }
 }

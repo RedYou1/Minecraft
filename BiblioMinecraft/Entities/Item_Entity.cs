@@ -23,7 +23,7 @@ namespace BiblioMinecraft.Entities
 
         public override string id()
         {
-            return "Item_Entity";
+            return "Item_Entity " + item.id();
         }
 
         public Item Item { get => item; }
