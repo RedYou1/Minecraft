@@ -7,14 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     
-    <Grid Background="Black" MouseWheel="Grid_MouseWheel">
+    <Grid Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MouseUp">
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button x:Name="button" Grid.Row="0" Content="Reset" />
+        <!--<Button x:Name="button" Grid.Row="0" Content="Reset" />-->
 
         <Viewport3D x:Name="viewport" Grid.Row="1">
             <ModelVisual3D x:Name="model">
@@ -28,7 +28,7 @@
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="camera" FarPlaneDistance="50"
         NearPlaneDistance="0" LookDirection="0,0,-1" UpDirection="0,1,0"
-            Position="0,0,5" FieldOfView="60" />
+            Position="0,0,5" FieldOfView="70" />
             </Viewport3D.Camera>
         </Viewport3D>
         

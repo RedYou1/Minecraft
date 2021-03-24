@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +54,8 @@
     <Compile Include="Other.cs" />
     <Compile Include="Trade.cs" />
     <Compile Include="World_System\Block.cs" />
+    <Compile Include="World_System\Blocks\Dirt_Block.cs" />
+    <Compile Include="World_System\Blocks\Stone_Block.cs" />
     <Compile Include="World_System\Chunk.cs" />
     <Compile Include="Damage\PhysicalDamage.cs" />
     <Compile Include="Attributes\Legging.cs" />
@@ -81,6 +84,8 @@
     <Compile Include="Items\Foods\Steak.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World_System\Model.cs" />
+    <Compile Include="World_System\Models\Cube.cs" />
     <Compile Include="World_System\World.cs" />
   </ItemGroup>
   <ItemGroup>
