@@ -35,8 +35,8 @@ namespace BiblioMinecraft.Entities
             this.x += x;
             this.y += y;
             this.z += z;
-            this.pitch = pitch;
-            this.yaw = yaw;
+            this.pitch += pitch;
+            this.yaw += yaw;
         }
         public virtual void TP(float x, float y, float z, float pitch, float yaw)
         {

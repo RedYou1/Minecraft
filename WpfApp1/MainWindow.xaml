@@ -27,8 +27,8 @@
             </ModelVisual3D>
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="camera" FarPlaneDistance="50"
-        NearPlaneDistance="0" LookDirection="0,0,-10" UpDirection="0,1,0"
-            Position="0,0,5" FieldOfView="45" />
+        NearPlaneDistance="0" LookDirection="0,0,-1" UpDirection="0,1,0"
+            Position="0,0,5" FieldOfView="60" />
             </Viewport3D.Camera>
         </Viewport3D>
         

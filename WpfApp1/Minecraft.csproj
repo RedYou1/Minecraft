@@ -69,7 +69,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main_Thread.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
