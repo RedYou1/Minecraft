@@ -18,7 +18,7 @@ namespace BiblioMinecraft.Items
 
         public virtual void EntityDied(Entity entity)
         {
-            World_System.World.SpawnEntity(new Item_Entity(entity.X,entity.Y,entity.Z,entity.Pitch,entity.Yaw,this));
+            entity.Location.World.SpawnEntity(new Item_Entity(entity.Location,this));
         }
 
         public virtual void Right_Click(Player player)

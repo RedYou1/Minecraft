@@ -1,4 +1,4 @@
-﻿<Window x:Class="Minecraft.MainWindow" KeyDown="Grid_KeyDown"
+﻿<Window x:Class="Minecraft.MainWindow" KeyDown="Grid_KeyDown" Closing="Game_Closing"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    
-    <Grid Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MouseUp">
+
+    <Grid Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MousePress">
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--<Button x:Name="button" Grid.Row="0" Content="Reset" />-->
+        <Button x:Name="button" Grid.Row="0" Content="Creative" />
 
         <Viewport3D x:Name="viewport" Grid.Row="1">
             <ModelVisual3D x:Name="model">
@@ -26,8 +26,8 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>
             <Viewport3D.Camera>
-                <PerspectiveCamera x:Name="camera" FarPlaneDistance="50"
-        NearPlaneDistance="0" LookDirection="0,0,-1" UpDirection="0,1,0"
+                <PerspectiveCamera x:Name="camera" FarPlaneDistance="60"
+        NearPlaneDistance="0.1" LookDirection="0,0,-1" UpDirection="0,1,0"
             Position="0,0,5" FieldOfView="70" />
             </Viewport3D.Camera>
         </Viewport3D>

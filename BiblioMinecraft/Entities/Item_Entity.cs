@@ -11,12 +11,12 @@ namespace BiblioMinecraft.Entities
     {
         public override void Die()
         {
-            World_System.World.RemoveEntity(this);
+            loc.World.RemoveEntity(this);
         }
 
         private Item item;
 
-        public Item_Entity(float x, float y, float z, float pitch, float yaw,Item item) : base(x, y, z, pitch, yaw, 1)
+        public Item_Entity(Location loc,Item item) : base(loc, 1)
         {
             this.item = item;
         }

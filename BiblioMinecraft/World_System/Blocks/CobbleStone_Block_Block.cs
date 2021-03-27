@@ -10,8 +10,8 @@ using System.Windows.Media.Imaging;
 
 namespace BiblioMinecraft.World_System.Blocks
 {
-    public class Dirt_Block : Cube
+    public class CobbleStone_Block : Cube
     {
-        public Dirt_Block(Location loc) : base(loc, Game_Model.GetImage(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\World_System\Blocks\Dirt.PNG")) { }
+        public CobbleStone_Block(Location loc) : base(loc, Game_Model.GetImage(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\World_System\Blocks\CobbleStone.PNG")) { }
     }
 }

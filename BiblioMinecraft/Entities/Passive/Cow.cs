@@ -16,12 +16,12 @@ namespace BiblioMinecraft.Entities
             int a = r.Next(1,4);
             for (int i = 0; i < a;i++)
             {
-                World.SpawnEntity(new Item_Entity(this.x,this.y,this.z,this.pitch,this.yaw,new Steak()));
+                loc.World.SpawnEntity(new Item_Entity(this.loc,new Steak()));
             }
-            World.RemoveEntity(this);
+            loc.World.RemoveEntity(this);
         }
 
-        public Cow(float x, float y, float z, float pitch, float yaw) : base(x, y, z, pitch, yaw, 10)
+        public Cow(Location loc) : base(loc, 10)
         {
 
         }

@@ -5,46 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 using BiblioMinecraft.Items;
 using BiblioMinecraft.Damages;
+using BiblioMinecraft.World_System;
 
 namespace BiblioMinecraft.Entities
 {
     public abstract class Entity
     {
-        protected float x;
-        protected float y;
-        protected float z;
-        protected float pitch;
-        protected float yaw;
+        protected Location loc;
         protected float hp;
 
-        public Entity(float x, float y, float z, float pitch, float yaw, float hp)
+        public Entity(Location loc, float hp)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.pitch = pitch;
-            this.yaw = yaw;
+            this.loc = loc;
             this.hp = hp;
         }
 
         public abstract String id();
 
         public abstract void Die();
-        public virtual void Move(float x, float y, float z, float pitch, float yaw)
+
+        public void Move(float x, float y, float z, float pitch, float yaw)
         {
-            this.x += x;
-            this.y += y;
-            this.z += z;
-            this.pitch += pitch;
-            this.yaw += yaw;
+            loc.Move(x, y, z, pitch, yaw);
         }
-        public virtual void TP(float x, float y, float z, float pitch, float yaw)
+        public void TP(float x, float y, float z, float pitch, float yaw)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.pitch = pitch;
-            this.yaw = yaw;
+            loc.TP(x, y, z, pitch, yaw);
         }
 
         /// <summary>
@@ -66,11 +52,46 @@ namespace BiblioMinecraft.Entities
             return false;
         }
 
-        public float X { get => x; }
-        public float Y { get => y; }
-        public float Z { get => z; }
-        public float Pitch { get => pitch; }
-        public float Yaw { get => yaw; }
+        public virtual object GetInFrontOfHim(float range)
+        {
+            for (float i = 0; i <= range; i += 0.05f)
+            {
+                Location nloc = new Location((float)Math.Cos(Pitch) * (float)Math.Sin(Yaw) * i + X,
+                    (float)Math.Sin(Pitch) * i + Y,
+                    (float)Math.Cos(Pitch) * (float)Math.Cos(Yaw) * i + Z,
+                    Pitch, Yaw, loc.World);
+                /*
+                foreach (Entity ent in loc.World.Entities)
+                {
+                    if ((int)ent.X == (int)nloc.X && (int)ent.Y == (int)nloc.Y && (int)ent.Z == (int)nloc.Z)
+                    {
+                        if (!ent.Equal(this))
+                        {
+                            return ent;
+                        }
+                    }
+                }
+                */
+                Block block = loc.World.GetBlock((int)Math.Round(nloc.X), (int)Math.Round(nloc.Y), (int)Math.Round(nloc.Z));
+                if (block != null)
+                {
+                    return block;
+                }
+            }
+            return null;
+        }
+
+        public bool Equal(Entity entity)
+        {
+            return id() == entity.id() && loc.Equals(entity.loc);
+        }
+
+        public Location Location { get => loc; }
+        public float X { get => loc.X; }
+        public float Y { get => loc.Y; }
+        public float Z { get => loc.Z; }
+        public float Pitch { get => loc.Pitch; }
+        public float Yaw { get => loc.Yaw; }
         public float Hp { get => hp; }
     }
 }

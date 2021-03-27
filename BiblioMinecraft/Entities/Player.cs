@@ -23,17 +23,8 @@ namespace BiblioMinecraft.Entities
 
         protected float distOfItemTaking = 1;
 
-        public Player(float x, float y, float z) : this(x, y, z, 0, 0) { }
-
-        public Player(float x, float y, float z, float pitch, float yaw) : base(x, y, z, pitch, yaw, 20)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.pitch = pitch;
-            this.yaw = yaw;
-            hp = 20;
-        }
+        public Player(Location loc) : base(loc, 20)
+        {}
 
         public override string id()
         {
@@ -73,15 +64,7 @@ namespace BiblioMinecraft.Entities
             if (chestPlate != null) { chestPlate.Reduce(damage); }
             if (legging != null) { legging.Reduce(damage); }
             if (boots != null) { boots.Reduce(damage); }
-            if (damage.damage > 0)
-            {
-                hp -= damage.damage;
-                if (hp <= 0)
-                {
-                    Die();
-                    return true;
-                }
-            }
+            base.TakeDamage(damage);
             return false;
         }
 
@@ -89,27 +72,32 @@ namespace BiblioMinecraft.Entities
         {
             if (inventaire.Contains(armor))
             {
+                Armor pre = null;
                 if (armor.Attribute_id() == "Helmet")
                 {
-                    if (helmet != null) { inventaire.AddItem(helmet); }
+                    if (helmet != null) { pre = helmet; }
                     helmet = (Helmet)armor;
                 }
                 else if (armor.Attribute_id() == "ChestPlate")
                 {
-                    if (chestPlate != null) { inventaire.AddItem(chestPlate); }
+                    if (chestPlate != null) { pre = chestPlate; }
                     chestPlate = (ChestPlate)armor;
                 }
                 else if (armor.Attribute_id() == "Legging")
                 {
-                    if (legging != null) { inventaire.AddItem(legging); }
+                    if (legging != null) { pre = legging; }
                     legging = (Legging)armor;
                 }
                 else if (armor.Attribute_id() == "Boots")
                 {
-                    if (boots != null) { inventaire.AddItem(boots); }
+                    if (boots != null) { pre = boots; }
                     boots = (Boots)armor;
                 }
                 inventaire.RemoveItem(armor);
+                if (pre != null)
+                {
+                    inventaire.AddItem(pre);
+                }
                 return true;
             }
             return false;
@@ -118,11 +106,11 @@ namespace BiblioMinecraft.Entities
         public void TakeItemAroundHim()
         {
             List<Item_Entity> ie = new List<Item_Entity>();
-            foreach (Entity entity in World_System.World.Entities)
+            foreach (Entity entity in loc.World.Entities)
             {
                 if (entity is Item_Entity item)
                 {
-                    if (Other.Dist(this.x, item.X, this.y, item.Y, this.z, item.Z) <= distOfItemTaking)
+                    if (Other.Dist(this.loc, item.Location) <= distOfItemTaking)
                     {
                         if (inventaire.AddItem(item.Item))
                         {
@@ -142,32 +130,32 @@ namespace BiblioMinecraft.Entities
             if (inventaire.Contains(item))
             {
                 inventaire.RemoveItem(item);
-                Item_Entity ie = new Item_Entity(this.x, this.y, this.z, this.pitch, this.yaw, item);
-                World.SpawnEntity(ie);
+                Item_Entity ie = new Item_Entity(this.loc, item);
+                loc.World.SpawnEntity(ie);
             }
             else if (helmet != null && item == helmet)
             {
                 helmet = null;
-                Item_Entity ie = new Item_Entity(this.x, this.y, this.z, this.pitch, this.yaw, item);
-                World.SpawnEntity(ie);
+                Item_Entity ie = new Item_Entity(this.loc, item);
+                loc.World.SpawnEntity(ie);
             }
             else if (chestPlate != null && item == chestPlate)
             {
                 chestPlate = null;
-                Item_Entity ie = new Item_Entity(this.x, this.y, this.z, this.pitch, this.yaw, item);
-                World.SpawnEntity(ie);
+                Item_Entity ie = new Item_Entity(this.loc, item);
+                loc.World.SpawnEntity(ie);
             }
             else if (legging != null && item == legging)
             {
                 legging = null;
-                Item_Entity ie = new Item_Entity(this.x, this.y, this.z, this.pitch, this.yaw, item);
-                World.SpawnEntity(ie);
+                Item_Entity ie = new Item_Entity(this.loc, item);
+                loc.World.SpawnEntity(ie);
             }
             else if (boots != null && item == boots)
             {
                 boots = null;
-                Item_Entity ie = new Item_Entity(this.x, this.y, this.z, this.pitch, this.yaw, item);
-                World.SpawnEntity(ie);
+                Item_Entity ie = new Item_Entity(this.loc, item);
+                loc.World.SpawnEntity(ie);
             }
         }
         public void RemoveItem(Item item)

@@ -13,7 +13,7 @@ namespace BiblioMinecraft.Entities
         private Inventaire inventaire;
         private List<Trade> trades;
 
-        public Merchand(float x, float y, float z, float pitch, float yaw) : base(x, y, z, pitch, yaw, 20)
+        public Merchand(Location loc) : base(loc, 20)
         {
             inventaire = new Inventaire(5, 1);
             inventaire.AddItem(new Emerald());
