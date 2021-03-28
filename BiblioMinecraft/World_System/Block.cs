@@ -15,7 +15,7 @@ namespace BiblioMinecraft.World_System
             this.loc = loc;
         }
 
-        public Game_Model Model()
+        public virtual Game_Model Model()
         {
             Game_Model a = BlockModel();
             for (int i = 0; i < a.model.Length; i++)
@@ -113,7 +113,7 @@ namespace BiblioMinecraft.World_System
 
         protected abstract Game_Model BlockModel();
 
-        private double[] CoordToRot(double[] coord)
+        protected double[] CoordToRot(double[] coord)
         {
             double[] rot = new double[2];
             rot[0] = Math.Atan2(coord[0], coord[2]);
@@ -121,7 +121,7 @@ namespace BiblioMinecraft.World_System
             return rot;
         }
 
-        private double[] RotToCoord(double[] rot, double dist)
+        protected double[] RotToCoord(double[] rot, double dist)
         {
             double[] coord = new double[3];
             coord[0] = Math.Cos(rot[1]) * Math.Sin(rot[0]) * dist;

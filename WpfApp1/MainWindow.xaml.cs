@@ -75,6 +75,7 @@ namespace Minecraft
             world.SetBlock(new Dirt_Block(new Location(0, 2, 0, world)));
             world.SetBlock(new CobbleStone_Block(new Location(0, 0, 0, world)));
             world.SetBlock(new Wooden_Block(new Location(2, 0, 0, world)));
+            world.SetBlock(new Chest(new Location(-2, 2, 0, world)));
         }
 
         public void RegenerateWorld()

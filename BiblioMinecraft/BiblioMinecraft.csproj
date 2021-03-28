@@ -57,6 +57,7 @@
     <Compile Include="Other.cs" />
     <Compile Include="Trade.cs" />
     <Compile Include="World_System\Block.cs" />
+    <Compile Include="World_System\Blocks\Chest.cs" />
     <Compile Include="World_System\Blocks\Dirt_Block.cs" />
     <Compile Include="World_System\Blocks\Wooden_Block.cs" />
     <Compile Include="World_System\Blocks\Wooden_staire.cs" />

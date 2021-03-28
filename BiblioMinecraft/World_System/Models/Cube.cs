@@ -10,7 +10,7 @@ namespace BiblioMinecraft.World_System.Models
 {
     public abstract class Cube : Block
     {
-        private DiffuseMaterial mat;
+        protected DiffuseMaterial mat;
         public Cube(Location loc, DiffuseMaterial mat) : base(loc)
         {
             this.mat = mat;
