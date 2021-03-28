@@ -20,6 +20,7 @@ namespace BiblioMinecraft.Items
         public override void Right_Click(Player player)
         {
             // TODO: ouvrire inventaire
+            
         }
     }
 }

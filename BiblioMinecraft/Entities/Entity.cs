@@ -54,7 +54,7 @@ namespace BiblioMinecraft.Entities
 
         public virtual object GetInFrontOfHim(float range)
         {
-            for (float i = 0; i <= range; i += 0.05f)
+            for (float i = 0; i <= range; i += 0.005f)
             {
                 Location nloc = new Location((float)Math.Cos(Pitch) * (float)Math.Sin(Yaw) * i + X,
                     (float)Math.Sin(Pitch) * i + Y,
@@ -72,7 +72,7 @@ namespace BiblioMinecraft.Entities
                     }
                 }
                 */
-                Block block = loc.World.GetBlock((int)Math.Round(nloc.X), (int)Math.Round(nloc.Y), (int)Math.Round(nloc.Z));
+                Block block = loc.World.GetBlock((int)Math.Floor(nloc.X+0.5f), (int)Math.Floor(nloc.Y+0.5f), (int)Math.Floor(nloc.Z+0.5f));
                 if (block != null)
                 {
                     return block;

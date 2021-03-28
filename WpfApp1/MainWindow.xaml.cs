@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using BiblioMinecraft;
 using System.Windows.Media.Media3D;
 using BiblioMinecraft.World_System;
+using BiblioMinecraft.Items;
 using BiblioMinecraft.Entities;
 using BiblioMinecraft.World_System.Models;
 using BiblioMinecraft.World_System.Blocks;
@@ -32,6 +33,7 @@ namespace Minecraft
         public MainWindow()
         {
             InitializeComponent();
+            
             //player = new Player(new Location(0, 0, 5, 0, (float)Math.PI, new World()));
             GenerateWorld(player.Location.World);
             RegenerateWorld();
@@ -44,21 +46,37 @@ namespace Minecraft
                     player.Z);
             camera.LookDirection = new Vector3D((float)Math.Cos(player.Pitch) * (float)Math.Sin(player.Yaw), (float)Math.Sin(player.Pitch), (float)Math.Cos(player.Pitch) * (float)Math.Cos(player.Yaw));
 
-            /*
-            System.Threading.Thread t = new System.Threading.Thread(() =>
+            //Dispatcher.Invoke(() => { UpdateWorld(); });
+
+
+        }
+
+        public void ShowInventory(object cont)
+        {
+            RemoveInventory();
+            if (cont is Player player)
             {
-                //while (open)
-                {
-                    //UpdateWorld();
-                    Dispatcher.Invoke(() => { UpdateWorld(); });
+                Image image = new Image();
+                image.Width = Width;
+                image.Height = Height / 2;
+                image.Source = new BitmapImage(new Uri(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\Entities\inventory.png"));
+                Canvas.Children.Add(image);
+                Canvas.SetTop(image, Height / 5);
+            }
+            if (cont is Inventaire chest)
+            {
+                Image image = new Image();
+                image.Width = Width;
+                image.Height = Height / 2;
+                image.Source = new BitmapImage(new Uri(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\Entities\inventory.png"));
+                Canvas.Children.Add(image);
+                Canvas.SetTop(image, Height / 5);
+            }
+        }
 
-                    System.Threading.Thread.Sleep(10);
-                }
-            });
-            t.Start();
-            */
-
-
+        public void RemoveInventory()
+        {
+            Canvas.Children.Clear();
         }
 
         public void GenerateWorld(World world)
@@ -166,7 +184,7 @@ namespace Minecraft
                         {
                             if (qqch is Block bl)
                             {
-                                object ob = bl.Right_Click(player, new Wooden_Block(bl.Location));
+                                object ob = bl.Right_Click(player, new Wooden_Block(bl.Location), bl.Location);
                                 if (ob != null)
                                 {
                                     if (ob is Block blo)
@@ -175,6 +193,10 @@ namespace Minecraft
                                         blockss.Add(blo);
                                         blocks = blockss.ToArray();
                                         UpdateBlock(group.Children.Count, blo);
+                                    }
+                                    if (ob is Inventaire inv)
+                                    {
+                                        ShowInventory(inv);
                                     }
                                 }
                                 return;
@@ -196,7 +218,7 @@ namespace Minecraft
                             if (qqch is Block block)
                             {
                                 block.Left_Click(player);
-                                
+
                                 List<Block> bl = blocks.ToList();
                                 int i = bl.IndexOf(block);
                                 group.Children.RemoveAt(i + 2);
@@ -220,6 +242,19 @@ namespace Minecraft
             Key key = e.Key;
             float speed = 0.12f;
             float speedrot = 0.02f;
+
+            if (key == Key.F)
+            {
+                if (Canvas.Children.Count > 0)
+                {
+                    RemoveInventory();
+                }
+                else
+                {
+                    ShowInventory(player);
+                }
+                return;
+            }
 
             if (key == Key.Delete)
             {

@@ -7,14 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
-    <Grid Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MousePress">
-        
+    <Grid x:Name="grid" Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MousePress">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <Button x:Name="button" Grid.Row="0" Content="Creative" />
 
         <Viewport3D x:Name="viewport" Grid.Row="1">
             <ModelVisual3D x:Name="model">
@@ -31,6 +29,9 @@
             Position="0,0,5" FieldOfView="70" />
             </Viewport3D.Camera>
         </Viewport3D>
-        
+
+        <Canvas x:Name="Canvas"></Canvas>
+
+        <Button x:Name="button" Grid.Row="0" Content="Creative" />
     </Grid>
 </Window>

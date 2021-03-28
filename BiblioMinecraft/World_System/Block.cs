@@ -71,13 +71,13 @@ namespace BiblioMinecraft.World_System
             Destroy();
         }
 
-        public virtual object Right_Click(BiblioMinecraft.Entities.Player player, Block block)
+        public virtual object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)
         {
-            float x = player.X - X;
-            float z = player.Z - Z;
+            float x = loc.X - X;
+            float z = loc.Z - Z;
             float yaw = (float)Math.Atan2(z, x);
 
-            float pitch = (float)Math.Atan2(player.Y - Y, Math.Sqrt(x * x + z * z));
+            float pitch = (float)Math.Atan2(loc.Y - Y, Math.Sqrt(x * x + z * z));
             if (pitch > Math.PI / 4)
             {
                 block.Location = new Location(X, Y + 1, Z, loc.World);
@@ -86,7 +86,7 @@ namespace BiblioMinecraft.World_System
             {
                 block.Location = new Location(X, Y - 1, Z, loc.World);
             }
-            else if (yaw >= -Math.PI / 4 && yaw <= Math.PI / 4)
+            else if (yaw >= 2 * Math.PI - Math.PI / 4 || yaw <= Math.PI / 4)
             {
                 block.Location = new Location(X, Y, Z + 1, loc.World);
             }
@@ -102,6 +102,7 @@ namespace BiblioMinecraft.World_System
             {
                 block.Location = new Location(X - 1, Y, Z, loc.World);
             }
+            
             loc.World.SetBlock(block);
             return block;
         }

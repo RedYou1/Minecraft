@@ -21,12 +21,9 @@ namespace BiblioMinecraft.World_System.Blocks
             inv = new Inventaire(9, 2);
         }
 
-        public override object Right_Click(BiblioMinecraft.Entities.Player player, Block block)
+        public override object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)
         {
-            player.TP(player.X, player.Y - 2, player.Z,player.Pitch,player.Yaw);
-
-            //TODO:ouvre inventaire
-            return null;
+            return inv;
         }
 
         public override Game_Model Model()
