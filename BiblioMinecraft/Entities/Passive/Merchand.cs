@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BiblioMinecraft.Items;
-using BiblioMinecraft.Items.Foods;
 
 namespace BiblioMinecraft.Entities
 {
@@ -16,11 +15,16 @@ namespace BiblioMinecraft.Entities
         public Merchand(Location loc) : base(loc, 20)
         {
             inventaire = new Inventaire(5, 1);
-            inventaire.AddItem(new Emerald());
-            inventaire.AddItem(new Steak());
+            inventaire.AddItem(new Emerald(1));
+            inventaire.AddItem(new Steak(1));
             trades = new List<Trade>();
-            trades.Add(new Trade(new Steak(), 1, new Emerald(), 1));
-            trades.Add(new Trade(new Emerald(), 1, new Steak(), 1));
+            trades.Add(new Trade(new Steak(1), 1, new Emerald(1), 1));
+            trades.Add(new Trade(new Emerald(1), 1, new Steak(1), 1));
+        }
+
+        public override object Right_Clicked(Player player, Item with)
+        {
+            return inventaire;
         }
 
         public override string id()

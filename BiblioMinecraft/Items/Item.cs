@@ -10,6 +10,15 @@ namespace BiblioMinecraft.Items
 {
     public abstract class Item
     {
+        protected int quantity;
+        protected int maxQuantity;
+
+        public Item(int quantity, int maxQuantity)
+        {
+            this.quantity = quantity;
+            this.maxQuantity = maxQuantity;
+        }
+
         public abstract String id();
         public virtual bool HaveAttribute(BiblioMinecraft.Attributes.Attribute attribute)
         {
@@ -18,16 +27,37 @@ namespace BiblioMinecraft.Items
 
         public virtual void EntityDied(Entity entity)
         {
-            entity.Location.World.SpawnEntity(new Item_Entity(entity.Location,this));
+            entity.Location.World.SpawnEntity(new Item_Entity(entity.Location, this));
         }
 
-        public virtual void Right_Click(Player player)
+        public virtual object Right_Click(Player player, object to)
         {
-
+            return null;
         }
-        public virtual void Left_Click(Player player)
+        public virtual object Left_Click(Player player, object to)
         {
-
+            if (to is Entity ent)
+            {
+                ent.TakeDamage(new Damages.PhysicalDamage(1));
+            }
+            return null;
         }
+
+        public int Quantity
+        {
+            get => quantity;
+            set
+            {
+                if (value <= maxQuantity)
+                {
+                    quantity = value;
+                }
+                if (value <= 0)
+                {
+                    //TODO: remove item from inventaire
+                }
+            }
+        }
+        public int MaxQuantity { get => maxQuantity; }
     }
 }

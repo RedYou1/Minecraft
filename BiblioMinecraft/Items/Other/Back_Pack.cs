@@ -12,15 +12,19 @@ namespace BiblioMinecraft.Items
     {
         public Inventaire inventaire = new Inventaire(3,2);
 
+        public Back_Pack() : base(1,1)
+        {
+
+        }
+
         public override string id()
         {
             return "Back_Pack";
         }
 
-        public override void Right_Click(Player player)
+        public override object Right_Click(Player player, object to)
         {
-            // TODO: ouvrire inventaire
-            
+            return inventaire;
         }
     }
 }

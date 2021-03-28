@@ -86,6 +86,11 @@ namespace BiblioMinecraft.Entities
             return id() == entity.id() && loc.Equals(entity.loc);
         }
 
+        public virtual object Right_Clicked(Player player,Item with)
+        {
+            return null;
+        }
+
         public Location Location { get => loc; }
         public float X { get => loc.X; }
         public float Y { get => loc.Y; }

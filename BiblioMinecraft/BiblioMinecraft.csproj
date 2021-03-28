@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\Outil.cs" />
+    <Compile Include="Attributes\Sword.cs" />
+    <Compile Include="Attributes\Weapon.cs" />
     <Compile Include="Attributes\Other.cs" />
     <Compile Include="Attributes\Mineral.cs" />
     <Compile Include="Attributes\Attribute.cs" />
@@ -52,6 +53,10 @@
     <Compile Include="Entities\Passive\Merchand.cs" />
     <Compile Include="Items\Minerals\Emerald.cs" />
     <Compile Include="Items\Other\Back_Pack.cs" />
+    <Compile Include="Items\Weapons\Iron_Sword.cs" />
+    <Compile Include="Items\Weapons\Stone_Sword.cs" />
+    <Compile Include="Items\Weapons\Diamond_Sword.cs" />
+    <Compile Include="Items\Weapons\Wooden_Sword.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Noise.cs" />
     <Compile Include="Other.cs" />
@@ -97,7 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Agressive\" />
-    <Folder Include="Items\Outils\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

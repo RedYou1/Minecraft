@@ -39,7 +39,7 @@ namespace BiblioMinecraft.Items
         /// 
         /// </summary>
         /// <param name="item"></param>
-        /// <returns>true if get in<br/>false if couldnt get in</returns>
+        /// <returns>true if get in<br/>false if couldnt get in or partialy</returns>
         public bool AddItem(Item item)
         {
             for (int i = 0; i < items.Length; i++)
@@ -48,6 +48,22 @@ namespace BiblioMinecraft.Items
                 {
                     items[i] = item;
                     return true;
+                }
+                else {
+                    if (items[i].id() == item.id() && items[i].MaxQuantity > items[i].Quantity)
+                    {
+                        if (items[i].MaxQuantity >= items[i].Quantity + item.Quantity)
+                        {
+                            items[i].Quantity += item.Quantity;
+                            return true;
+                        }
+                        else
+                        {
+                            int a = items[i].MaxQuantity - items[i].Quantity;
+                            items[i].Quantity = items[i].MaxQuantity;
+                            item.Quantity -= a;
+                        }
+                    }
                 }
             }
             return false;
@@ -109,7 +125,7 @@ namespace BiblioMinecraft.Items
             get
             {
                 List<Item> a = new List<Item>();
-                foreach(Item i in items)
+                foreach (Item i in items)
                 {
                     if (i != null)
                     {

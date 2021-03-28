@@ -186,6 +186,9 @@ namespace BiblioMinecraft.Entities
             return inv;
         }
 
+        /// <summary>
+        /// the clone of the player inventory
+        /// </summary>
         public Inventaire Inventaire { get => inventaire.Clone(); }
         public float Hunger { get => hunger; set => hunger = value; }
         public Helmet Helmet { get => helmet; }

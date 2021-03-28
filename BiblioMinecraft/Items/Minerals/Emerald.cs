@@ -8,7 +8,10 @@ namespace BiblioMinecraft.Items
 {
     public class Emerald : BiblioMinecraft.Attributes.Mineral
     {
+        public Emerald(int quantity) : base(quantity,64)
+        {
 
+        }
         public override String id()
         {
             return "Emerald";

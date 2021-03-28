@@ -10,6 +10,11 @@ namespace BiblioMinecraft.Attributes
 {
     public abstract class Mineral : Attribute
     {
+        public Mineral(int quantity,int maxQuantity) : base(quantity,maxQuantity)
+        {
+
+        }
+
         public override String Attribute_id() { return "Mineral"; }
         public override bool HaveAttribute(Attribute attribute)
         {

@@ -14,7 +14,7 @@ namespace BiblioMinecraft.World_System.Blocks
     public class Chest : Block
     {
         private Inventaire inv;
-        private DiffuseMaterial mat = Game_Model.GetImage(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\World_System\Blocks\Chest.PNG");
+        private DiffuseMaterial mat = Game_Model.GetImage(Other.ImageFile + "Chest.PNG");
         //public float opened = 0;
         public Chest(Location loc) : base(loc)
         {

@@ -12,6 +12,6 @@ namespace BiblioMinecraft.World_System.Blocks
 {
     public class Dirt_Block : Cube
     {
-        public Dirt_Block(Location loc) : base(loc, Game_Model.GetImage(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\World_System\Blocks\Dirt.PNG")) { }
+        public Dirt_Block(Location loc) : base(loc, Game_Model.GetImage(Other.ImageFile + "Dirt.PNG")) { }
     }
 }

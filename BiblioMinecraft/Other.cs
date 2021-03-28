@@ -8,6 +8,8 @@ namespace BiblioMinecraft
 {
     public static class Other
     {
+        public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
+
         public static float Dist(Location loc1, Location loc2)
         {
             return Dist(loc1.X, loc2.X, loc1.Y, loc2.Y, loc1.Z, loc2.Z);

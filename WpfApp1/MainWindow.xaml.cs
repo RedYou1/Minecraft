@@ -30,10 +30,15 @@ namespace Minecraft
     {
         public static Block[] blocks;
         public static Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
+
         public MainWindow()
         {
             InitializeComponent();
-            
+            Other.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
+            player.AddItem(new Steak(2));
+            player.AddItem(new Emerald(2));
+            player.AddItem(new Steak(2));
+
             //player = new Player(new Location(0, 0, 5, 0, (float)Math.PI, new World()));
             GenerateWorld(player.Location.World);
             RegenerateWorld();
@@ -59,16 +64,47 @@ namespace Minecraft
                 Image image = new Image();
                 image.Width = Width;
                 image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\Entities\inventory.png"));
+                image.Source = new BitmapImage(new Uri(Other.ImageFile + "inventory.png"));
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
+
+                Inventaire inv = player.Inventaire;
+                for (int i = 0; i < 4 * 9; i++)
+                {
+                    Item it = inv.GetItem(i);
+                    if (it != null)
+                    {
+                        //TODO:good inventory
+                        int x = i % 9;
+                        int y = (int)(i / 9);
+                        Image itImage = new Image();
+                        itImage.Width = 64 / 3;
+                        itImage.Height = 64 / 3;
+                        itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + it.id() + ".png"));
+                        Canvas.Children.Add(itImage);
+                        Canvas.SetTop(itImage, Height / 2 - (y * 64));
+                        Canvas.SetLeft(itImage, Width / 3 + (x * 64));
+                        if (it.Quantity != 1)
+                        {
+                            TextBlock tb = new TextBlock();
+                            tb.Text = "" + it.Quantity;
+                            tb.Background = Brushes.White;
+                            tb.Foreground = Brushes.Black;
+                            tb.Width = 25;
+                            tb.Height = 20;
+                            Canvas.Children.Add(tb);
+                            Canvas.SetTop(tb, Height / 2 + 60 / 3 - (y * 64));
+                            Canvas.SetLeft(tb, Width / 3 + 60 / 3 + (x * 64));
+                        }
+                    }
+                }
             }
             if (cont is Inventaire chest)
             {
                 Image image = new Image();
                 image.Width = Width;
                 image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(@"C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\Entities\inventory.png"));
+                image.Source = new BitmapImage(new Uri(Other.ImageFile + "inventory.png"));
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
             }

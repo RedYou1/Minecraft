@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BiblioMinecraft.World_System;
-using BiblioMinecraft.Items.Foods;
+using BiblioMinecraft.Items;
 
 namespace BiblioMinecraft.Entities
 {
@@ -14,10 +14,7 @@ namespace BiblioMinecraft.Entities
         {
             Random r = new Random();
             int a = r.Next(1,4);
-            for (int i = 0; i < a;i++)
-            {
-                loc.World.SpawnEntity(new Item_Entity(this.loc,new Steak()));
-            }
+            loc.World.SpawnEntity(new Item_Entity(this.loc,new Steak(a)));
             loc.World.RemoveEntity(this);
         }
 

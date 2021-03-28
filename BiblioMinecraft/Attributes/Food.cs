@@ -10,9 +10,15 @@ namespace BiblioMinecraft.Attributes
     public abstract class Food : Attribute
     {
 
-        public override void Right_Click(Player player)
+        public Food(int quantity, int maxQuantity) : base(quantity,maxQuantity)
+        {
+
+        }
+
+        public override object Right_Click(Player player, object to)
         {
             player.Eat(this);
+            return null;
         }
 
         public override string Attribute_id() { return "Food"; }

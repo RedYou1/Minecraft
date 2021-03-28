@@ -10,6 +10,11 @@ namespace BiblioMinecraft.Attributes
 {
     public abstract class Other : Attribute
     {
+        public Other(int quantity, int maxQuantity) : base(quantity, maxQuantity)
+        {
+
+        }
+
         public override String Attribute_id() { return "Other"; }
         public override bool HaveAttribute(Attribute attribute)
         {
