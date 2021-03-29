@@ -9,8 +9,12 @@ namespace BiblioMinecraft.Items
     public class Inventaire
     {
         private Item[] items;
+        private int width;
+        private int height;
         public Inventaire(int width, int height)
         {
+            this.width = width;
+            this.height = height;
             items = new Item[width * height];
         }
         public Inventaire(Item[] items)
@@ -148,5 +152,9 @@ namespace BiblioMinecraft.Items
             s += "}";
             return s;
         }
+
+        public int Length { get => width * height; }
+        public int Width { get => width; }
+        public int Height { get => height; }
     }
 }

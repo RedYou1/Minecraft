@@ -55,6 +55,7 @@ namespace BiblioMinecraft.Items
                 if (value <= 0)
                 {
                     //TODO: remove item from inventaire
+                    
                 }
             }
         }

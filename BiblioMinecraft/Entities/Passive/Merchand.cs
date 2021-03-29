@@ -49,8 +49,8 @@ namespace BiblioMinecraft.Entities
             {
                 if (player.Inventaire.Contains(trade.wanted) && inventaire.Contains(trade.giving))
                 {
-                    player.RemoveItem(trade.wanted);
-                    player.AddItem(trade.giving);
+                    player.Inventaire.RemoveItem(trade.wanted);
+                    player.Inventaire.AddItem(trade.giving);
                     inventaire.RemoveItem(trade.giving);
                     inventaire.AddItem(trade.wanted);
                 }

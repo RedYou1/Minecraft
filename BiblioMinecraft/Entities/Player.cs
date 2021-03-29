@@ -158,14 +158,6 @@ namespace BiblioMinecraft.Entities
                 loc.World.SpawnEntity(ie);
             }
         }
-        public void RemoveItem(Item item)
-        {
-            inventaire.RemoveItem(item);
-        }
-        public void AddItem(Item item)
-        {
-            inventaire.AddItem(item);
-        }
 
         public void Eat(Food food)
         {
@@ -186,10 +178,7 @@ namespace BiblioMinecraft.Entities
             return inv;
         }
 
-        /// <summary>
-        /// the clone of the player inventory
-        /// </summary>
-        public Inventaire Inventaire { get => inventaire.Clone(); }
+        public Inventaire Inventaire { get => inventaire; }
         public float Hunger { get => hunger; set => hunger = value; }
         public Helmet Helmet { get => helmet; }
         public ChestPlate ChestPlate { get => chestPlate; }
