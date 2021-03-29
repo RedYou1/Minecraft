@@ -21,6 +21,7 @@ using BiblioMinecraft.World_System.Blocks;
 using BiblioMinecraft.Damages;
 using System.Threading;
 using BiblioMinecraft.Items.Armors;
+using BiblioMinecraft.Attributes;
 
 namespace Minecraft
 {
@@ -35,7 +36,7 @@ namespace Minecraft
         public MainWindow()
         {
             InitializeComponent();
-            Other.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
+            Helper.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
             Iron_Helmet hel = new Iron_Helmet();
             player.Inventaire.AddItem(hel);
@@ -50,10 +51,20 @@ namespace Minecraft
             player.Inventaire.AddItem(boo);
             player.Equipe(boo);
 
-            for (int i = 0; i < player.Inventaire.Length; i++)
+            player.Inventaire.SetItem(new Emerald(0 + 2), 0);
+            for (int i = 1; i < player.Inventaire.Length - player.Inventaire.Width; i++)
             {
                 player.Inventaire.SetItem(new Steak(i + 2), i);
             }
+
+            Diamond_Helmet hel2 = new Diamond_Helmet();
+            player.Inventaire.AddItem(hel2);
+            Diamond_ChestPlate che2 = new Diamond_ChestPlate();
+            player.Inventaire.AddItem(che2);
+            Diamond_Legging leg2 = new Diamond_Legging();
+            player.Inventaire.AddItem(leg2);
+            Diamond_Boots boo2 = new Diamond_Boots();
+            player.Inventaire.AddItem(boo2);
 
             //player = new Player(new Location(0, 0, 5, 0, (float)Math.PI, new World()));
             GenerateWorld(player.Location.World);
@@ -80,7 +91,7 @@ namespace Minecraft
                 Image image = new Image();
                 image.Width = Width;
                 image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(Other.ImageFile + "inventory.png"));
+                image.Source = new BitmapImage(new Uri(Helper.ImageFile + "inventory.png"));
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
 
@@ -89,7 +100,7 @@ namespace Minecraft
                       Image itImage = new Image();
                       itImage.Width = 64 / 3;
                       itImage.Height = 64 / 3;
-                      itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + id + ".png"));
+                      itImage.Source = new BitmapImage(new Uri(Helper.ImageFile + "Items\\Armors\\" + id + ".png"));
                       itImage.MouseDown += ItemClickInv;
                       Canvas.Children.Add(itImage);
                       Canvas.SetTop(itImage, Height / 5 + i);
@@ -126,10 +137,15 @@ namespace Minecraft
 
                         tempqt.Add(() =>
                         {
+                            String adi = "";
+                            if (it is Armor ar)
+                            {
+                                adi = "Armors\\";
+                            }
                             Image itImage = new Image();
                             itImage.Width = 64 / 3;
                             itImage.Height = 64 / 3;
-                            itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + it.id() + ".png"));
+                            itImage.Source = new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + adi + it.id() + ".png"));
                             itImage.MouseDown += ItemClickInv;
                             Canvas.Children.Add(itImage);
                             Canvas.SetTop(itImage, Height / 2 + Height / 8 - (y * 27) + 2);
@@ -161,9 +177,42 @@ namespace Minecraft
                 Image image = new Image();
                 image.Width = Width;
                 image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(Other.ImageFile + "inventory.png"));
+                image.Source = new BitmapImage(new Uri(Helper.ImageFile + "inventory.png"));
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
+            }
+        }
+
+        private void SwapWithSelect(int index, bool selnul)
+        {
+            UIElement t = Canvas.Children[Canvas.Children.Count - 1];
+            //Canvas.Children[Canvas.Children.Count - 1].
+            List<UIElement> ui = new List<UIElement>();
+            foreach (UIElement uiin in Canvas.Children)
+            {
+                ui.Add(uiin);
+            }
+            UIElement a = ui[ui.Count - 1];
+            if (selnul)
+            {
+                ui.Add(ui[index]);
+                ui.RemoveAt(index);
+            }
+            else
+            {
+                ui[ui.Count - 1] = ui[index];
+                a = ui[ui.Count - 1];
+                ui[index] = t;
+            }
+            Canvas.Children.Clear();
+            foreach (UIElement uiin in ui)
+            {
+                Canvas.Children.Add(uiin);
+            }
+            if (!selnul)
+            {
+                Canvas.SetTop(Canvas.Children[index], Canvas.GetTop(a));
+                Canvas.SetLeft(Canvas.Children[index], Canvas.GetLeft(a));
             }
         }
 
@@ -173,7 +222,119 @@ namespace Minecraft
 
             if (Height / 2.3f > pos.Y)
             {
-                //armor...
+                //TODO: crafting
+                int x = (int)((pos.X - Width / 3 - 25) / 24.5);
+                if (x == 0)
+                {
+                    int y = (int)(((pos.Y - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
+                    foreach (UIElement a in Canvas.Children)
+                    {
+                        if (a is Image img)
+                        {
+                            if (img.Width > 128)
+                            {
+                                continue;
+                            }
+                            int y1 = (int)(((Canvas.GetTop(a) - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
+                            if (y1 == y)
+                            {
+                                int b = Canvas.Children.IndexOf(a);
+                                switch (y)
+                                {
+                                    //boots
+                                    case 4:
+                                        {
+                                            if (selected is Boots sel)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Boots;
+                                                player.Boots = sel;
+                                                if (selected == null)
+                                                {
+                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 83);
+                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                }
+                                            }
+                                            else if (selected == null)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Boots;
+                                                player.Boots = null;
+                                            }
+                                        }
+                                        return;
+                                    //leggings
+                                    case 5:
+                                        {
+                                            if (selected is Legging sel)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Legging;
+                                                player.Legging = sel;
+                                                if (selected == null)
+                                                {
+                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 59);
+                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                }
+                                            }
+                                            else if (selected == null)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Legging;
+                                                player.Legging = null;
+                                            }
+                                        }
+                                        return;
+                                    //chestplate
+                                    case 6:
+                                        {
+                                            if (selected is ChestPlate sel)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.ChestPlate;
+                                                player.ChestPlate = sel;
+                                                if (selected == null)
+                                                {
+                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 34);
+                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                }
+                                            }
+                                            else if (selected == null)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.ChestPlate;
+                                                player.ChestPlate = null;
+                                            }
+                                        }
+                                        return;
+                                    //helmet
+                                    case 7:
+                                        {
+                                            if (selected is Helmet sel)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Helmet;
+                                                player.Helmet = sel;
+                                                if (selected == null)
+                                                {
+                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 10);
+                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                }
+                                            }
+                                            else if (selected == null)
+                                            {
+                                                SwapWithSelect(b, selected == null);
+                                                selected = player.Helmet;
+                                                player.Helmet = null;
+                                            }
+                                        }
+                                        return;
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
             else
             {
@@ -184,45 +345,22 @@ namespace Minecraft
                 {
                     foreach (UIElement a in Canvas.Children)
                     {
-                        double y1 = Canvas.GetTop(a);
-                        double y2 = Height / 2 + Height / 8 - (y * 27) + 2;
-                        int x1 = (int)((Canvas.GetLeft(a) + 10) / 10);
-                        int x2 = (int)((Width / 3 + (x * 24.5) + 10) / 10);
-                        if (y1 == y2 && x1 == x2)
+                        if (a is Image img)
                         {
-                            int b = Canvas.Children.IndexOf(a);
-                            player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
-                            selected = item;
+                            int y1 = (int)(((Canvas.GetTop(a) - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
+                            int x1 = (int)((Canvas.GetLeft(a) - Width / 3 - 25) / 24.5);
+                            if (y1 == y && x1 == x)
+                            {
+                                int b = Canvas.Children.IndexOf(a);
+                                player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
 
-                            if (selected != null)
-                            {
-                                UIElement t = Canvas.Children[Canvas.Children.Count - 1];
-                                //Canvas.Children[Canvas.Children.Count - 1].
-                                List<UIElement> ui = new List<UIElement>();
-                                foreach(UIElement uiin in Canvas.Children)
-                                {
-                                    ui.Add(uiin);
-                                }
-                                ui[ui.Count - 1] = ui[b];
-                                ui[b] = t;
-                                Canvas.Children.Clear();
-                                foreach (UIElement uiin in ui)
-                                {
-                                    Canvas.Children.Add(uiin);
-                                }
+                                SwapWithSelect(b, selected == null);
+                                selected = item;
                                 return;
-                            }
-                            else
-                            {
-                                Image iImage = new Image();
-                                iImage.Width = 64 / 3;
-                                iImage.Height = 64 / 3;
-                                iImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + selected.id() + ".png"));
-                                Canvas.Children.Add(iImage);
                             }
                         }
                     }
-                    
+
                     /*
                     foreach (UIElement a in Canvas.Children)
                     {
@@ -239,7 +377,10 @@ namespace Minecraft
                 }
                 else if (selected != null)
                 {
+                    Canvas.SetTop(Canvas.Children[Canvas.Children.Count - 1], Height / 2 + Height / 8 - (y * 27) + 2);
+                    Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], Width / 3 + (x * 24.5) + 25);
                     player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
+                    selected = null;
                     /*
                     foreach (UIElement a in Canvas.Children)
                     {
@@ -257,7 +398,7 @@ namespace Minecraft
         {
             if (selected != null)
             {
-                Canvas.SetTop(Canvas.Children[Canvas.Children.Count-1], e.GetPosition(Canvas).Y);
+                Canvas.SetTop(Canvas.Children[Canvas.Children.Count - 1], e.GetPosition(Canvas).Y);
                 Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], e.GetPosition(Canvas).X);
             }
         }

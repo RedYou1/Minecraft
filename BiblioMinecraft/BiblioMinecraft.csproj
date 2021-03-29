@@ -59,7 +59,7 @@
     <Compile Include="Items\Weapons\Wooden_Sword.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Noise.cs" />
-    <Compile Include="Other.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Trade.cs" />
     <Compile Include="World_System\Block.cs" />
     <Compile Include="World_System\Blocks\Chest.cs" />

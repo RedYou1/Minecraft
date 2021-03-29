@@ -12,6 +12,6 @@ namespace BiblioMinecraft.World_System.Blocks
 {
     public class CobbleStone_Block : Cube
     {
-        public CobbleStone_Block(Location loc) : base(loc, Game_Model.GetImage(Other.ImageFile + "CobbleStone.PNG")) { }
+        public CobbleStone_Block(Location loc) : base(loc, Game_Model.GetImage(Helper.ImageFile + "CobbleStone.PNG")) { }
     }
 }

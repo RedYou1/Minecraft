@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiblioMinecraft
 {
-    public static class Other
+    public static class Helper
     {
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 

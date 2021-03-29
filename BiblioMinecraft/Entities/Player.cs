@@ -24,7 +24,7 @@ namespace BiblioMinecraft.Entities
         protected float distOfItemTaking = 1;
 
         public Player(Location loc) : base(loc, 20)
-        {}
+        { }
 
         public override string id()
         {
@@ -110,7 +110,7 @@ namespace BiblioMinecraft.Entities
             {
                 if (entity is Item_Entity item)
                 {
-                    if (Other.Dist(this.loc, item.Location) <= distOfItemTaking)
+                    if (Helper.Dist(this.loc, item.Location) <= distOfItemTaking)
                     {
                         if (inventaire.AddItem(item.Item))
                         {
@@ -161,7 +161,8 @@ namespace BiblioMinecraft.Entities
 
         public void Eat(Food food)
         {
-            if (inventaire.Contains(food)) {
+            if (inventaire.Contains(food))
+            {
                 hunger += food.Food_Restored();
                 if (hunger > 20)
                 {
@@ -180,10 +181,10 @@ namespace BiblioMinecraft.Entities
 
         public Inventaire Inventaire { get => inventaire; }
         public float Hunger { get => hunger; set => hunger = value; }
-        public Helmet Helmet { get => helmet; }
-        public ChestPlate ChestPlate { get => chestPlate; }
-        public Legging Legging { get => legging; }
-        public Boots Boots { get => boots; }
+        public Helmet Helmet { get => helmet; set => helmet = value; }
+        public ChestPlate ChestPlate { get => chestPlate; set => chestPlate = value; }
+        public Legging Legging { get => legging; set => legging = value; }
+        public Boots Boots { get => boots; set => boots = value; }
         public float DistOfItemTaking { get => distOfItemTaking; }
     }
 }

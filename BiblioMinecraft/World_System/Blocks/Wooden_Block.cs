@@ -12,6 +12,6 @@ namespace BiblioMinecraft.World_System.Blocks
 {
     public class Wooden_Block : Cube
     {
-        public Wooden_Block(Location loc) : base(loc, Game_Model.GetImage(Other.ImageFile + "oak_planks.PNG")) { }
+        public Wooden_Block(Location loc) : base(loc, Game_Model.GetImage(Helper.ImageFile + "oak_planks.PNG")) { }
     }
 }
