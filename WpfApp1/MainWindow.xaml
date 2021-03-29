@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
-    <Grid x:Name="grid" Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MousePress">
+    <Grid x:Name="grid" MouseMove="SelectedMove" Background="Black" MouseWheel="Grid_MouseWheel" MouseUp="Grid_MousePress">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

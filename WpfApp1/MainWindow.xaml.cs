@@ -31,7 +31,7 @@ namespace Minecraft
     {
         public static Block[] blocks;
         public static Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
-
+        public static Item selected = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -182,13 +182,93 @@ namespace Minecraft
                 Item item = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
                 if (item != null)
                 {
-                    //TODO: select item
+                    foreach (UIElement a in Canvas.Children)
+                    {
+                        double y1 = Canvas.GetTop(a);
+                        double y2 = Height / 2 + Height / 8 - (y * 27) + 2;
+                        int x1 = (int)((Canvas.GetLeft(a) + 10) / 10);
+                        int x2 = (int)((Width / 3 + (x * 24.5) + 10) / 10);
+                        if (y1 == y2 && x1 == x2)
+                        {
+                            int b = Canvas.Children.IndexOf(a);
+                            player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
+                            selected = item;
+
+                            if (selected != null)
+                            {
+                                UIElement t = Canvas.Children[Canvas.Children.Count - 1];
+                                //Canvas.Children[Canvas.Children.Count - 1].
+                                List<UIElement> ui = new List<UIElement>();
+                                foreach(UIElement uiin in Canvas.Children)
+                                {
+                                    ui.Add(uiin);
+                                }
+                                ui[ui.Count - 1] = ui[b];
+                                ui[b] = t;
+                                Canvas.Children.Clear();
+                                foreach (UIElement uiin in ui)
+                                {
+                                    Canvas.Children.Add(uiin);
+                                }
+                                return;
+                            }
+                            else
+                            {
+                                Image iImage = new Image();
+                                iImage.Width = 64 / 3;
+                                iImage.Height = 64 / 3;
+                                iImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + selected.id() + ".png"));
+                                Canvas.Children.Add(iImage);
+                            }
+                        }
+                    }
+                    
+                    /*
+                    foreach (UIElement a in Canvas.Children)
+                    {
+                        double y1 = Canvas.GetTop(a);
+                        double y2 = Height / 2 + Height / 8 - (y * 27) + 2;
+                        int x1 = (int)((Canvas.GetLeft(a)+10)/10);
+                        int x2 = (int)((Width / 3 + (x * 24.5) + 10)/10);
+                        if (y1 == y2 && x1 ==  x2)
+                        {
+                            Canvas.MouseMove += SelectedMove;
+                        }
+                    }
+                    */
                 }
+                else if (selected != null)
+                {
+                    player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
+                    /*
+                    foreach (UIElement a in Canvas.Children)
+                    {
+                        if (Canvas.GetTop(a) == Height / 2 + Height / 8 - (y * 27) + 2 && Canvas.GetLeft(a) == Width / 3 + ((x + 1) * 24.5) + 10)
+                        {
+                            a.MouseMove -= SelectedMove;
+                        }
+                    }
+                    */
+                }
+            }
+        }
+
+        private void SelectedMove(object sender, MouseEventArgs e)
+        {
+            if (selected != null)
+            {
+                Canvas.SetTop(Canvas.Children[Canvas.Children.Count-1], e.GetPosition(Canvas).Y);
+                Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], e.GetPosition(Canvas).X);
             }
         }
 
         public void RemoveInventory()
         {
+            if (selected != null)
+            {
+                player.Location.World.SpawnEntity(new Item_Entity(player.Location, selected));
+                selected = null;
+            }
             Canvas.Children.Clear();
         }
 
