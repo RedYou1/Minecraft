@@ -52,7 +52,7 @@ namespace Minecraft
 
             for (int i = 0; i < player.Inventaire.Length; i++)
             {
-                player.Inventaire.SetItem(new Steak(1), i);
+                player.Inventaire.SetItem(new Steak(i + 2), i);
             }
 
             //player = new Player(new Location(0, 0, 5, 0, (float)Math.PI, new World()));
@@ -84,48 +84,38 @@ namespace Minecraft
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
 
+                Func<string, double, bool> AddArmor = (id, i) =>
+                  {
+                      Image itImage = new Image();
+                      itImage.Width = 64 / 3;
+                      itImage.Height = 64 / 3;
+                      itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + id + ".png"));
+                      itImage.MouseDown += ItemClickInv;
+                      Canvas.Children.Add(itImage);
+                      Canvas.SetTop(itImage, Height / 5 + i);
+                      Canvas.SetLeft(itImage, Width / 3 + 25);
+                      return true;
+                  };
+
                 if (player.Helmet != null)
                 {
-                    Image itImage = new Image();
-                    itImage.Width = 64 / 3;
-                    itImage.Height = 64 / 3;
-                    itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + player.Helmet.id() + ".png"));
-                    Canvas.Children.Add(itImage);
-                    Canvas.SetTop(itImage, Height / 5 + 10);
-                    Canvas.SetLeft(itImage, Width / 3 + 25);
+                    AddArmor(player.Helmet.id(), 10);
                 }
                 if (player.ChestPlate != null)
                 {
-                    Image itImage = new Image();
-                    itImage.Width = 64 / 3;
-                    itImage.Height = 64 / 3;
-                    itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + player.ChestPlate.id() + ".png"));
-                    Canvas.Children.Add(itImage);
-                    Canvas.SetTop(itImage, Height / 5 + 27 + 7);
-                    Canvas.SetLeft(itImage, Width / 3 + 25);
+                    AddArmor(player.ChestPlate.id(), 34);
                 }
                 if (player.Legging != null)
                 {
-                    Image itImage = new Image();
-                    itImage.Width = 64 / 3;
-                    itImage.Height = 64 / 3;
-                    itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + player.Legging.id() + ".png"));
-                    Canvas.Children.Add(itImage);
-                    Canvas.SetTop(itImage, Height / 5 + 54 + 5);
-                    Canvas.SetLeft(itImage, Width / 3 + 25);
+                    AddArmor(player.Legging.id(), 59);
                 }
                 if (player.Boots != null)
                 {
-                    Image itImage = new Image();
-                    itImage.Width = 64 / 3;
-                    itImage.Height = 64 / 3;
-                    itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\Armors\\" + player.Boots.id() + ".png"));
-                    Canvas.Children.Add(itImage);
-                    Canvas.SetTop(itImage, Height / 5 + 81 + 2);
-                    Canvas.SetLeft(itImage, Width / 3 + 25);
+                    AddArmor(player.Boots.id(), 83);
                 }
 
                 Inventaire inv = player.Inventaire;
+                List<Func<bool>> tempqt = new List<Func<bool>>();
                 for (int i = 0; i < 4 * 9; i++)
                 {
                     Item it = inv.GetItem(i);
@@ -133,13 +123,20 @@ namespace Minecraft
                     {
                         int x = i % inv.Width;
                         int y = (int)(i / inv.Width);
-                        Image itImage = new Image();
-                        itImage.Width = 64 / 3;
-                        itImage.Height = 64 / 3;
-                        itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + it.id() + ".png"));
-                        Canvas.Children.Add(itImage);
-                        Canvas.SetTop(itImage, Height / 2 + Height / 8 - (y * 27) + 2);
-                        Canvas.SetLeft(itImage, Width / 3 + (x * 24.5) + 25);
+
+                        tempqt.Add(() =>
+                        {
+                            Image itImage = new Image();
+                            itImage.Width = 64 / 3;
+                            itImage.Height = 64 / 3;
+                            itImage.Source = new BitmapImage(new Uri(Other.ImageFile + "Items\\" + it.id() + ".png"));
+                            itImage.MouseDown += ItemClickInv;
+                            Canvas.Children.Add(itImage);
+                            Canvas.SetTop(itImage, Height / 2 + Height / 8 - (y * 27) + 2);
+                            Canvas.SetLeft(itImage, Width / 3 + (x * 24.5) + 25);
+                            return true;
+                        });
+
                         if (it.Quantity != 1)
                         {
                             TextBlock tb = new TextBlock();
@@ -149,10 +146,14 @@ namespace Minecraft
                             tb.Width = 25;
                             tb.Height = 20;
                             Canvas.Children.Add(tb);
-                            Canvas.SetTop(tb, Height / 2 + 60 / 3 - (y * 64));
-                            Canvas.SetLeft(tb, Width / 3 + 60 / 3 + (x * 64));
+                            Canvas.SetTop(tb, Height / 2 + Height / 8 - ((y - 1) * 27) - 10);
+                            Canvas.SetLeft(tb, Width / 3 + ((x + 1) * 24.5) + 10);
                         }
                     }
+                }
+                foreach (Func<bool> a in tempqt)
+                {
+                    a();
                 }
             }
             if (cont is Inventaire chest)
@@ -163,6 +164,26 @@ namespace Minecraft
                 image.Source = new BitmapImage(new Uri(Other.ImageFile + "inventory.png"));
                 Canvas.Children.Add(image);
                 Canvas.SetTop(image, Height / 5);
+            }
+        }
+
+        private void ItemClickInv(object sender, MouseEventArgs e)
+        {
+            Point pos = e.GetPosition(Canvas);
+
+            if (Height / 2.3f > pos.Y)
+            {
+                //armor...
+            }
+            else
+            {
+                int x = (int)((pos.X - Width / 3 - 25) / 24.5);
+                int y = (int)(((pos.Y - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
+                Item item = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
+                if (item != null)
+                {
+                    //TODO: select item
+                }
             }
         }
 
