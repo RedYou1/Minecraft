@@ -31,8 +31,8 @@ namespace Minecraft
     public partial class MainWindow : Window
     {
         public static Block[] blocks;
-        public static Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
-        public static int selected = -1;
+        public Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
+        public static int selected = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -90,21 +90,20 @@ namespace Minecraft
         public void ShowInventory(object cont)
         {
             RemoveInventory();
+            selected = 0;
             Helper.Width = Width;
             Helper.Height = Height;
             if (cont is Player player)
             {
-                inv = new UI_Inventaire(player, 32, 32);
-                Canvas.Children.Add(inv);
+                inv = new UI_Inventaire(player, player, 32, 32, Canvas);
+                Point t = Mouse.GetPosition(Canvas);
+                inv.Move(selected, t.X, t.Y);
             }
-            if (cont is Inventaire chest)
+            if (cont is Inventaire invo)
             {
-                Image image = new Image();
-                image.Width = Width;
-                image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(Helper.ImageFile + "inventory.png"));
-                Canvas.Children.Add(image);
-                Canvas.SetTop(image, Height / 5);
+                inv = new UI_Inventaire(this.player, invo, 32, 32, Canvas);
+                Point t = Mouse.GetPosition(Canvas);
+                inv.Move(selected, t.X, t.Y);
             }
         }
 
@@ -112,233 +111,135 @@ namespace Minecraft
         {
             Point pos = e.GetPosition(Canvas);
 
-            UI_Item[] its = inv.GetItem(pos.X, pos.Y);
-            if (its.Length > 0)
+            KeyValuePair<UI_Item, int>[] its = inv.GetItem(pos.X, pos.Y);
+            if (its.Length > 1)
             {
-                if (selected == -1)
+                for (int i = 0; i < its.Length; i++)
                 {
-                    player.Inventaire.RemoveItem(its[0].item);
-                    selected = inv.GetIndex(its[0].item);
-
-                    Point p = Mouse.GetPosition(Canvas);
-                    its[0].x = p.X - inv.ItWidth / 2;
-                    its[0].y = p.Y - inv.ItHeight / 2;
-                }
-                else if (its.Length > 1)
-                {
-                    for (int i = 0; i < its.Length; i++)
+                    int h = its[i].Value;
+                    if (h != selected)
                     {
-                        int h = inv.GetIndex(its[i].item);
-                        if (h != selected)
+                        UI_Item it = inv.GetItem(h);
+                        UI_Item uit = inv.GetItem(selected);
+
+                        bool doit = false;
+                        if (it.y > 3)
                         {
-                            UI_Item it = inv.GetItem(h);
-
-                            int x = (int)((it.x - Helper.Width / 4 - 20) / 41);
-                            int y = (int)((it.y - Helper.Height + Helper.Height / 4 - 5) / -41 + 1);
-                            player.Inventaire.SetItem(inv.GetItem(selected).item, x + (y * player.Inventaire.Width));
-
-                            inv.Move(selected, it.x, it.y);
-                            selected = h;
-                            player.Inventaire.RemoveItem(inv.GetItem(selected).item);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    UI_Item it = inv.GetItem(selected);
-                    int x = (int)((it.x - Helper.Width / 4 - 20) / 41);
-                    int y = (int)((it.y - Helper.Height + Helper.Height / 4 - 5) / -41+1);
-                    player.Inventaire.SetItem(it.item,x+(y*player.Inventaire.Width));
-                    inv.Move(selected, Helper.Width / 4 + (x * 41) + 20, Helper.Height - Helper.Height / 4 - (y * 41) + 5);
-                    selected = -1;
-                }
-                Canvas.Children.Remove(inv);
-                Canvas.Children.Add(inv);
-            }
-
-            /*
-            if (Height / 2.3f > pos.Y)
-            {
-                //TODO: crafting
-                int x = (int)((pos.X - Width / 3 - 25) / 24.5);
-                if (x == 0)
-                {
-                    int y = (int)(((pos.Y - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
-                    foreach (UIElement a in Canvas.Children)
-                    {
-                        if (a is Image img)
-                        {
-                            if (img.Width > 128)
+                            if (inv.inv is Player p)
                             {
-                                continue;
-                            }
-                            int y1 = (int)(((Canvas.GetTop(a) - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
-                            if (y1 == y)
-                            {
-                                int b = Canvas.Children.IndexOf(a);
-                                switch (y)
+                                Item ith = inv.GetItem(selected).item;
+                                if (ith is Armor || ith == null)
                                 {
-                                    //boots
-                                    case 4:
-                                        {
-                                            if (selected is Boots sel)
+                                    switch (it.y)
+                                    {
+                                        case 4:
                                             {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Boots;
-                                                player.Boots = sel;
-                                                if (selected == null)
+                                                if (ith is Boots boo)
                                                 {
-                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 83);
-                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                    uit.x = 0;
+                                                    uit.y = 4;
+                                                    p.Boots = boo;
+                                                    doit = true;
+                                                }
+                                                if (ith == null)
+                                                {
+                                                    uit.x = 0;
+                                                    uit.y = 4;
+                                                    p.Boots = null;
+                                                    doit = true;
                                                 }
                                             }
-                                            else if (selected == null)
+                                            break;
+                                        case 5:
                                             {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Boots;
-                                                player.Boots = null;
-                                            }
-                                        }
-                                        return;
-                                    //leggings
-                                    case 5:
-                                        {
-                                            if (selected is Legging sel)
-                                            {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Legging;
-                                                player.Legging = sel;
-                                                if (selected == null)
+                                                if (ith is Legging le)
                                                 {
-                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 59);
-                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                    uit.x = 0;
+                                                    uit.y = 5;
+                                                    p.Legging = le;
+                                                    doit = true;
+                                                }
+                                                if (ith == null)
+                                                {
+                                                    uit.x = 0;
+                                                    uit.y = 5;
+                                                    p.Legging = null;
+                                                    doit = true;
                                                 }
                                             }
-                                            else if (selected == null)
+                                            break;
+                                        case 6:
                                             {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Legging;
-                                                player.Legging = null;
-                                            }
-                                        }
-                                        return;
-                                    //chestplate
-                                    case 6:
-                                        {
-                                            if (selected is ChestPlate sel)
-                                            {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.ChestPlate;
-                                                player.ChestPlate = sel;
-                                                if (selected == null)
+                                                if (ith is ChestPlate ch)
                                                 {
-                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 34);
-                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                    uit.x = 0;
+                                                    uit.y = 6;
+                                                    p.ChestPlate = ch;
+                                                    doit = true;
+                                                }
+                                                if (ith == null)
+                                                {
+                                                    uit.x = 0;
+                                                    uit.y = 6;
+                                                    p.ChestPlate = null;
+                                                    doit = true;
                                                 }
                                             }
-                                            else if (selected == null)
+                                            break;
+                                        case 7:
                                             {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.ChestPlate;
-                                                player.ChestPlate = null;
-                                            }
-                                        }
-                                        return;
-                                    //helmet
-                                    case 7:
-                                        {
-                                            if (selected is Helmet sel)
-                                            {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Helmet;
-                                                player.Helmet = sel;
-                                                if (selected == null)
+                                                if (ith is Helmet hel)
                                                 {
-                                                    Canvas.SetTop(Canvas.Children[b], Height / 5 + 10);
-                                                    Canvas.SetLeft(Canvas.Children[b], Width / 3 + 25);
+                                                    uit.x = 0;
+                                                    uit.y = 7;
+                                                    p.Helmet = hel;
+                                                    doit = true;
+                                                }
+                                                if (ith == null)
+                                                {
+                                                    uit.x = 0;
+                                                    uit.y = 7;
+                                                    p.Helmet = null;
+                                                    doit = true;
                                                 }
                                             }
-                                            else if (selected == null)
-                                            {
-                                                SwapWithSelect(b, selected == null);
-                                                selected = player.Helmet;
-                                                player.Helmet = null;
-                                            }
-                                        }
-                                        return;
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-            else
-            {
-                int x = (int)((pos.X - Width / 3 - 25) / 24.5);
-                int y = (int)(((pos.Y - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
-                Item item = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
-                if (item != null)
-                {
-                    foreach (UIElement a in Canvas.Children)
-                    {
-                        if (a is Image img)
-                        {
-                            int y1 = (int)(((Canvas.GetTop(a) - Height / 2 + Height / 8 - 2) / 27) - 5) * -1;
-                            int x1 = (int)((Canvas.GetLeft(a) - Width / 3 - 25) / 24.5);
-                            if (y1 == y && x1 == x)
-                            {
-                                int b = Canvas.Children.IndexOf(a);
-
-                                Item s = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
-                                if (selected != null && s != null)
-                                {
-                                    if (s.id() == selected.id()) {
-                                        if (s.MaxQuantity >= s.Quantity + selected.Quantity)
-                                        {
-                                            s.Quantity += selected.Quantity;
-                                            Canvas.Children.RemoveAt(Canvas.Children.Count - 1);
-                                            selected = null;
-                                        }
-                                        else
-                                        {
-                                            int an = s.MaxQuantity - s.Quantity;
-                                            s.Quantity = s.MaxQuantity;
-                                            selected.Quantity -= an;
-                                        }
-                                        return;
+                                            break;
                                     }
                                 }
-
-                                player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
-
-                                SwapWithSelect(b, selected == null);
-                                selected = item;
-                                break;
                             }
                         }
+                        else
+                        {
+                            doit = true;
+                            uit.x = it.x;
+                            uit.y = it.y;
+                            player.Inventaire.SetItem(uit.item, it.x + (it.y * player.Inventaire.Width));
+                            if (it.item != null)
+                            {
+                                player.Inventaire.RemoveItem(it.item);
+                            }
+                        }
+                        if (doit == true)
+                        {
+                            double x = uit.pix;
+                            double y = uit.piy;
+                            inv.Move(selected, it.pix, it.piy);
+                            selected = h;
+                            inv.Move(selected, x, y);
+                        }
+                        break;
                     }
-                }
-                else if (selected != null)
-                {
-                    Canvas.SetTop(Canvas.Children[Canvas.Children.Count - 1], Height / 2 + Height / 8 - (y * 27) + 2);
-                    Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], Width / 3 + (x * 24.5) + 25);
-                    player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
-                    selected = null;
+
                 }
             }
-            */
         }
 
         private void SelectedMove(object sender, MouseEventArgs e)
         {
-            if (selected != -1 && inv != null)
+            if (inv != null)
             {
                 Point p = e.GetPosition(Canvas);
-                inv.Move(selected, p.X-inv.ItWidth/2, p.Y - inv.ItHeight / 2);
-                Canvas.Children.Remove(inv);
-                Canvas.Children.Add(inv);
+                inv.Move(selected, p.X - inv.ItWidth / 2, p.Y - inv.ItHeight / 2);
             }
         }
 
@@ -346,14 +247,26 @@ namespace Minecraft
         {
             if (inv != null)
             {
-                if (selected != -1)
+                if (inv.inv is Player) {
+                    Inventaire pinv = new Inventaire(player.Inventaire.Width, player.Inventaire.Height);
+                    foreach (UI_Item ith in inv.items)
+                    {
+                        if (ith.item != null && ith.x >= 0 && ith.x < pinv.Width && ith.y >= 0 && ith.y < pinv.Height)
+                        {
+                            pinv.SetItem(ith.item, ith.x + (ith.y * player.Inventaire.Width));
+                        }
+                    }
+                    player.Inventaire = pinv;
+                }
+
+                Item it = inv.GetItem(selected).item;
+                if (it != null)
                 {
-                    Item it = inv.GetItem(selected).item;
-                    player.Inventaire.RemoveItem(it);
                     player.Location.World.SpawnEntity(new Item_Entity(player.Location, it));
                     group.Children.Add(Model(new Item_Entity(player.Location, it).Model()));
-                    selected = -1;
                 }
+
+                inv = null;
                 Canvas.Children.Clear();
             }
         }
@@ -456,62 +369,65 @@ namespace Minecraft
 
         public void Grid_MousePress(object sender, MouseButtonEventArgs e)
         {
-            MouseButton button = e.ChangedButton;
-            switch (button)
+            if (inv == null)
             {
-                case MouseButton.Right:
-                    {
-                        object qqch = player.GetInFrontOfHim(20);
-                        if (qqch != null)
+                MouseButton button = e.ChangedButton;
+                switch (button)
+                {
+                    case MouseButton.Right:
                         {
-                            if (qqch is Block bl)
+                            object qqch = player.GetInFrontOfHim(20);
+                            if (qqch != null)
                             {
-                                object ob = bl.Right_Click(player, new Wooden_Block(bl.Location), bl.Location);
-                                if (ob != null)
+                                if (qqch is Block bl)
                                 {
-                                    if (ob is Block blo)
+                                    object ob = bl.Right_Click(player, new Wooden_Block(bl.Location), bl.Location);
+                                    if (ob != null)
                                     {
-                                        List<Block> blockss = blocks.ToList();
-                                        blockss.Add(blo);
-                                        blocks = blockss.ToArray();
-                                        UpdateBlock(group.Children.Count, blo);
+                                        if (ob is Block blo)
+                                        {
+                                            List<Block> blockss = blocks.ToList();
+                                            blockss.Add(blo);
+                                            blocks = blockss.ToArray();
+                                            UpdateBlock(group.Children.Count, blo);
+                                        }
+                                        if (ob is Inventaire inv)
+                                        {
+                                            ShowInventory(inv);
+                                        }
                                     }
-                                    if (ob is Inventaire inv)
-                                    {
-                                        ShowInventory(inv);
-                                    }
+                                    return;
                                 }
-                                return;
                             }
                         }
-                    }
-                    break;
-                case MouseButton.Left:
-                    {
-                        object qqch = player.GetInFrontOfHim(20);
-                        if (qqch != null)
+                        break;
+                    case MouseButton.Left:
                         {
-                            if (qqch is Entity ent)
+                            object qqch = player.GetInFrontOfHim(20);
+                            if (qqch != null)
                             {
-                                bool died = ent.TakeDamage(new PhysicalDamage(1));
+                                if (qqch is Entity ent)
+                                {
+                                    bool died = ent.TakeDamage(new PhysicalDamage(1));
 
-                                // TODO: enlever model losque sera implementer
-                            }
-                            if (qqch is Block block)
-                            {
-                                block.Left_Click(player);
+                                    // TODO: enlever model losque sera implementer
+                                }
+                                if (qqch is Block block)
+                                {
+                                    block.Left_Click(player);
 
-                                List<Block> bl = blocks.ToList();
-                                int i = bl.IndexOf(block);
-                                group.Children.RemoveAt(i + 2);
-                                bl.Remove(block);
-                                blocks = bl.ToArray();
+                                    List<Block> bl = blocks.ToList();
+                                    int i = bl.IndexOf(block);
+                                    group.Children.RemoveAt(i + 2);
+                                    bl.Remove(block);
+                                    blocks = bl.ToArray();
+                                }
                             }
                         }
-                    }
-                    break;
-                case MouseButton.Middle:
-                    break;
+                        break;
+                    case MouseButton.Middle:
+                        break;
+                }
             }
         }
 

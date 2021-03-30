@@ -20,22 +20,40 @@ namespace Minecraft
         public Item item;
         private double width;
         private double height;
-        public UI_Item(Item item, double pix, double piy,double width,double height)
+        public UI_Item(Item item, double pix, double piy, double width, double height, int x, int y)
         {
+            this.x = x;
+            this.y = y;
             this.item = item;
-            image = new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + (item is Armor?"Armors\\":"") + item.id() + ".png"));
-            x = pix;
-            y = piy;
+            if (item != null)
+            {
+                image = new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + (item is Armor ? "Armors\\" : "") + item.id() + ".png"));
+            }
+            this.pix = pix;
+            this.piy = piy;
             this.width = width;
             this.height = height;
         }
         public BitmapImage image;
-        public void Render(DrawingContext drawingContext)
+        protected override void OnRender(DrawingContext drawingContext)
         {
-            drawingContext.DrawImage(image, new Rect(new Point(x, y), new Point(x + width, y + height)));
-            drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25), new Point(x + width / 1.25f, y + height / 2));
+            base.OnRender(drawingContext);
+            if (item != null)
+            {
+                drawingContext.DrawImage(image, new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
+                if (item.Quantity != 1)
+                {
+                    drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25), new Point(pix + width / 1.25f, piy + height / 2));
+                }
+            }
+            else
+            {
+                drawingContext.DrawRectangle(Brushes.Black, new Pen(), new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
+            }
         }
-        public double x;
-        public double y;
+        public int x;
+        public int y;
+        public double pix;
+        public double piy;
     }
 }
