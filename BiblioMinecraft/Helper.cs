@@ -8,6 +8,9 @@ namespace BiblioMinecraft
 {
     public static class Helper
     {
+        public static double Width;
+        public static double Height;
+
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
         public static float Dist(Location loc1, Location loc2)

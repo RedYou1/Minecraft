@@ -24,6 +24,49 @@ namespace BiblioMinecraft.Entities
 
         public abstract void Die();
 
+
+        public virtual Game_Model Model()
+        {
+            Game_Model a = EntityModel();
+            for (int i = 0; i < a.model.Length; i++)
+            {
+                double[] rot = CoordToRot(a.model[i].Key);
+                rot[0] += loc.Pitch;
+                //rot[1] += yaw;
+                double dist = Math.Sqrt(a.model[i].Key[1] * a.model[i].Key[1] + (a.model[i].Key[0] * a.model[i].Key[0] + a.model[i].Key[2] * a.model[i].Key[2]));
+                double[] model = RotToCoord(rot, dist);
+                a.model[i].Key[0] = model[0];
+                a.model[i].Key[1] = model[1];
+                a.model[i].Key[2] = model[2];
+
+                a.model[i].Key[0] += loc.X;
+                a.model[i].Key[1] += loc.Y;
+                a.model[i].Key[2] += loc.Z;
+
+            }
+            //pitch += 0.01f;
+            return a;
+        }
+
+        protected double[] CoordToRot(double[] coord)
+        {
+            double[] rot = new double[2];
+            rot[0] = Math.Atan2(coord[0], coord[2]);
+            rot[1] = Math.Atan2(coord[1], Math.Sqrt(coord[0] * coord[0] + coord[2] * coord[2]));
+            return rot;
+        }
+
+        protected double[] RotToCoord(double[] rot, double dist)
+        {
+            double[] coord = new double[3];
+            coord[0] = Math.Cos(rot[1]) * Math.Sin(rot[0]) * dist;
+            coord[1] = Math.Sin(rot[1]) * dist;
+            coord[2] = Math.Cos(rot[1]) * Math.Cos(rot[0]) * dist;
+            return coord;
+        }
+
+        protected abstract Game_Model EntityModel();
+
         public void Move(float x, float y, float z, float pitch, float yaw)
         {
             loc.Move(x, y, z, pitch, yaw);

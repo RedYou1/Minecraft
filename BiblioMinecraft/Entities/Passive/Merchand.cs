@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BiblioMinecraft.Items;
+using BiblioMinecraft;
+using BiblioMinecraft.World_System;
 
 namespace BiblioMinecraft.Entities
 {
@@ -20,6 +22,14 @@ namespace BiblioMinecraft.Entities
             trades = new List<Trade>();
             trades.Add(new Trade(new Steak(1), 1, new Emerald(1), 1));
             trades.Add(new Trade(new Emerald(1), 1, new Steak(1), 1));
+        }
+
+        protected override Game_Model EntityModel()
+        {
+            KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]
+            {
+            };
+            return new Game_Model(model, Game_Model.GetImage(Helper.ImageFile + id() + ".png"));
         }
 
         public override object Right_Clicked(Player player, Item with)

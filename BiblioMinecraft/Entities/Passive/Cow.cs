@@ -23,6 +23,14 @@ namespace BiblioMinecraft.Entities
 
         }
 
+        protected override Game_Model EntityModel()
+        {
+            KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]
+            {
+            };
+            return new Game_Model(model, Game_Model.GetImage(Helper.ImageFile+id()+".png"));
+        }
+
         public override string id()
         {
             return "Cow";

@@ -179,6 +179,13 @@ namespace BiblioMinecraft.Entities
             return inv;
         }
 
+        protected override Game_Model EntityModel()
+        {
+            KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]{
+            };
+            return new Game_Model(model,Game_Model.GetImage(Helper.ImageFile+@"player.png"));
+        }
+
         public Inventaire Inventaire { get => inventaire; }
         public float Hunger { get => hunger; set => hunger = value; }
         public Helmet Helmet { get => helmet; set => helmet = value; }

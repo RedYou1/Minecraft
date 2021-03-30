@@ -32,11 +32,13 @@ namespace Minecraft
     {
         public static Block[] blocks;
         public static Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
-        public static Item selected = null;
+        public static int selected = -1;
         public MainWindow()
         {
             InitializeComponent();
             Helper.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
+
+            Canvas.MouseDown += ItemClickInv;
 
             Iron_Helmet hel = new Iron_Helmet();
             player.Inventaire.AddItem(hel);
@@ -83,94 +85,17 @@ namespace Minecraft
 
         }
 
+        private UI_Inventaire inv;
+
         public void ShowInventory(object cont)
         {
             RemoveInventory();
+            Helper.Width = Width;
+            Helper.Height = Height;
             if (cont is Player player)
             {
-                Image image = new Image();
-                image.Width = Width;
-                image.Height = Height / 2;
-                image.Source = new BitmapImage(new Uri(Helper.ImageFile + "inventory.png"));
-                Canvas.Children.Add(image);
-                Canvas.SetTop(image, Height / 5);
-
-                Func<string, double, bool> AddArmor = (id, i) =>
-                  {
-                      Image itImage = new Image();
-                      itImage.Width = 64 / 3;
-                      itImage.Height = 64 / 3;
-                      itImage.Source = new BitmapImage(new Uri(Helper.ImageFile + "Items\\Armors\\" + id + ".png"));
-                      itImage.MouseDown += ItemClickInv;
-                      Canvas.Children.Add(itImage);
-                      Canvas.SetTop(itImage, Height / 5 + i);
-                      Canvas.SetLeft(itImage, Width / 3 + 25);
-                      return true;
-                  };
-
-                if (player.Helmet != null)
-                {
-                    AddArmor(player.Helmet.id(), 10);
-                }
-                if (player.ChestPlate != null)
-                {
-                    AddArmor(player.ChestPlate.id(), 34);
-                }
-                if (player.Legging != null)
-                {
-                    AddArmor(player.Legging.id(), 59);
-                }
-                if (player.Boots != null)
-                {
-                    AddArmor(player.Boots.id(), 83);
-                }
-
-                Inventaire inv = player.Inventaire;
-                List<Func<bool>> tempqt = new List<Func<bool>>();
-                for (int i = 0; i < 4 * 9; i++)
-                {
-                    Item it = inv.GetItem(i);
-                    if (it != null)
-                    {
-                        int x = i % inv.Width;
-                        int y = (int)(i / inv.Width);
-
-                        tempqt.Add(() =>
-                        {
-                            String adi = "";
-                            if (it is Armor ar)
-                            {
-                                adi = "Armors\\";
-                            }
-                            Image itImage = new Image();
-                            itImage.Width = 64 / 3;
-                            itImage.Height = 64 / 3;
-                            itImage.Source = new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + adi + it.id() + ".png"));
-                            itImage.MouseDown += ItemClickInv;
-                            Canvas.Children.Add(itImage);
-                            Canvas.SetTop(itImage, Height / 2 + Height / 8 - (y * 27) + 2);
-                            Canvas.SetLeft(itImage, Width / 3 + (x * 24.5) + 25);
-                            return true;
-                        });
-
-                        if (it.Quantity != 1)
-                        {
-                            TextBlock tb = new TextBlock();
-                            tb.Text = "" + it.Quantity;
-                            tb.Background = Brushes.White;
-                            tb.Foreground = Brushes.Black;
-                            tb.Width = 25;
-                            tb.Height = 20;
-                            Canvas.Children.Add(tb);
-                            Canvas.SetTop(tb, Height / 2 + Height / 8 - ((y - 1) * 27) - 10);
-                            Canvas.SetLeft(tb, Width / 3 + ((x + 1) * 24.5) + 10);
-                        }
-                    }
-                }
-                foreach (Func<bool> a in tempqt)
-                {
-                    a();
-                }
+                inv = new UI_Inventaire(player, 32, 32);
+                Canvas.Children.Add(inv);
             }
             if (cont is Inventaire chest)
             {
@@ -183,43 +108,56 @@ namespace Minecraft
             }
         }
 
-        private void SwapWithSelect(int index, bool selnul)
-        {
-            UIElement t = Canvas.Children[Canvas.Children.Count - 1];
-            //Canvas.Children[Canvas.Children.Count - 1].
-            List<UIElement> ui = new List<UIElement>();
-            foreach (UIElement uiin in Canvas.Children)
-            {
-                ui.Add(uiin);
-            }
-            UIElement a = ui[ui.Count - 1];
-            if (selnul)
-            {
-                ui.Add(ui[index]);
-                ui.RemoveAt(index);
-            }
-            else
-            {
-                ui[ui.Count - 1] = ui[index];
-                a = ui[ui.Count - 1];
-                ui[index] = t;
-            }
-            Canvas.Children.Clear();
-            foreach (UIElement uiin in ui)
-            {
-                Canvas.Children.Add(uiin);
-            }
-            if (!selnul)
-            {
-                Canvas.SetTop(Canvas.Children[index], Canvas.GetTop(a));
-                Canvas.SetLeft(Canvas.Children[index], Canvas.GetLeft(a));
-            }
-        }
-
         private void ItemClickInv(object sender, MouseEventArgs e)
         {
             Point pos = e.GetPosition(Canvas);
 
+            UI_Item[] its = inv.GetItem(pos.X, pos.Y);
+            if (its.Length > 0)
+            {
+                if (selected == -1)
+                {
+                    player.Inventaire.RemoveItem(its[0].item);
+                    selected = inv.GetIndex(its[0].item);
+
+                    Point p = Mouse.GetPosition(Canvas);
+                    its[0].x = p.X - inv.ItWidth / 2;
+                    its[0].y = p.Y - inv.ItHeight / 2;
+                }
+                else if (its.Length > 1)
+                {
+                    for (int i = 0; i < its.Length; i++)
+                    {
+                        int h = inv.GetIndex(its[i].item);
+                        if (h != selected)
+                        {
+                            UI_Item it = inv.GetItem(h);
+
+                            int x = (int)((it.x - Helper.Width / 4 - 20) / 41);
+                            int y = (int)((it.y - Helper.Height + Helper.Height / 4 - 5) / -41 + 1);
+                            player.Inventaire.SetItem(inv.GetItem(selected).item, x + (y * player.Inventaire.Width));
+
+                            inv.Move(selected, it.x, it.y);
+                            selected = h;
+                            player.Inventaire.RemoveItem(inv.GetItem(selected).item);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    UI_Item it = inv.GetItem(selected);
+                    int x = (int)((it.x - Helper.Width / 4 - 20) / 41);
+                    int y = (int)((it.y - Helper.Height + Helper.Height / 4 - 5) / -41+1);
+                    player.Inventaire.SetItem(it.item,x+(y*player.Inventaire.Width));
+                    inv.Move(selected, Helper.Width / 4 + (x * 41) + 20, Helper.Height - Helper.Height / 4 - (y * 41) + 5);
+                    selected = -1;
+                }
+                Canvas.Children.Remove(inv);
+                Canvas.Children.Add(inv);
+            }
+
+            /*
             if (Height / 2.3f > pos.Y)
             {
                 //TODO: crafting
@@ -352,28 +290,35 @@ namespace Minecraft
                             if (y1 == y && x1 == x)
                             {
                                 int b = Canvas.Children.IndexOf(a);
+
+                                Item s = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
+                                if (selected != null && s != null)
+                                {
+                                    if (s.id() == selected.id()) {
+                                        if (s.MaxQuantity >= s.Quantity + selected.Quantity)
+                                        {
+                                            s.Quantity += selected.Quantity;
+                                            Canvas.Children.RemoveAt(Canvas.Children.Count - 1);
+                                            selected = null;
+                                        }
+                                        else
+                                        {
+                                            int an = s.MaxQuantity - s.Quantity;
+                                            s.Quantity = s.MaxQuantity;
+                                            selected.Quantity -= an;
+                                        }
+                                        return;
+                                    }
+                                }
+
                                 player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
 
                                 SwapWithSelect(b, selected == null);
                                 selected = item;
-                                return;
+                                break;
                             }
                         }
                     }
-
-                    /*
-                    foreach (UIElement a in Canvas.Children)
-                    {
-                        double y1 = Canvas.GetTop(a);
-                        double y2 = Height / 2 + Height / 8 - (y * 27) + 2;
-                        int x1 = (int)((Canvas.GetLeft(a)+10)/10);
-                        int x2 = (int)((Width / 3 + (x * 24.5) + 10)/10);
-                        if (y1 == y2 && x1 ==  x2)
-                        {
-                            Canvas.MouseMove += SelectedMove;
-                        }
-                    }
-                    */
                 }
                 else if (selected != null)
                 {
@@ -381,36 +326,36 @@ namespace Minecraft
                     Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], Width / 3 + (x * 24.5) + 25);
                     player.Inventaire.SetItem(selected, x + (y * player.Inventaire.Width));
                     selected = null;
-                    /*
-                    foreach (UIElement a in Canvas.Children)
-                    {
-                        if (Canvas.GetTop(a) == Height / 2 + Height / 8 - (y * 27) + 2 && Canvas.GetLeft(a) == Width / 3 + ((x + 1) * 24.5) + 10)
-                        {
-                            a.MouseMove -= SelectedMove;
-                        }
-                    }
-                    */
                 }
             }
+            */
         }
 
         private void SelectedMove(object sender, MouseEventArgs e)
         {
-            if (selected != null)
+            if (selected != -1 && inv != null)
             {
-                Canvas.SetTop(Canvas.Children[Canvas.Children.Count - 1], e.GetPosition(Canvas).Y);
-                Canvas.SetLeft(Canvas.Children[Canvas.Children.Count - 1], e.GetPosition(Canvas).X);
+                Point p = e.GetPosition(Canvas);
+                inv.Move(selected, p.X-inv.ItWidth/2, p.Y - inv.ItHeight / 2);
+                Canvas.Children.Remove(inv);
+                Canvas.Children.Add(inv);
             }
         }
 
         public void RemoveInventory()
         {
-            if (selected != null)
+            if (inv != null)
             {
-                player.Location.World.SpawnEntity(new Item_Entity(player.Location, selected));
-                selected = null;
+                if (selected != -1)
+                {
+                    Item it = inv.GetItem(selected).item;
+                    player.Inventaire.RemoveItem(it);
+                    player.Location.World.SpawnEntity(new Item_Entity(player.Location, it));
+                    group.Children.Add(Model(new Item_Entity(player.Location, it).Model()));
+                    selected = -1;
+                }
+                Canvas.Children.Clear();
             }
-            Canvas.Children.Clear();
         }
 
         public void GenerateWorld(World world)
@@ -454,7 +399,7 @@ namespace Minecraft
             {
                 if (block.Location.World.Name == player.Location.World.Name)
                 {
-                    group.Children[index] = BlockToModel(block);
+                    group.Children[index] = Model(block.Model());
                 }
                 else
                 {
@@ -465,7 +410,7 @@ namespace Minecraft
             {
                 if (block.Location.World.Name == player.Location.World.Name)
                 {
-                    group.Children.Add(BlockToModel(block));
+                    group.Children.Add(Model(block.Model()));
                 }
             }
         }
@@ -479,15 +424,18 @@ namespace Minecraft
             group.Children.Add(g2);
             foreach (Block block in blocks)
             {
-                group.Children.Add(BlockToModel(block));
+                group.Children.Add(Model(block.Model()));
+            }
+            foreach (Entity ent in player.Location.World.Entities)
+            {
+                group.Children.Add(Model(ent.Model()));
             }
         }
 
-        public static GeometryModel3D BlockToModel(Block block)
+        public static GeometryModel3D Model(Game_Model a)
         {
             MeshGeometry3D mesh = new MeshGeometry3D();
 
-            Game_Model a = block.Model();
             PointCollection pc = new PointCollection();
             for (int i = 0; i < a.model.Length; i++)
             {
