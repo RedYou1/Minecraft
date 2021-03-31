@@ -23,6 +23,11 @@ namespace BiblioMinecraft.Entities
 
         }
 
+        public override void Update()
+        {
+
+        }
+
         protected override Game_Model EntityModel()
         {
             KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]

@@ -103,6 +103,11 @@ namespace BiblioMinecraft.Entities
             return false;
         }
 
+        public override void Update()
+        {
+
+        }
+
         public void TakeItemAroundHim()
         {
             List<Item_Entity> ie = new List<Item_Entity>();
@@ -183,7 +188,7 @@ namespace BiblioMinecraft.Entities
         {
             KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]{
             };
-            return new Game_Model(model,Game_Model.GetImage(Helper.ImageFile+@"player.png"));
+            return new Game_Model(model,Game_Model.GetImage(Helper.ImageFile+@"Player.png"));
         }
 
         public Inventaire Inventaire { get => inventaire; }

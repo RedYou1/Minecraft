@@ -61,6 +61,11 @@ namespace BiblioMinecraft
             return X == loc.X && Y == loc.Y && Z == loc.Z && Pitch == loc.Pitch && Yaw == loc.Yaw;
         }
 
+        public Location Clone()
+        {
+            return new Location(x,y,z,pitch,yaw,world);
+        }
+
         public float X { get => x; }
         public float Y { get => y; }
         public float Z { get => z; }

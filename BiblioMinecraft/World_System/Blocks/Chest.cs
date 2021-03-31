@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using BiblioMinecraft.World_System.Models;
+using BiblioMinecraft.Entities;
 
 namespace BiblioMinecraft.World_System.Blocks
 {
@@ -31,8 +32,9 @@ namespace BiblioMinecraft.World_System.Blocks
             base.Destroy();
             foreach (Item it in inv.Items)
             {
-                Location.World.SpawnEntity(new Entities.Item_Entity(Location, it));
-                Helper.group.Children.Add(Helper.Model(new Entities.Item_Entity(Location, it).Model()));
+                Item_Entity ie = new Item_Entity(Location.Clone(), it);
+                Location.World.SpawnEntity(ie);
+                Helper.group.AddEntity(ie);
             }
         }
 

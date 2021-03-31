@@ -23,6 +23,11 @@ namespace BiblioMinecraft.Entities
             this.item = item;
         }
 
+        public override void Update()
+        {
+            Move(0,0,0,0,0.01f);
+        }
+
         public override string id()
         {
             return "Item_Entity " + item.id();

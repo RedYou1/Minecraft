@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BiblioMinecraft.Items;
 using BiblioMinecraft.Damages;
 using BiblioMinecraft.World_System;
+using System.Windows.Media.Media3D;
 
 namespace BiblioMinecraft.Entities
 {
@@ -31,8 +32,7 @@ namespace BiblioMinecraft.Entities
             for (int i = 0; i < a.model.Length; i++)
             {
                 double[] rot = CoordToRot(a.model[i].Key);
-                rot[0] += loc.Pitch;
-                //rot[1] += yaw;
+                rot[0] += loc.Yaw;
                 double dist = Math.Sqrt(a.model[i].Key[1] * a.model[i].Key[1] + (a.model[i].Key[0] * a.model[i].Key[0] + a.model[i].Key[2] * a.model[i].Key[2]));
                 double[] model = RotToCoord(rot, dist);
                 a.model[i].Key[0] = model[0];
@@ -42,9 +42,7 @@ namespace BiblioMinecraft.Entities
                 a.model[i].Key[0] += loc.X;
                 a.model[i].Key[1] += loc.Y;
                 a.model[i].Key[2] += loc.Z;
-
             }
-            //pitch += 0.01f;
             return a;
         }
 
@@ -65,15 +63,22 @@ namespace BiblioMinecraft.Entities
             return coord;
         }
 
+        public abstract void Update();
+
         protected abstract Game_Model EntityModel();
 
         public void Move(float x, float y, float z, float pitch, float yaw)
         {
+            
+            Helper.group.RemoveEntity(this);
             loc.Move(x, y, z, pitch, yaw);
+            Helper.group.AddEntity(this);
         }
         public void TP(float x, float y, float z, float pitch, float yaw)
         {
+            Helper.group.RemoveEntity(this);
             loc.TP(x, y, z, pitch, yaw);
+            Helper.group.AddEntity(this);
         }
 
         /// <summary>
@@ -115,10 +120,10 @@ namespace BiblioMinecraft.Entities
                     }
                 }
                 */
-                Block block = loc.World.GetBlock((int)Math.Floor(nloc.X+0.5f), (int)Math.Floor(nloc.Y+0.5f), (int)Math.Floor(nloc.Z+0.5f));
+                Block block = loc.World.GetBlock((int)Math.Floor(nloc.X + 0.5f), (int)Math.Floor(nloc.Y + 0.5f), (int)Math.Floor(nloc.Z + 0.5f));
                 if (block != null)
                 {
-                    return new KeyValuePair<Block,Location>(block,nloc);
+                    return new KeyValuePair<Block, Location>(block, nloc);
                 }
             }
             return null;
@@ -129,7 +134,7 @@ namespace BiblioMinecraft.Entities
             return id() == entity.id() && loc.Equals(entity.loc);
         }
 
-        public virtual object Right_Clicked(Player player,Item with)
+        public virtual object Right_Clicked(Player player, Item with)
         {
             return null;
         }

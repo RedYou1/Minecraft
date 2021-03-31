@@ -24,6 +24,11 @@ namespace BiblioMinecraft.Entities
             trades.Add(new Trade(new Emerald(1), 1, new Steak(1), 1));
         }
 
+        public override void Update()
+        {
+            
+        }
+
         protected override Game_Model EntityModel()
         {
             KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]

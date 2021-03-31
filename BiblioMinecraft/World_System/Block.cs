@@ -64,14 +64,7 @@ namespace BiblioMinecraft.World_System
         public virtual void Destroy()
         {
             loc.World.SetBlock((int)Math.Round(loc.X), (int)Math.Round(loc.Y), (int)Math.Round(loc.Z), null);
-            List<Block> bl = Helper.blocks.ToList();
-            int i = bl.IndexOf(this);
-            if (i != -1)
-            {
-                Helper.group.Children.RemoveAt(i + 2);
-                bl.Remove(this);
-                Helper.blocks = bl.ToArray();
-            }
+            Helper.group.RemoveBlock(this);
         }
 
         public virtual void Left_Click(BiblioMinecraft.Entities.Player player)

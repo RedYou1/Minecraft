@@ -21,8 +21,8 @@ namespace BiblioMinecraft
 
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
-        public static Model3DGroup group;
-        public static Block[] blocks;
+        public static Model3DHandeler group;
+        public static Entities.Player player = new Entities.Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
 
         public static float Dist(Location loc1, Location loc2)
         {
