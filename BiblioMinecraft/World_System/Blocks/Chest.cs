@@ -18,7 +18,7 @@ namespace BiblioMinecraft.World_System.Blocks
         //public float opened = 0;
         public Chest(Location loc) : base(loc)
         {
-            inv = new Inventaire(9, 2);
+            inv = new Inventaire(9, 3);
         }
 
         public override object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)

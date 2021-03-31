@@ -123,8 +123,19 @@ namespace Minecraft
                         UI_Item uit = inv.GetItem(selected);
 
                         bool doit = false;
-                        if (it.y > 3)
+                        if (it.y >= player.Inventaire.Height)
                         {
+                            if (inv.inv is Inventaire other)
+                            {
+                                doit = true;
+                                uit.x = it.x;
+                                uit.y = it.y;
+                                other.SetItem(uit.item, it.x + ((it.y- player.Inventaire.Height) * player.Inventaire.Width));
+                                if (it.item != null)
+                                {
+                                    other.RemoveItem(it.item);
+                                }
+                            }
                             if (inv.inv is Player p)
                             {
                                 Item ith = inv.GetItem(selected).item;
@@ -247,18 +258,6 @@ namespace Minecraft
         {
             if (inv != null)
             {
-                if (inv.inv is Player) {
-                    Inventaire pinv = new Inventaire(player.Inventaire.Width, player.Inventaire.Height);
-                    foreach (UI_Item ith in inv.items)
-                    {
-                        if (ith.item != null && ith.x >= 0 && ith.x < pinv.Width && ith.y >= 0 && ith.y < pinv.Height)
-                        {
-                            pinv.SetItem(ith.item, ith.x + (ith.y * player.Inventaire.Width));
-                        }
-                    }
-                    player.Inventaire = pinv;
-                }
-
                 Item it = inv.GetItem(selected).item;
                 if (it != null)
                 {

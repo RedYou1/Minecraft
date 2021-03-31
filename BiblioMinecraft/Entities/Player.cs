@@ -186,7 +186,7 @@ namespace BiblioMinecraft.Entities
             return new Game_Model(model,Game_Model.GetImage(Helper.ImageFile+@"player.png"));
         }
 
-        public Inventaire Inventaire { get => inventaire; set => inventaire = value; }
+        public Inventaire Inventaire { get => inventaire; }
         public float Hunger { get => hunger; set => hunger = value; }
         public Helmet Helmet { get => helmet; set => helmet = value; }
         public ChestPlate ChestPlate { get => chestPlate; set => chestPlate = value; }

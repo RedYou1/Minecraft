@@ -36,13 +36,13 @@ namespace Minecraft
             height = Helper.Height;
             this.itwidth = itwidth;
             this.itheight = itheight;
-            image = new BitmapImage(new Uri(Helper.ImageFile + "inventory.png"));
             items = new List<UI_Item>();
 
             items.Add(new UI_Item(null, width / 4 + (1 * 41) + 20, height - height / 4 - (1 * 41) + 5, itwidth, itheight, 0, 0));
 
             if (something is Player player)
             {
+                image = new BitmapImage(new Uri(Helper.ImageFile + "Player_Inventory.png"));
                 this.inv = player;
                 for (int x = 0; x < player.Inventaire.Width; x++)
                 {
@@ -59,6 +59,7 @@ namespace Minecraft
             }
             if (something is Inventaire inv)
             {
+                image = new BitmapImage(new Uri(Helper.ImageFile + "Chest_Inventory.png"));
                 this.inv = inv;
                 for (int x = 0; x < caster.Inventaire.Width; x++)
                 {
@@ -73,7 +74,7 @@ namespace Minecraft
                     for (int y = 0; y < inv.Height; y++)
                     {
                         Item it = inv.GetItem(x + (y * inv.Width));
-                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5 - height / 6 - 110, itwidth, itheight, x, y+3));
+                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5 - height / 6 - 110, itwidth, itheight, x, y+ caster.Inventaire.Height));
                     }
                 }
             }
@@ -98,29 +99,6 @@ namespace Minecraft
 
                 canvas.Children.Remove(items[index]);
                 canvas.Children.Add(items[index]);
-            }
-        }
-
-        public void Swap(int i1, int i2)
-        {
-            UI_Item t = items[i1];
-            items[i1] = items[i2];
-            items[i2] = t;
-
-            List<UIElement> ele = new List<UIElement>();
-            foreach (UIElement e in canvas.Children)
-            {
-                ele.Add(e);
-            }
-
-            UIElement tf = ele[i1 + 1];
-            ele[i1 + 1] = ele[i2 + 1];
-            ele[i2 + 1] = tf;
-
-            canvas.Children.Clear();
-            foreach (UIElement e in ele)
-            {
-                canvas.Children.Add(e);
             }
         }
 

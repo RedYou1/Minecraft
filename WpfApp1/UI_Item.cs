@@ -46,10 +46,6 @@ namespace Minecraft
                     drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25), new Point(pix + width / 1.25f, piy + height / 2));
                 }
             }
-            else
-            {
-                drawingContext.DrawRectangle(Brushes.Black, new Pen(), new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
-            }
         }
         public int x;
         public int y;
