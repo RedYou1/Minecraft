@@ -33,6 +33,53 @@ namespace BiblioMinecraft.Entities
         {
             KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]
             {
+                // Front face
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, 0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, 0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, 0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, 0.5 },new double[]{ 0 , 1}),
+
+                // Back face
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, -0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, -0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, -0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, -0.5 },new double[]{ 1 , 1}),
+
+                // Right face
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, -0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, 0.5 },new double[]{ 0 , 1}),
+
+                // Left face
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, -0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, -0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, -0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, 0.5 },new double[]{ 1 , 1}),
+
+                // Top face
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, -0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, -0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, -0.5 },new double[]{ 1 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, 0.5, 0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, 0.5, 0.5 },new double[]{ 1 , 0}),
+
+                // Buttom face
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, -0.5 },new double[]{ 0 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, 0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ -0.5, -0.5, 0.5 },new double[]{ 0 , 1}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, -0.5 },new double[]{ 1 , 0}),
+                new KeyValuePair<double[],double[]>(new double[]{ 0.5, -0.5, 0.5 },new double[]{ 1 , 1})
             };
             return new Game_Model(model, Game_Model.GetImage(Helper.ImageFile + id() + ".png"));
         }
@@ -49,6 +96,7 @@ namespace BiblioMinecraft.Entities
 
         public override void Die()
         {
+            base.Die();
             foreach (Item item in inventaire.Items)
             {
                 if (item != null)
@@ -79,7 +127,7 @@ namespace BiblioMinecraft.Entities
             return inv;
         }
 
-        public Inventaire Inventaire { get => inventaire.Clone(); }
+        public Inventaire Inventaire { get => inventaire; }
         public Trade[] Trades { get => trades.ToArray(); }
     }
 }

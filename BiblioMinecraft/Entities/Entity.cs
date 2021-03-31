@@ -23,7 +23,11 @@ namespace BiblioMinecraft.Entities
 
         public abstract String id();
 
-        public abstract void Die();
+        public virtual void Die()
+        {
+            loc.World.RemoveEntity(this);
+            Helper.group.RemoveEntity(this);
+        }
 
 
         public virtual Game_Model Model()
@@ -108,7 +112,7 @@ namespace BiblioMinecraft.Entities
                     (float)Math.Sin(Pitch) * i + Y,
                     (float)Math.Cos(Pitch) * (float)Math.Cos(Yaw) * i + Z,
                     Pitch, Yaw, loc.World);
-                /*
+                
                 foreach (Entity ent in loc.World.Entities)
                 {
                     if ((int)ent.X == (int)nloc.X && (int)ent.Y == (int)nloc.Y && (int)ent.Z == (int)nloc.Z)
@@ -119,7 +123,7 @@ namespace BiblioMinecraft.Entities
                         }
                     }
                 }
-                */
+                
                 Block block = loc.World.GetBlock((int)Math.Floor(nloc.X + 0.5f), (int)Math.Floor(nloc.Y + 0.5f), (int)Math.Floor(nloc.Z + 0.5f));
                 if (block != null)
                 {

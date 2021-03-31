@@ -103,13 +103,10 @@ namespace BiblioMinecraft.World_System
             {
                 block.Location = new Location(X + 1, Y, Z, loc.World);
             }
-            else
-            {
-                return null;
-            }
-
+            
             loc.World.SetBlock(block);
-            return block;
+            Helper.group.AddBlock(block);
+            return null;
         }
 
         public bool Equal(Block block)

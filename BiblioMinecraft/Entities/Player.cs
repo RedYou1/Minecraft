@@ -33,6 +33,7 @@ namespace BiblioMinecraft.Entities
 
         public override void Die()
         {
+            base.Die();
             foreach (Item item in inventaire.Items)
             {
                 if (item != null)

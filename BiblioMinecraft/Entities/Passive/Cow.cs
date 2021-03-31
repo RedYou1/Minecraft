@@ -12,10 +12,10 @@ namespace BiblioMinecraft.Entities
     {
         public override void Die()
         {
+            base.Die();
             Random r = new Random();
             int a = r.Next(1,4);
             loc.World.SpawnEntity(new Item_Entity(this.loc,new Steak(a)));
-            loc.World.RemoveEntity(this);
         }
 
         public Cow(Location loc) : base(loc, 10)

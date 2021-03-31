@@ -71,6 +71,10 @@ namespace Minecraft
             GenerateWorld(Helper.player.Location.World);
             RegenerateWorld();
 
+            Merchand mer = new Merchand(new Location(-5,5,5,Helper.player.Location.World));
+            Helper.player.Location.World.SpawnEntity(mer);
+            Helper.group.AddEntity(mer);
+
             camera.Position = new Point3D(
                     Helper.player.X,
                     Helper.player.Y,
@@ -341,15 +345,15 @@ namespace Minecraft
                             object qqch = Helper.player.GetInFrontOfHim(20);
                             if (qqch != null)
                             {
+                                if (qqch is Merchand mer)
+                                {
+                                    ShowInventory(mer.Inventaire);
+                                }
                                 if (qqch is KeyValuePair<Block, Location> bl)
                                 {
                                     object ob = bl.Key.Right_Click(Helper.player, new Wooden_Block(bl.Value), bl.Value);
                                     if (ob != null)
                                     {
-                                        if (ob is Block blo)
-                                        {
-                                            Helper.group.AddBlock(blo);
-                                        }
                                         if (ob is Inventaire inv)
                                         {
                                             ShowInventory(inv);
@@ -367,9 +371,7 @@ namespace Minecraft
                             {
                                 if (qqch is Entity ent)
                                 {
-                                    bool died = ent.TakeDamage(new PhysicalDamage(1));
-
-                                    // TODO: enlever model losque sera implementer
+                                    ent.TakeDamage(new PhysicalDamage(1));
                                 }
                                 if (qqch is KeyValuePair<Block, Location> block)
                                 {

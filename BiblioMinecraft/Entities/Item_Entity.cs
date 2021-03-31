@@ -11,11 +11,6 @@ namespace BiblioMinecraft.Entities
 {
     public class Item_Entity : Entity
     {
-        public override void Die()
-        {
-            loc.World.RemoveEntity(this);
-        }
-
         private Item item;
 
         public Item_Entity(Location loc,Item item) : base(loc, 1)

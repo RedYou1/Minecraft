@@ -38,6 +38,7 @@ namespace Minecraft
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
+            //drawingContext.DrawRectangle(Brushes.Black,new Pen(), new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
             if (item != null)
             {
                 drawingContext.DrawImage(image, new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
