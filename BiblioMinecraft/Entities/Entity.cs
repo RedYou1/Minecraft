@@ -118,7 +118,7 @@ namespace BiblioMinecraft.Entities
                 Block block = loc.World.GetBlock((int)Math.Floor(nloc.X+0.5f), (int)Math.Floor(nloc.Y+0.5f), (int)Math.Floor(nloc.Z+0.5f));
                 if (block != null)
                 {
-                    return block;
+                    return new KeyValuePair<Block,Location>(block,nloc);
                 }
             }
             return null;

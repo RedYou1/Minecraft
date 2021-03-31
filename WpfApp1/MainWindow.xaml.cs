@@ -30,7 +30,6 @@ namespace Minecraft
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static Block[] blocks;
         public Player player = new Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
         public static int selected = 0;
         public MainWindow()
@@ -39,6 +38,7 @@ namespace Minecraft
             Helper.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
             Canvas.MouseDown += ItemClickInv;
+            Helper.group = group;
 
             Iron_Helmet hel = new Iron_Helmet();
             player.Inventaire.AddItem(hel);
@@ -130,7 +130,7 @@ namespace Minecraft
                                 doit = true;
                                 uit.x = it.x;
                                 uit.y = it.y;
-                                other.SetItem(uit.item, it.x + ((it.y- player.Inventaire.Height) * player.Inventaire.Width));
+                                other.SetItem(uit.item, it.x + ((it.y - player.Inventaire.Height) * player.Inventaire.Width));
                                 if (it.item != null)
                                 {
                                     other.RemoveItem(it.item);
@@ -262,7 +262,7 @@ namespace Minecraft
                 if (it != null)
                 {
                     player.Location.World.SpawnEntity(new Item_Entity(player.Location, it));
-                    group.Children.Add(Model(new Item_Entity(player.Location, it).Model()));
+                    group.Children.Add(Helper.Model(new Item_Entity(player.Location, it).Model()));
                 }
 
                 inv = null;
@@ -289,7 +289,7 @@ namespace Minecraft
 
         public void RegenerateWorld()
         {
-            blocks = player.Location.World.Blocks;
+            Helper.blocks = player.Location.World.Blocks;
             UpdateWorld();
         }
 
@@ -311,7 +311,7 @@ namespace Minecraft
             {
                 if (block.Location.World.Name == player.Location.World.Name)
                 {
-                    group.Children[index] = Model(block.Model());
+                    group.Children[index] = Helper.Model(block.Model());
                 }
                 else
                 {
@@ -322,7 +322,7 @@ namespace Minecraft
             {
                 if (block.Location.World.Name == player.Location.World.Name)
                 {
-                    group.Children.Add(Model(block.Model()));
+                    group.Children.Add(Helper.Model(block.Model()));
                 }
             }
         }
@@ -334,36 +334,14 @@ namespace Minecraft
             group.Children.Clear();
             group.Children.Add(g1);
             group.Children.Add(g2);
-            foreach (Block block in blocks)
+            foreach (Block block in Helper.blocks)
             {
-                group.Children.Add(Model(block.Model()));
+                group.Children.Add(Helper.Model(block.Model()));
             }
             foreach (Entity ent in player.Location.World.Entities)
             {
-                group.Children.Add(Model(ent.Model()));
+                group.Children.Add(Helper.Model(ent.Model()));
             }
-        }
-
-        public static GeometryModel3D Model(Game_Model a)
-        {
-            MeshGeometry3D mesh = new MeshGeometry3D();
-
-            PointCollection pc = new PointCollection();
-            for (int i = 0; i < a.model.Length; i++)
-            {
-                KeyValuePair<double[], double[]> paire = a.model[i];
-                double[] vertex = paire.Key;
-                double[] tex = paire.Value;
-                mesh.Positions.Add(new Point3D(vertex[0], vertex[1], vertex[2]));
-                pc.Add(new Point(tex[0], tex[1]));
-                mesh.TriangleIndices.Add(i);
-            }
-            mesh.TextureCoordinates = pc;
-
-            GeometryModel3D mGeometry = new GeometryModel3D(mesh, a.mat);
-            Transform3DGroup trans = new Transform3DGroup();
-            mGeometry.Transform = trans;
-            return mGeometry;
         }
 
         public void Grid_MousePress(object sender, MouseButtonEventArgs e)
@@ -378,16 +356,16 @@ namespace Minecraft
                             object qqch = player.GetInFrontOfHim(20);
                             if (qqch != null)
                             {
-                                if (qqch is Block bl)
+                                if (qqch is KeyValuePair<Block, Location> bl)
                                 {
-                                    object ob = bl.Right_Click(player, new Wooden_Block(bl.Location), bl.Location);
+                                    object ob = bl.Key.Right_Click(player, new Wooden_Block(bl.Value), bl.Value);
                                     if (ob != null)
                                     {
                                         if (ob is Block blo)
                                         {
-                                            List<Block> blockss = blocks.ToList();
-                                            blockss.Add(blo);
-                                            blocks = blockss.ToArray();
+                                            List<Block> blocks = Helper.blocks.ToList();
+                                            blocks.Add(blo);
+                                            Helper.blocks = blocks.ToArray();
                                             UpdateBlock(group.Children.Count, blo);
                                         }
                                         if (ob is Inventaire inv)
@@ -414,12 +392,6 @@ namespace Minecraft
                                 if (qqch is Block block)
                                 {
                                     block.Left_Click(player);
-
-                                    List<Block> bl = blocks.ToList();
-                                    int i = bl.IndexOf(block);
-                                    group.Children.RemoveAt(i + 2);
-                                    bl.Remove(block);
-                                    blocks = bl.ToArray();
                                 }
                             }
                         }
@@ -434,13 +406,7 @@ namespace Minecraft
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
-            float pitch = player.Pitch;
-            float yaw = player.Yaw;
-            Key key = e.Key;
-            float speed = 0.12f;
-            float speedrot = 0.02f;
-
-            if (key == Key.F)
+            if (e.Key == Key.F)
             {
                 if (Canvas.Children.Count > 0)
                 {
@@ -452,112 +418,120 @@ namespace Minecraft
                 }
                 return;
             }
-
-            if (key == Key.Delete)
+            if (inv == null)
             {
-                player.Location.ChangeWorld(player.X, player.Y, player.Z, player.Pitch, player.Yaw, new World());
-                GenerateWorld(player.Location.World);
-                RegenerateWorld();
-                return;
-            }
+                float pitch = player.Pitch;
+                float yaw = player.Yaw;
+                Key key = e.Key;
+                float speed = 0.12f;
+                float speedrot = 0.02f;
 
-            if (key == Key.Y)
-            {
-                blocks[blocks.Length - 1].Move(0, 0, 0, 0.2f, 0);
-                UpdateBlock(group.Children.Count - 1, blocks[blocks.Length - 1]);
-                return;
-            }
+                if (key == Key.Delete)
+                {
+                    player.Location.ChangeWorld(player.X, player.Y, player.Z, player.Pitch, player.Yaw, new World());
+                    GenerateWorld(player.Location.World);
+                    RegenerateWorld();
+                    return;
+                }
 
-            if (key == Key.LeftCtrl)
-            {
-                ctrl = !ctrl;
+                if (key == Key.Y)
+                {
+                    Helper.blocks[Helper.blocks.Length - 1].Move(0, 0, 0, 0.2f, 0);
+                    UpdateBlock(group.Children.Count - 1, Helper.blocks[Helper.blocks.Length - 1]);
+                    return;
+                }
+
+                if (key == Key.LeftCtrl)
+                {
+                    ctrl = !ctrl;
+                    if (ctrl)
+                    {
+                        button.Content = "Creative";
+                    }
+                    else
+                    {
+                        button.Content = "Spectator";
+                    }
+                    return;
+                }
                 if (ctrl)
                 {
-                    button.Content = "Creative";
+                    switch (key)
+                    {
+                        case Key.W:
+                            player.Move((float)Math.Sin(yaw) * speed, 0, (float)Math.Cos(yaw) * speed, 0, 0);
+                            break;
+                        case Key.S:
+                            player.Move((float)Math.Sin(yaw) * -speed, 0, (float)Math.Cos(yaw) * -speed, 0, 0);
+                            break;
+                        case Key.A:
+                            player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
+                            break;
+                        case Key.D:
+                            player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
+                            break;
+                        case Key.Space:
+                            player.Move(0, speed, 0, 0, 0);
+                            break;
+                        case Key.LeftShift:
+                            player.Move(0, -speed, 0, 0, 0);
+                            break;
+                        case Key.K:
+                            player.Move(0, 0, 0, -speedrot, 0);
+                            break;
+                        case Key.L:
+                            player.Move(0, 0, 0, speedrot, 0);
+                            break;
+                        case Key.E:
+                            player.Move(0, 0, 0, 0, -speedrot);
+                            break;
+                        case Key.Q:
+                            player.Move(0, 0, 0, 0, speedrot);
+                            break;
+                    }
                 }
                 else
                 {
-                    button.Content = "Spectator";
+                    switch (key)
+                    {
+                        case Key.W:
+                            player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * speed, (float)Math.Sin(pitch) * speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * speed, 0, 0);
+                            break;
+                        case Key.S:
+                            player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * -speed, (float)Math.Sin(pitch) * -speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * -speed, 0, 0);
+                            break;
+                        case Key.A:
+                            player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
+                            break;
+                        case Key.D:
+                            player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
+                            break;
+                        case Key.Space:
+                            player.Move(0, speed, 0, 0, 0);
+                            break;
+                        case Key.LeftShift:
+                            player.Move(0, -speed, 0, 0, 0);
+                            break;
+                        case Key.K:
+                            player.Move(0, 0, 0, -speedrot, 0);
+                            break;
+                        case Key.L:
+                            player.Move(0, 0, 0, speedrot, 0);
+                            break;
+                        case Key.E:
+                            player.Move(0, 0, 0, 0, -speedrot);
+                            break;
+                        case Key.Q:
+                            player.Move(0, 0, 0, 0, speedrot);
+                            break;
+                    }
                 }
-                return;
+                camera.Position = new Point3D(
+                        player.X,
+                        player.Y,
+                        player.Z);
+                camera.LookDirection = new Vector3D((float)Math.Cos(player.Pitch) * (float)Math.Sin(player.Yaw), (float)Math.Sin(player.Pitch), (float)Math.Cos(player.Pitch) * (float)Math.Cos(player.Yaw));
             }
-            if (ctrl)
-            {
-                switch (key)
-                {
-                    case Key.W:
-                        player.Move((float)Math.Sin(yaw) * speed, 0, (float)Math.Cos(yaw) * speed, 0, 0);
-                        break;
-                    case Key.S:
-                        player.Move((float)Math.Sin(yaw) * -speed, 0, (float)Math.Cos(yaw) * -speed, 0, 0);
-                        break;
-                    case Key.A:
-                        player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
-                        break;
-                    case Key.D:
-                        player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
-                        break;
-                    case Key.Space:
-                        player.Move(0, speed, 0, 0, 0);
-                        break;
-                    case Key.LeftShift:
-                        player.Move(0, -speed, 0, 0, 0);
-                        break;
-                    case Key.K:
-                        player.Move(0, 0, 0, -speedrot, 0);
-                        break;
-                    case Key.L:
-                        player.Move(0, 0, 0, speedrot, 0);
-                        break;
-                    case Key.E:
-                        player.Move(0, 0, 0, 0, -speedrot);
-                        break;
-                    case Key.Q:
-                        player.Move(0, 0, 0, 0, speedrot);
-                        break;
-                }
-            }
-            else
-            {
-                switch (key)
-                {
-                    case Key.W:
-                        player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * speed, (float)Math.Sin(pitch) * speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * speed, 0, 0);
-                        break;
-                    case Key.S:
-                        player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * -speed, (float)Math.Sin(pitch) * -speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * -speed, 0, 0);
-                        break;
-                    case Key.A:
-                        player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
-                        break;
-                    case Key.D:
-                        player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
-                        break;
-                    case Key.Space:
-                        player.Move(0, speed, 0, 0, 0);
-                        break;
-                    case Key.LeftShift:
-                        player.Move(0, -speed, 0, 0, 0);
-                        break;
-                    case Key.K:
-                        player.Move(0, 0, 0, -speedrot, 0);
-                        break;
-                    case Key.L:
-                        player.Move(0, 0, 0, speedrot, 0);
-                        break;
-                    case Key.E:
-                        player.Move(0, 0, 0, 0, -speedrot);
-                        break;
-                    case Key.Q:
-                        player.Move(0, 0, 0, 0, speedrot);
-                        break;
-                }
-            }
-            camera.Position = new Point3D(
-                    player.X,
-                    player.Y,
-                    player.Z);
-            camera.LookDirection = new Vector3D((float)Math.Cos(player.Pitch) * (float)Math.Sin(player.Yaw), (float)Math.Sin(player.Pitch), (float)Math.Cos(player.Pitch) * (float)Math.Cos(player.Yaw));
         }
     }
 }

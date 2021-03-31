@@ -26,6 +26,16 @@ namespace BiblioMinecraft.World_System.Blocks
             return inv;
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+            foreach (Item it in inv.Items)
+            {
+                Location.World.SpawnEntity(new Entities.Item_Entity(Location, it));
+                Helper.group.Children.Add(Helper.Model(new Entities.Item_Entity(Location, it).Model()));
+            }
+        }
+
         public override Game_Model Model()
         {
             Game_Model Cbase = base.Model();

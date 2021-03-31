@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Markup;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.Imaging;
+using BiblioMinecraft.World_System;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BiblioMinecraft
 {
@@ -13,6 +21,9 @@ namespace BiblioMinecraft
 
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
+        public static Model3DGroup group;
+        public static Block[] blocks;
+
         public static float Dist(Location loc1, Location loc2)
         {
             return Dist(loc1.X, loc2.X, loc1.Y, loc2.Y, loc1.Z, loc2.Z);
@@ -20,6 +31,28 @@ namespace BiblioMinecraft
         public static float Dist(float x1, float x2, float y1, float y2, float z1, float z2)
         {
             return (float)Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(z1 - z2, 2) + Math.Pow(y1 - y2, 2));
+        }
+
+        public static GeometryModel3D Model(Game_Model a)
+        {
+            MeshGeometry3D mesh = new MeshGeometry3D();
+
+            PointCollection pc = new PointCollection();
+            for (int i = 0; i < a.model.Length; i++)
+            {
+                KeyValuePair<double[], double[]> paire = a.model[i];
+                double[] vertex = paire.Key;
+                double[] tex = paire.Value;
+                mesh.Positions.Add(new Point3D(vertex[0], vertex[1], vertex[2]));
+                pc.Add(new Point(tex[0], tex[1]));
+                mesh.TriangleIndices.Add(i);
+            }
+            mesh.TextureCoordinates = pc;
+
+            GeometryModel3D mGeometry = new GeometryModel3D(mesh, a.mat);
+            Transform3DGroup trans = new Transform3DGroup();
+            mGeometry.Transform = trans;
+            return mGeometry;
         }
     }
 }

@@ -64,6 +64,14 @@ namespace BiblioMinecraft.World_System
         public virtual void Destroy()
         {
             loc.World.SetBlock((int)Math.Round(loc.X), (int)Math.Round(loc.Y), (int)Math.Round(loc.Z), null);
+            List<Block> bl = Helper.blocks.ToList();
+            int i = bl.IndexOf(this);
+            if (i != -1)
+            {
+                Helper.group.Children.RemoveAt(i + 2);
+                bl.Remove(this);
+                Helper.blocks = bl.ToArray();
+            }
         }
 
         public virtual void Left_Click(BiblioMinecraft.Entities.Player player)
@@ -92,7 +100,7 @@ namespace BiblioMinecraft.World_System
             }
             else if (yaw >= Math.PI / 2 - Math.PI / 4 && yaw <= Math.PI / 2 + Math.PI / 4)
             {
-                block.Location = new Location(X + 1, Y, Z, loc.World);
+                block.Location = new Location(X - 1, Y, Z, loc.World);
             }
             else if (yaw >= Math.PI - Math.PI / 4 && yaw <= Math.PI + Math.PI / 4)
             {
@@ -100,9 +108,13 @@ namespace BiblioMinecraft.World_System
             }
             else if (yaw >= Math.PI + Math.PI / 2 - Math.PI / 4 && yaw <= Math.PI + Math.PI / 2 + Math.PI / 4)
             {
-                block.Location = new Location(X - 1, Y, Z, loc.World);
+                block.Location = new Location(X + 1, Y, Z, loc.World);
             }
-            
+            else
+            {
+                return null;
+            }
+
             loc.World.SetBlock(block);
             return block;
         }
