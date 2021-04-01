@@ -35,6 +35,23 @@ namespace Minecraft
             this.height = height;
         }
         public BitmapImage image;
+
+        public DrawingImage GetImage()
+        {
+            DrawingGroup i = new DrawingGroup();
+            DrawingContext j = i.Open();
+            if (item != null)
+            {
+                j.DrawImage(image, new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
+                if (item.Quantity != 1)
+                {
+                    j.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25), new Point(pix + width / 1.25f, piy + height / 2));
+                }
+            }
+            j.Close();
+            return new DrawingImage(i);
+        }
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);

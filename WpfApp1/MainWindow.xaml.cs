@@ -71,7 +71,7 @@ namespace Minecraft
             GenerateWorld(Helper.player.Location.World);
             RegenerateWorld();
 
-            Merchand mer = new Merchand(new Location(-5,5,5,Helper.player.Location.World));
+            Merchand mer = new Merchand(new Location(-5, 5, 5, Helper.player.Location.World));
             Helper.player.Location.World.SpawnEntity(mer);
             Helper.group.AddEntity(mer);
 
@@ -104,18 +104,9 @@ namespace Minecraft
             selected = 0;
             Helper.Width = Width;
             Helper.Height = Height;
-            if (cont is Player player)
-            {
-                inv = new UI_Inventaire(player, player, 32, 32, Canvas);
-                Point t = Mouse.GetPosition(Canvas);
-                inv.Move(selected, t.X, t.Y);
-            }
-            if (cont is Inventaire invo)
-            {
-                inv = new UI_Inventaire(Helper.player, invo, 32, 32, Canvas);
-                Point t = Mouse.GetPosition(Canvas);
-                inv.Move(selected, t.X, t.Y);
-            }
+            inv = new UI_Inventaire(Helper.player, cont, 32, 32, Canvas);
+            Point t = Mouse.GetPosition(Canvas);
+            inv.Move(selected, t.X, t.Y);
         }
 
         private void ItemClickInv(object sender, MouseEventArgs e)
@@ -136,6 +127,72 @@ namespace Minecraft
                         bool doit = false;
                         if (it.y >= Helper.player.Inventaire.Height)
                         {
+                            if (inv.inv is Merchand mer)
+                            {
+                                Trade trade = mer.Trades[it.y - Helper.player.Inventaire.Height];
+                                if (it.x == 0)
+                                {
+                                    if (uit.item == null || uit.item.id() != trade.wanted.id() || uit.item.Quantity < trade.wanted.Quantity)
+                                    {
+                                        List<KeyValuePair<UI_Item, int>> tl = inv.GetItem(1, it.y);
+                                        if (tl.Count >= 1)
+                                        {
+                                            inv.RemoveItem(tl[0].Key);
+                                        }
+                                    }
+
+                                    if (uit.item != null)
+                                    {
+                                        if (uit.item.id() == trade.wanted.id())
+                                        {
+                                            doit = true;
+                                            uit.x = it.x;
+                                            uit.y = it.y;
+                                            if (uit.item.Quantity >= trade.wanted.Quantity)
+                                            {
+                                                List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
+                                                if (l.Count == 0)
+                                                {
+                                                    inv.AddItem(new UI_Item(trade.giving, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        doit = true;
+                                        uit.x = it.x;
+                                        uit.y = it.y;
+                                    }
+                                }
+                                if (it.x == 1)
+                                {
+                                    if (uit.item == null)
+                                    {
+                                        doit = true;
+                                        List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
+                                        if (l.Count > 0)
+                                        {
+                                            if (trade.wanted.Quantity < l[0].Key.item.Quantity)
+                                            {
+                                                l[0].Key.item.Quantity -= trade.wanted.Quantity;
+                                            }
+                                            else
+                                            {
+                                                l[0].Key.item = null;
+                                            }
+                                            if (trade.wanted.Quantity <= l[0].Key.item.Quantity)
+                                            {
+                                                //inv.AddItem(new UI_Item(trade.giving, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                            }
+                                            uit.x = it.x;
+                                            uit.y = it.y;
+                                            inv.Move(l[0].Value, l[0].Key.pix, l[0].Key.piy);
+                                        }
+                                    }
+                                }
+                            }
+
                             if (inv.inv is Inventaire other)
                             {
                                 doit = true;
@@ -232,6 +289,28 @@ namespace Minecraft
                         }
                         else
                         {
+                            if (it.item != null && uit.item != null)
+                            {
+                                if (it.item.id() == uit.item.id())
+                                {
+                                    if (it.item.Quantity < it.item.MaxQuantity)
+                                    {
+                                        if (it.item.MaxQuantity >= it.item.Quantity + uit.item.Quantity)
+                                        {
+                                            it.item.Quantity += uit.item.Quantity;
+                                            uit.item = null;
+
+                                            inv.Move(h, it.pix, it.piy);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            uit.item.Quantity -= (it.item.MaxQuantity - it.item.Quantity);
+                                            it.item.Quantity = it.item.MaxQuantity;
+                                        }
+                                    }
+                                }
+                            }
                             doit = true;
                             uit.x = it.x;
                             uit.y = it.y;
@@ -347,7 +426,7 @@ namespace Minecraft
                             {
                                 if (qqch is Merchand mer)
                                 {
-                                    ShowInventory(mer.Inventaire);
+                                    ShowInventory(mer);
                                 }
                                 if (qqch is KeyValuePair<Block, Location> bl)
                                 {
