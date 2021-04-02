@@ -35,6 +35,28 @@ namespace BiblioMinecraft
             this.z += z;
             this.pitch += pitch;
             this.yaw += yaw;
+
+            while (this.yaw < -Math.PI)
+            {
+                this.yaw += (float)Math.PI*2;
+            }
+            while (this.yaw > Math.PI)
+            {
+                this.yaw -= (float)Math.PI*2;
+            }
+
+            /*
+            while (this.pitch > (float)Math.PI)
+            {
+                this.yaw += (float)Math.PI;
+                this.pitch -= (float)Math.PI;
+            }
+            while (this.pitch < -(float)Math.PI)
+            {
+                this.yaw += (float)Math.PI;
+                this.pitch += (float)Math.PI;
+            }
+            */
         }
 
         public virtual void TP(float x, float y, float z, float pitch, float yaw)

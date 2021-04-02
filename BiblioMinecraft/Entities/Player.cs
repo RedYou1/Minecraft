@@ -178,12 +178,14 @@ namespace BiblioMinecraft.Entities
             }
         }
 
+        /*
         public override string ToString()
         {
             String inv = inventaire.ToString();
             inv = inv.Replace("Invertory{", id() + " Invertory{");
             return inv;
         }
+        */
 
         protected override Game_Model EntityModel()
         {

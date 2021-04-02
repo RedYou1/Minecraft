@@ -26,7 +26,7 @@ namespace BiblioMinecraft.Entities
         public virtual void Die()
         {
             loc.World.RemoveEntity(this);
-            Helper.group.RemoveEntity(this);
+            if (Helper.group != null) { Helper.group.RemoveEntity(this); }
         }
 
 
@@ -73,16 +73,16 @@ namespace BiblioMinecraft.Entities
 
         public void Move(float x, float y, float z, float pitch, float yaw)
         {
-            
-            Helper.group.RemoveEntity(this);
+
+            if (Helper.group != null) { Helper.group.RemoveEntity(this); }
             loc.Move(x, y, z, pitch, yaw);
-            Helper.group.AddEntity(this);
+            if (Helper.group != null) { Helper.group.AddEntity(this); }
         }
         public void TP(float x, float y, float z, float pitch, float yaw)
         {
-            Helper.group.RemoveEntity(this);
+            if (Helper.group != null) { Helper.group.RemoveEntity(this); }
             loc.TP(x, y, z, pitch, yaw);
-            Helper.group.AddEntity(this);
+            if (Helper.group != null) { Helper.group.AddEntity(this); }
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace BiblioMinecraft.Entities
                     (float)Math.Sin(Pitch) * i + Y,
                     (float)Math.Cos(Pitch) * (float)Math.Cos(Yaw) * i + Z,
                     Pitch, Yaw, loc.World);
-                
+
                 foreach (Entity ent in loc.World.Entities)
                 {
                     if ((int)ent.X == (int)nloc.X && (int)ent.Y == (int)nloc.Y && (int)ent.Z == (int)nloc.Z)
@@ -123,7 +123,7 @@ namespace BiblioMinecraft.Entities
                         }
                     }
                 }
-                
+
                 Block block = loc.World.GetBlock((int)Math.Floor(nloc.X + 0.5f), (int)Math.Floor(nloc.Y + 0.5f), (int)Math.Floor(nloc.Z + 0.5f));
                 if (block != null)
                 {

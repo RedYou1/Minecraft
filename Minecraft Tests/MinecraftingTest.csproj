@@ -49,18 +49,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Cow.cs" />
-    <Compile Include="Entities\Merchand.cs" />
-    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Cow_Test.cs" />
+    <Compile Include="Entities\Merchand_Test.cs" />
+    <Compile Include="Entities\Player_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiblioMinecraft\BiblioMinecraft.csproj">
+    <ProjectReference Include="..\BiblioMinecraft\BibliMinecrafting.csproj">
       <Project>{ced824cf-9081-4021-ac7f-2017f5a12fcb}</Project>
-      <Name>BiblioMinecraft</Name>
+      <Name>BibliMinecrafting</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

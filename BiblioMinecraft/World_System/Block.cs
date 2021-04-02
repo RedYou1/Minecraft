@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace BiblioMinecraft.World_System
 {
@@ -20,22 +21,34 @@ namespace BiblioMinecraft.World_System
             Game_Model a = BlockModel();
             for (int i = 0; i < a.model.Length; i++)
             {
-                double[] rot = CoordToRot(a.model[i].Key);
-                rot[0] += loc.Pitch;
-                //rot[1] += yaw;
-                double dist = Math.Sqrt(a.model[i].Key[1] * a.model[i].Key[1] + (a.model[i].Key[0] * a.model[i].Key[0] + a.model[i].Key[2] * a.model[i].Key[2]));
-                double[] model = RotToCoord(rot, dist);
-                a.model[i].Key[0] = model[0];
-                a.model[i].Key[1] = model[1];
-                a.model[i].Key[2] = model[2];
+                double[,] coord = new double[1, 3];
+                coord[0, 0] = a.model[i].Key[0];
+                coord[0, 1] = a.model[i].Key[1];
+                coord[0, 2] = a.model[i].Key[2];
+                double[,] rotmat = new double[3, 3];
+                rotmat[0, 0] = Math.Cos(loc.Yaw);
+                rotmat[1, 0] = Math.Sin(loc.Yaw) * Math.Sin(loc.Pitch);
+                rotmat[2, 0] = Math.Sin(loc.Yaw) * Math.Cos(loc.Pitch);
+                rotmat[0, 1] = 0;
+                rotmat[1, 1] = Math.Cos(loc.Pitch);
+                rotmat[2, 1] = -Math.Sin(loc.Pitch);
+                rotmat[0, 2] = -Math.Sin(loc.Yaw);
+                rotmat[1, 2] = Math.Cos(loc.Yaw) * Math.Sin(loc.Pitch);
+                rotmat[2, 2] = Math.Cos(loc.Yaw) * Math.Cos(loc.Pitch);
 
-                a.model[i].Key[0] += loc.X;
-                a.model[i].Key[1] += loc.Y;
-                a.model[i].Key[2] += loc.Z;
+                double[,] newcoord = Helper.MultiplyMatrix(coord, rotmat);
+
+                a.model[i].Key[0] = newcoord[0, 0] + loc.X;
+                a.model[i].Key[1] = newcoord[0, 1] + loc.Y;
+                a.model[i].Key[2] = newcoord[0, 2] + loc.Z;
 
             }
-            //pitch += 0.01f;
             return a;
+        }
+
+        public virtual void Update()
+        {
+
         }
 
         public void Move(float x, float y, float z, float pitch, float yaw)
@@ -103,7 +116,7 @@ namespace BiblioMinecraft.World_System
             {
                 block.Location = new Location(X + 1, Y, Z, loc.World);
             }
-            
+
             loc.World.SetBlock(block);
             Helper.group.AddBlock(block);
             return null;

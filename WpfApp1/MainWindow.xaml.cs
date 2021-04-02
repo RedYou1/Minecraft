@@ -90,6 +90,10 @@ namespace Minecraft
                     {
                         Dispatcher.Invoke(() => { ent.Update(); });
                     }
+                    foreach (Block block in Helper.player.Location.World.Blocks)
+                    {
+                        Dispatcher.Invoke(() => { block.Update(); });
+                    }
                     Thread.Sleep(20);
                 }
             });
@@ -132,7 +136,8 @@ namespace Minecraft
                                 Trade trade = mer.Trades[it.y - Helper.player.Inventaire.Height];
                                 if (it.x == 0)
                                 {
-                                    if (uit.item == null || uit.item.id() != trade.wanted.id() || uit.item.Quantity < trade.wanted.Quantity)
+                                    Item wanted = trade.wanted();
+                                    if (uit.item == null || uit.item.id() != wanted.id() || uit.item.Quantity < wanted.Quantity)
                                     {
                                         List<KeyValuePair<UI_Item, int>> tl = inv.GetItem(1, it.y);
                                         if (tl.Count >= 1)
@@ -143,17 +148,17 @@ namespace Minecraft
 
                                     if (uit.item != null)
                                     {
-                                        if (uit.item.id() == trade.wanted.id())
+                                        if (uit.item.id() == wanted.id())
                                         {
                                             doit = true;
                                             uit.x = it.x;
                                             uit.y = it.y;
-                                            if (uit.item.Quantity >= trade.wanted.Quantity)
+                                            if (uit.item.Quantity >= wanted.Quantity)
                                             {
                                                 List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
                                                 if (l.Count == 0)
                                                 {
-                                                    inv.AddItem(new UI_Item(trade.giving, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    inv.AddItem(new UI_Item(trade.giving(), it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
                                                 }
                                             }
                                         }
@@ -173,15 +178,16 @@ namespace Minecraft
                                         List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
                                         if (l.Count > 0)
                                         {
-                                            if (trade.wanted.Quantity < l[0].Key.item.Quantity)
+                                            Item wanted = trade.wanted();
+                                            if (wanted.Quantity < l[0].Key.item.Quantity)
                                             {
-                                                l[0].Key.item.Quantity -= trade.wanted.Quantity;
+                                                l[0].Key.item.Quantity -= wanted.Quantity;
                                             }
                                             else
                                             {
                                                 l[0].Key.item = null;
                                             }
-                                            if (trade.wanted.Quantity <= l[0].Key.item.Quantity)
+                                            if (wanted.Quantity <= l[0].Key.item.Quantity)
                                             {
                                                 //inv.AddItem(new UI_Item(trade.giving, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
                                             }
@@ -348,6 +354,19 @@ namespace Minecraft
         {
             if (inv != null)
             {
+                if (inv.inv is Chest chest)
+                {
+                    chest.opening = false;
+                    Thread t = new Thread(() => {
+                        while (chest.opened > 0 && !chest.opening)
+                        {
+                            chest.opened -= 0.002f;
+                            Thread.Sleep(1);
+                        }
+                    });
+                    t.Start();
+                }
+
                 Item it = inv.GetItem(selected).item;
                 if (it != null)
                 {
@@ -433,6 +452,10 @@ namespace Minecraft
                                     object ob = bl.Key.Right_Click(Helper.player, new Wooden_Block(bl.Value), bl.Value);
                                     if (ob != null)
                                     {
+                                        if (ob is Chest chest)
+                                        {
+                                            ShowInventory(chest);
+                                        }
                                         if (ob is Inventaire inv)
                                         {
                                             ShowInventory(inv);
@@ -497,6 +520,15 @@ namespace Minecraft
                     return;
                 }
 
+                if (key == Key.Y)
+                {
+                    Block[] b = Helper.player.Location.World.Blocks;
+                    Helper.group.RemoveBlock(b[b.Length-1]);
+                    b[b.Length - 1].Location.Move(0,0,0,0.1f,0.1f);
+                    Helper.group.AddBlock(b[b.Length - 1]);
+                    return;
+                }
+
                 if (key == Key.LeftCtrl)
                 {
                     ctrl = !ctrl;
@@ -533,10 +565,16 @@ namespace Minecraft
                             Helper.player.Move(0, -speed, 0, 0, 0);
                             break;
                         case Key.K:
-                            Helper.player.Move(0, 0, 0, -speedrot, 0);
+                            if (Helper.player.Location.Pitch - speedrot >= -Math.PI / 2)
+                            {
+                                Helper.player.Move(0, 0, 0, -speedrot, 0);
+                            }
                             break;
                         case Key.L:
-                            Helper.player.Move(0, 0, 0, speedrot, 0);
+                            if (Helper.player.Location.Pitch + speedrot <= Math.PI / 2)
+                            {
+                                Helper.player.Move(0, 0, 0, speedrot, 0);
+                            }
                             break;
                         case Key.E:
                             Helper.player.Move(0, 0, 0, 0, -speedrot);
@@ -569,10 +607,16 @@ namespace Minecraft
                             Helper.player.Move(0, -speed, 0, 0, 0);
                             break;
                         case Key.K:
-                            Helper.player.Move(0, 0, 0, -speedrot, 0);
+                            if (Helper.player.Location.Pitch - speedrot >= -Math.PI / 2)
+                            {
+                                Helper.player.Move(0, 0, 0, -speedrot, 0);
+                            }
                             break;
                         case Key.L:
-                            Helper.player.Move(0, 0, 0, speedrot, 0);
+                            if (Helper.player.Location.Pitch + speedrot <= Math.PI / 2)
+                            {
+                                Helper.player.Move(0, 0, 0, speedrot, 0);
+                            }
                             break;
                         case Key.E:
                             Helper.player.Move(0, 0, 0, 0, -speedrot);

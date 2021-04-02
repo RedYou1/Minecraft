@@ -9,6 +9,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using BiblioMinecraft.World_System.Models;
 using BiblioMinecraft.Entities;
+using System.Threading;
 
 namespace BiblioMinecraft.World_System.Blocks
 {
@@ -16,7 +17,10 @@ namespace BiblioMinecraft.World_System.Blocks
     {
         private Inventaire inv;
         private DiffuseMaterial mat = Game_Model.GetImage(Helper.ImageFile + "Chest.PNG");
-        //public float opened = 0;
+        public float opened = 0;
+        private float topened = 0;
+        public bool opening = false;
+
         public Chest(Location loc) : base(loc)
         {
             inv = new Inventaire(9, 3);
@@ -24,7 +28,26 @@ namespace BiblioMinecraft.World_System.Blocks
 
         public override object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)
         {
-            return inv;
+            opening = true;
+            Thread t = new Thread(() => {
+                while (opened < Math.PI/2 && opening)
+                {
+                    opened += 0.002f;
+                    Thread.Sleep(1);
+                }
+            });
+            t.Start();
+            return this;
+        }
+
+        public override void Update()
+        {
+            if (topened != opened)
+            {
+                Helper.group.RemoveBlock(this);
+                Helper.group.AddBlock(this);
+                topened = opened;
+            }
         }
 
         public override void Destroy()
@@ -44,21 +67,27 @@ namespace BiblioMinecraft.World_System.Blocks
             KeyValuePair<double[], double[]>[] a = Top_Model();
             for (int i = 0; i < a.Length; i++)
             {
-                double[] rot = CoordToRot(a[i].Key);
-                rot[0] += loc.Pitch;
-                //rot[1] += yaw;
-                //TODO: +opened (yaw but not in origine)
-                double dist = Math.Sqrt(a[i].Key[1] * a[i].Key[1] + (a[i].Key[0] * a[i].Key[0] + a[i].Key[2] * a[i].Key[2]));
-                double[] model = RotToCoord(rot, dist);
-                a[i].Key[0] = model[0];
-                a[i].Key[1] = model[1];
-                a[i].Key[2] = model[2];
+                double[,] coord = new double[1, 3];
+                coord[0, 0] = a[i].Key[0];
+                coord[0, 1] = a[i].Key[1] - 0.11458;
+                coord[0, 2] = a[i].Key[2] + (0.46875 * Math.Cos(loc.Yaw));
+                double[,] rotmat = new double[3, 3];
+                rotmat[0, 0] = Math.Cos(loc.Yaw);
+                rotmat[1, 0] = Math.Sin(loc.Yaw) * Math.Sin(loc.Pitch - opened);
+                rotmat[2, 0] = Math.Sin(loc.Yaw) * Math.Cos(loc.Pitch - opened);
+                rotmat[0, 1] = 0;
+                rotmat[1, 1] = Math.Cos(loc.Pitch - opened);
+                rotmat[2, 1] = -Math.Sin(loc.Pitch - opened);
+                rotmat[0, 2] = -Math.Sin(loc.Yaw);
+                rotmat[1, 2] = Math.Cos(loc.Yaw) * Math.Sin(loc.Pitch - opened);
+                rotmat[2, 2] = Math.Cos(loc.Yaw) * Math.Cos(loc.Pitch - opened);
 
-                a[i].Key[0] += loc.X;
-                a[i].Key[1] += loc.Y;
-                a[i].Key[2] += loc.Z;
+                double[,] newcoord = Helper.MultiplyMatrix(coord, rotmat);
+
+                a[i].Key[0] = newcoord[0, 0] + loc.X;
+                a[i].Key[1] = newcoord[0, 1] + loc.Y + 0.11458;
+                a[i].Key[2] = newcoord[0, 2] + loc.Z - (0.46875 * Math.Cos(loc.Yaw));
             }
-            //pitch += 0.01f;
 
             List<KeyValuePair<double[], double[]>> li = Cbase.model.ToList();
             foreach (KeyValuePair<double[], double[]> c in a)
@@ -81,7 +110,7 @@ namespace BiblioMinecraft.World_System.Blocks
                 new KeyValuePair<double[],double[]>(new double[]{ 0.46875, 0.11458, 0.46875 },new double[]{ 0.49972, 0.441497}),
                 new KeyValuePair<double[],double[]>(new double[]{ -0.46875, 0.46875, 0.46875 },new double[]{ 0.25 , 0.325581}),
                 new KeyValuePair<double[],double[]>(new double[]{ -0.46875, 0.11458, 0.46875 },new double[]{ 0.25 , 0.441497}),
-                
+
                 new KeyValuePair<double[],double[]>(new double[]{ 0.085938, 0.261719, 0.5 },new double[]{ 0.053292, 0.023256}),
                 new KeyValuePair<double[],double[]>(new double[]{ -0.085938, 0.261719, 0.5 },new double[]{ 0.017857 , 0.023256}),
                 new KeyValuePair<double[],double[]>(new double[]{ 0.085938, -0.089844, 0.5 },new double[]{ 0.053292, 0.115916}),

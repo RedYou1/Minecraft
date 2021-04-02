@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using BiblioMinecraft;
 using BiblioMinecraft.Attributes;
 using BiblioMinecraft.Entities;
+using BiblioMinecraft.World_System.Blocks;
 
 namespace Minecraft
 {
@@ -84,8 +85,8 @@ namespace Minecraft
                 int ty = 0;
                 foreach (Trade trade in mer.Trades)
                 {
-                    UI_Item wanted = new UI_Item(trade.wanted, 0, 0, itwidth, itheight, tx, ty);
-                    UI_Item giving = new UI_Item(trade.giving, 0, 0, itwidth, itheight, tx, ty);
+                    UI_Item wanted = new UI_Item(trade.wanted(), 0, 0, itwidth, itheight, tx, ty);
+                    UI_Item giving = new UI_Item(trade.giving(), 0, 0, itwidth, itheight, tx, ty);
 
                     j.DrawImage(wanted.GetImage(), new Rect(
                             new Point((tx * 16) + 7, 7 + (ty * 18)),
@@ -118,6 +119,13 @@ namespace Minecraft
                 j.Close();
                 this.image = new DrawingImage(i);
             }
+            bool isinv = true;
+            if (something is Chest chest)
+            {
+                something = chest.Inventaire;
+                this.inv = chest;
+                isinv = false;
+            }
             if (something is Inventaire inv)
             {
                 BitmapImage slot = new BitmapImage(new Uri(Helper.ImageFile + "Slot.png"));
@@ -125,7 +133,7 @@ namespace Minecraft
                 DrawingGroup i = new DrawingGroup();
                 DrawingContext j = i.Open();
                 j.DrawImage(image, new Rect(new Point(0, 0), new Point(177, 166)));
-                this.inv = inv;
+                if (isinv) { this.inv = inv; }
                 for (int x = 0; x < caster.Inventaire.Width; x++)
                 {
                     for (int y = 0; y < caster.Inventaire.Height; y++)

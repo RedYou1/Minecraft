@@ -9,10 +9,10 @@ namespace BiblioMinecraft
 {
     public class Trade
     {
-        public Item wanted;
-        public Item giving;
+        public Func<Item> wanted;
+        public Func<Item> giving;
 
-        public Trade(Item wanted,Item giving)
+        public Trade(Func<Item> wanted, Func<Item> giving)
         {
             this.wanted = wanted;
             this.giving = giving;

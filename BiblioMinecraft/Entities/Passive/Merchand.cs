@@ -20,17 +20,17 @@ namespace BiblioMinecraft.Entities
             inventaire.AddItem(new Emerald(1));
             inventaire.AddItem(new Steak(1));
             trades = new List<Trade>();
-            trades.Add(new Trade(new Steak(1), new Emerald(1)));
-            trades.Add(new Trade(new Emerald(1), new Steak(1)));
-            trades.Add(new Trade(new Steak(2), new Emerald(2)));
-            trades.Add(new Trade(new Emerald(2), new Steak(2)));
-            trades.Add(new Trade(new Steak(3), new Emerald(3)));
-            trades.Add(new Trade(new Emerald(3), new Steak(3)));
+            trades.Add(new Trade(() => { return new Steak(1); }, () => { return new Emerald(1); }));
+            trades.Add(new Trade(() => { return new Emerald(1); }, () => { return new Steak(1); }));
+            trades.Add(new Trade(() => { return new Steak(2); }, () => { return new Emerald(2); }));
+            trades.Add(new Trade(() => { return new Emerald(2); }, () => { return new Steak(2); }));
+            trades.Add(new Trade(() => { return new Steak(3); }, () => { return new Emerald(3); }));
+            trades.Add(new Trade(() => { return new Emerald(3); }, () => { return new Steak(3); }));
         }
 
         public override void Update()
         {
-            
+
         }
 
         protected override Game_Model EntityModel()
@@ -110,6 +110,7 @@ namespace BiblioMinecraft.Entities
             }
         }
 
+        /*
         public void MakeATrade(Player player, Trade trade)
         {
             if (trades.Contains(trade))
@@ -123,13 +124,16 @@ namespace BiblioMinecraft.Entities
                 }
             }
         }
+        */
 
+        /*
         public override string ToString()
         {
             String inv = inventaire.ToString();
             inv = inv.Replace("Invertory{", id() + " Invertory{");
             return inv;
         }
+        */
 
         public Inventaire Inventaire { get => inventaire; }
         public Trade[] Trades { get => trades.ToArray(); }

@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiblioMinecraft\BiblioMinecraft.csproj">
+    <ProjectReference Include="..\BiblioMinecraft\BibliMinecrafting.csproj">
       <Project>{ced824cf-9081-4021-ac7f-2017f5a12fcb}</Project>
-      <Name>BiblioMinecraft</Name>
+      <Name>BibliMinecrafting</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
