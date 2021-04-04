@@ -22,8 +22,7 @@ namespace BiblioMinecraft.World_System
 
         public static DiffuseMaterial GetImage(String fullpath)
         {
-            bool goodimage = false;
-            if (goodimage) {
+            if (Helper.goodimage) {
                 Image colors_brush = new Image();
                 colors_brush.Source = new BitmapImage(new Uri(fullpath, UriKind.Relative));
                 RenderOptions.SetCachingHint(colors_brush, CachingHint.Cache);

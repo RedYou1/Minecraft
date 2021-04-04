@@ -19,6 +19,8 @@ namespace BiblioMinecraft
         public static double Width;
         public static double Height;
 
+        public static bool goodimage = false;
+
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
         public static Model3DHandeler group;
