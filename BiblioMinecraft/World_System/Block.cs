@@ -129,23 +129,6 @@ namespace BiblioMinecraft.World_System
 
         protected abstract Game_Model BlockModel();
 
-        protected double[] CoordToRot(double[] coord)
-        {
-            double[] rot = new double[2];
-            rot[0] = Math.Atan2(coord[0], coord[2]);
-            rot[1] = Math.Atan2(coord[1], Math.Sqrt(coord[0] * coord[0] + coord[2] * coord[2]));
-            return rot;
-        }
-
-        protected double[] RotToCoord(double[] rot, double dist)
-        {
-            double[] coord = new double[3];
-            coord[0] = Math.Cos(rot[1]) * Math.Sin(rot[0]) * dist;
-            coord[1] = Math.Sin(rot[1]) * dist;
-            coord[2] = Math.Cos(rot[1]) * Math.Cos(rot[0]) * dist;
-            return coord;
-        }
-
         public Location Location { get => loc; set => loc = value; }
         public float X { get => loc.X; }
         public float Y { get => loc.Y; }

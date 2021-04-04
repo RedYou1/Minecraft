@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BiblioMinecraft.World_System;
 using BiblioMinecraft.Items;
+using System.Windows.Media.Media3D;
+using System.Windows;
 
 namespace BiblioMinecraft.Entities
 {
@@ -23,9 +25,9 @@ namespace BiblioMinecraft.Entities
 
         }
 
-        public override void Update()
+        protected override Rect3D HitBox()
         {
-
+            return new Rect3D(-0.5, -0.5f, -0.5, 0.5, 0.5, 0.5);
         }
 
         protected override Game_Model EntityModel()

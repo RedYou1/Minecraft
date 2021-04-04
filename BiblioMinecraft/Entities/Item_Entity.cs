@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BiblioMinecraft.Items;
 using BiblioMinecraft.World_System;
 using BiblioMinecraft.Attributes;
+using System.Windows.Media.Media3D;
 
 namespace BiblioMinecraft.Entities
 {
@@ -21,6 +22,11 @@ namespace BiblioMinecraft.Entities
         public override void Update()
         {
             Move(0,0,0,0,0.01f);
+        }
+
+        protected override Rect3D HitBox()
+        {
+            return new Rect3D(-0.5, -0.5f, -0.5, 0.5, 0.5, 0.5);
         }
 
         public override string id()

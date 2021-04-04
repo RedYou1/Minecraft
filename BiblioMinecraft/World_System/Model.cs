@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace BiblioMinecraft.World_System
 {
@@ -21,10 +22,21 @@ namespace BiblioMinecraft.World_System
 
         public static DiffuseMaterial GetImage(String fullpath)
         {
-            ImageBrush colors_brush = new ImageBrush();
-            colors_brush.ImageSource = new BitmapImage(new Uri(fullpath, UriKind.Relative));
-            DiffuseMaterial colors_material = new DiffuseMaterial(colors_brush);
-            return colors_material;
+            bool goodimage = false;
+            if (goodimage) {
+                Image colors_brush = new Image();
+                colors_brush.Source = new BitmapImage(new Uri(fullpath, UriKind.Relative));
+                RenderOptions.SetCachingHint(colors_brush, CachingHint.Cache);
+                RenderOptions.SetBitmapScalingMode(colors_brush, BitmapScalingMode.NearestNeighbor);
+                DiffuseMaterial colors_material = new DiffuseMaterial(new VisualBrush(colors_brush));
+                return colors_material;
+            }
+            else {
+                ImageBrush colors_brush = new ImageBrush();
+                colors_brush.ImageSource = new BitmapImage(new Uri(fullpath, UriKind.RelativeOrAbsolute));
+                DiffuseMaterial colors_material = new DiffuseMaterial(colors_brush);
+                return colors_material;
+            }
         }
     }
 

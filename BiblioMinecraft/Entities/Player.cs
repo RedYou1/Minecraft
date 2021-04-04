@@ -7,6 +7,7 @@ using BiblioMinecraft.Attributes;
 using BiblioMinecraft.Items;
 using BiblioMinecraft.Damages;
 using BiblioMinecraft.World_System;
+using System.Windows.Media.Media3D;
 
 namespace BiblioMinecraft.Entities
 {
@@ -104,11 +105,6 @@ namespace BiblioMinecraft.Entities
             return false;
         }
 
-        public override void Update()
-        {
-
-        }
-
         public void TakeItemAroundHim()
         {
             List<Item_Entity> ie = new List<Item_Entity>();
@@ -192,6 +188,11 @@ namespace BiblioMinecraft.Entities
             KeyValuePair<double[], double[]>[] model = new KeyValuePair<double[], double[]>[]{
             };
             return new Game_Model(model,Game_Model.GetImage(Helper.ImageFile+@"Player.png"));
+        }
+
+        protected override Rect3D HitBox()
+        {
+            return new Rect3D(-0.5,-0.5f,-0.5,0.5,0.5,0.5);
         }
 
         public Inventaire Inventaire { get => inventaire; }

@@ -69,7 +69,10 @@ namespace Minecraft
 
             //Helper.player = new Helper.player(new Location(0, 0, 5, 0, (float)Math.PI, new World()));
             GenerateWorld(Helper.player.Location.World);
-            RegenerateWorld();
+            foreach (Block block in Helper.player.Location.World.Blocks)
+            {
+                Helper.group.AddBlock(block);
+            }
 
             Merchand mer = new Merchand(new Location(-5, 5, 5, Helper.player.Location.World));
             Helper.player.Location.World.SpawnEntity(mer);
@@ -88,11 +91,11 @@ namespace Minecraft
                 {
                     foreach (Entity ent in Helper.player.Location.World.Entities)
                     {
-                        Dispatcher.Invoke(() => { ent.Update(); });
+                        if (open) { Dispatcher.Invoke(() => { ent.Update(); }); } else { return; }
                     }
                     foreach (Block block in Helper.player.Location.World.Blocks)
                     {
-                        Dispatcher.Invoke(() => { block.Update(); });
+                        if (open) { Dispatcher.Invoke(() => { block.Update(); }); } else { return; }
                     }
                     Thread.Sleep(20);
                 }
@@ -146,7 +149,13 @@ namespace Minecraft
                                         }
                                     }
 
-                                    if (uit.item != null)
+                                    if (uit.item == null)
+                                    {
+                                        doit = true;
+                                        uit.x = it.x;
+                                        uit.y = it.y;
+                                    }
+                                    else
                                     {
                                         if (uit.item.id() == wanted.id())
                                         {
@@ -163,14 +172,8 @@ namespace Minecraft
                                             }
                                         }
                                     }
-                                    else
-                                    {
-                                        doit = true;
-                                        uit.x = it.x;
-                                        uit.y = it.y;
-                                    }
                                 }
-                                if (it.x == 1)
+                                else
                                 {
                                     if (uit.item == null)
                                     {
@@ -181,19 +184,54 @@ namespace Minecraft
                                             Item wanted = trade.wanted();
                                             if (wanted.Quantity < l[0].Key.item.Quantity)
                                             {
+                                                inv.AddItem(new UI_Item(trade.giving(), it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                            }
+                                            if (wanted.Quantity < l[0].Key.item.Quantity)
+                                            {
                                                 l[0].Key.item.Quantity -= wanted.Quantity;
                                             }
                                             else
                                             {
                                                 l[0].Key.item = null;
                                             }
-                                            if (wanted.Quantity <= l[0].Key.item.Quantity)
-                                            {
-                                                //inv.AddItem(new UI_Item(trade.giving, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
-                                            }
                                             uit.x = it.x;
                                             uit.y = it.y;
                                             inv.Move(l[0].Value, l[0].Key.pix, l[0].Key.piy);
+
+                                            selected = h - 1;
+                                            inv.RemoveItem(uit);
+                                            return;
+                                        }
+                                    }
+                                    else if (uit.item.id() == trade.giving().id())
+                                    {
+                                        Item giving = trade.giving();
+                                        if (uit.item.Quantity + giving.Quantity <= uit.item.MaxQuantity)
+                                        {
+                                            inv.RemoveItem(it);
+
+                                            inv.RemoveItem(uit);
+                                            uit.item.Quantity += giving.Quantity;
+                                            inv.AddItem(uit);
+                                            selected = inv.items.Count - 2;
+
+                                            Item wanted = trade.wanted();
+                                            List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
+                                            if (l.Count > 0)
+                                            {
+                                                if (wanted.Quantity < l[0].Key.item.Quantity)
+                                                {
+                                                    inv.AddItem(new UI_Item(trade.giving(), it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+
+                                                    inv.RemoveItem(l[0].Key);
+                                                    if (l[0].Key.item.Quantity > 1)
+                                                    {
+                                                        l[0].Key.item.Quantity -= wanted.Quantity;
+                                                        inv.AddItem(l[0].Key);
+                                                    }
+                                                }
+                                            }
+                                            return;
                                         }
                                     }
                                 }
@@ -357,10 +395,11 @@ namespace Minecraft
                 if (inv.inv is Chest chest)
                 {
                     chest.opening = false;
-                    Thread t = new Thread(() => {
+                    Thread t = new Thread(() =>
+                    {
                         while (chest.opened > 0 && !chest.opening)
                         {
-                            chest.opened -= 0.002f;
+                            chest.opened -= 0.003f;
                             Thread.Sleep(1);
                         }
                     });
@@ -397,11 +436,6 @@ namespace Minecraft
             world.SetBlock(new Chest(new Location(-2, 2, 0, world)));
         }
 
-        public void RegenerateWorld()
-        {
-            UpdateWorld();
-        }
-
         public static bool open = true;
 
         private void Game_Closing(object sender, EventArgs e)
@@ -412,23 +446,6 @@ namespace Minecraft
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
 
-        }
-
-        public void UpdateWorld()
-        {
-            Model3D g1 = group.Children[0];
-            Model3D g2 = group.Children[1];
-            group.Children.Clear();
-            group.Children.Add(g1);
-            group.Children.Add(g2);
-            foreach (Block block in Helper.player.Location.World.Blocks)
-            {
-                Helper.group.AddBlock(block);
-            }
-            foreach (Entity ent in Helper.player.Location.World.Entities)
-            {
-                Helper.group.AddEntity(ent);
-            }
         }
 
         public void Grid_MousePress(object sender, MouseButtonEventArgs e)
@@ -512,20 +529,37 @@ namespace Minecraft
                 float speed = 0.12f;
                 float speedrot = 0.02f;
 
-                if (key == Key.Delete)
-                {
-                    Helper.player.Location.ChangeWorld(Helper.player.X, Helper.player.Y, Helper.player.Z, Helper.player.Pitch, Helper.player.Yaw, new World());
-                    GenerateWorld(Helper.player.Location.World);
-                    RegenerateWorld();
-                    return;
-                }
-
                 if (key == Key.Y)
                 {
                     Block[] b = Helper.player.Location.World.Blocks;
-                    Helper.group.RemoveBlock(b[b.Length-1]);
-                    b[b.Length - 1].Location.Move(0,0,0,0.1f,0.1f);
+                    Helper.group.RemoveBlock(b[b.Length - 1]);
+                    b[b.Length - 1].Location.Move(0, 0, 0, 0.1f, 0.1f);
                     Helper.group.AddBlock(b[b.Length - 1]);
+                    return;
+                }
+
+                if (key == Key.V)
+                {
+                    Entity[] b = Helper.player.Location.World.Entities;
+                    b[b.Length - 1].Move(0, 0, 0, 0.1f, 0);
+                    return;
+                }
+                if (key == Key.B)
+                {
+                    Entity[] b = Helper.player.Location.World.Entities;
+                    b[b.Length - 1].Move(0, 0, 0, -0.1f, 0);
+                    return;
+                }
+                if (key == Key.N)
+                {
+                    Entity[] b = Helper.player.Location.World.Entities;
+                    b[b.Length - 1].Move(0, 0, 0, 0, 0.1f);
+                    return;
+                }
+                if (key == Key.M)
+                {
+                    Entity[] b = Helper.player.Location.World.Entities;
+                    b[b.Length - 1].Move(0, 0, 0, 0, -0.1f);
                     return;
                 }
 

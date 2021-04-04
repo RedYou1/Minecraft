@@ -32,7 +32,7 @@ namespace BiblioMinecraft.World_System.Blocks
             Thread t = new Thread(() => {
                 while (opened < Math.PI/2 && opening)
                 {
-                    opened += 0.002f;
+                    opened += 0.003f;
                     Thread.Sleep(1);
                 }
             });
