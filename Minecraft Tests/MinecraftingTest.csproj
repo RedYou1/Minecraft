@@ -52,7 +52,10 @@
     <Compile Include="Entities\Cow_Test.cs" />
     <Compile Include="Entities\Merchand_Test.cs" />
     <Compile Include="Entities\Player_Test.cs" />
+    <Compile Include="Items\Inventaire_Test.cs" />
+    <Compile Include="Location_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World_System\World_Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

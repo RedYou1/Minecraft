@@ -27,10 +27,13 @@ namespace Minecraft
         private double itheight;
         private Canvas canvas;
         public Player caster;
+        public object something2;
         public object inv;
+        private int act = 0;
 
-        public UI_Inventaire(Player caster, object something, double itwidth, double itheight, Canvas canvas)
+        public UI_Inventaire(Player caster, object something, object something2, double itwidth, double itheight, Canvas canvas)
         {
+            this.something2 = something2;
             this.caster = caster;
             this.canvas = canvas;
             width = Helper.Width;
@@ -39,7 +42,7 @@ namespace Minecraft
             this.itheight = itheight;
             items = new List<UI_Item>();
 
-            items.Add(new UI_Item(null, width / 4 + (1 * 41) + 20, height - height / 4 - (1 * 41) + 5, itwidth, itheight, 0, 0));
+            items.Add(new UI_Item(null, act++, width / 4 + (1 * 41) + 20, height - height / 4 - (1 * 41) + 5, itwidth, itheight, 0, 0));
 
             if (something is Player player)
             {
@@ -55,13 +58,13 @@ namespace Minecraft
                     for (int y = 0; y < player.Inventaire.Height; y++)
                     {
                         Item it = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
-                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
                     }
                 }
-                items.Add(new UI_Item(player.Helmet, width / 4 + 20, height / 6, itwidth, itheight, 0, 7));
-                items.Add(new UI_Item(player.ChestPlate, width / 4 + 20, height / 6 + 34, itwidth, itheight, 0, 6));
-                items.Add(new UI_Item(player.Legging, width / 4 + 20, height / 6 + 68, itwidth, itheight, 0, 5));
-                items.Add(new UI_Item(player.Boots, width / 4 + 20, height / 6 + 110, itwidth, itheight, 0, 4));
+                items.Add(new UI_Item(player.Helmet, act++, width / 4 + 20, height / 6, itwidth, itheight, 0, 7));
+                items.Add(new UI_Item(player.ChestPlate, act++, width / 4 + 20, height / 6 + 34, itwidth, itheight, 0, 6));
+                items.Add(new UI_Item(player.Legging, act++, width / 4 + 20, height / 6 + 68, itwidth, itheight, 0, 5));
+                items.Add(new UI_Item(player.Boots, act++, width / 4 + 20, height / 6 + 110, itwidth, itheight, 0, 4));
             }
             if (something is Merchand mer)
             {
@@ -77,7 +80,7 @@ namespace Minecraft
                     for (int y = 0; y < caster.Inventaire.Height; y++)
                     {
                         Item it = caster.Inventaire.GetItem(x + (y * caster.Inventaire.Width));
-                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
                     }
                 }
 
@@ -85,8 +88,8 @@ namespace Minecraft
                 int ty = 0;
                 foreach (Trade trade in mer.Trades)
                 {
-                    UI_Item wanted = new UI_Item(trade.wanted(), 0, 0, itwidth, itheight, tx, ty);
-                    UI_Item giving = new UI_Item(trade.giving(), 0, 0, itwidth, itheight, tx, ty);
+                    UI_Item wanted = new UI_Item(trade.wanted(), 0, 0, 0, itwidth, itheight, tx, ty);
+                    UI_Item giving = new UI_Item(trade.giving(), 0, 0, 0, itwidth, itheight, tx, ty);
 
                     j.DrawImage(wanted.GetImage(), new Rect(
                             new Point((tx * 16) + 7, 7 + (ty * 18)),
@@ -102,8 +105,8 @@ namespace Minecraft
                             new Point(((tx + 4) * 16) + 7, 7 + (ty * 18)),
                             new Point(((tx + 5) * 16) + 7, 7 + ((ty + 1) * 18))));
 
-                    items.Add(new UI_Item(null, width / 4 + ((tx + 1) * 36) + 17, height - height / 4 - ((2 - ty) * 36) - height / 6 - 115, itwidth, itheight, 0, ty + (tx / 5) + caster.Inventaire.Height));
-                    
+                    items.Add(new UI_Item(null, act++, width / 4 + ((tx + 1) * 36) + 17, height - height / 4 - ((2 - ty) * 36) - height / 6 - 115, itwidth, itheight, 0, ty + (tx / 5) + caster.Inventaire.Height));
+
                     ty++;
                     if (ty > 3)
                     {
@@ -119,27 +122,20 @@ namespace Minecraft
                 j.Close();
                 this.image = new DrawingImage(i);
             }
-            bool isinv = true;
-            if (something is Chest chest)
-            {
-                something = chest.Inventaire;
-                this.inv = chest;
-                isinv = false;
-            }
             if (something is Inventaire inv)
             {
+                this.inv = inv;
                 BitmapImage slot = new BitmapImage(new Uri(Helper.ImageFile + "Slot.png"));
                 BitmapImage image = new BitmapImage(new Uri(Helper.ImageFile + "Other_Inventory.png"));
                 DrawingGroup i = new DrawingGroup();
                 DrawingContext j = i.Open();
                 j.DrawImage(image, new Rect(new Point(0, 0), new Point(177, 166)));
-                if (isinv) { this.inv = inv; }
                 for (int x = 0; x < caster.Inventaire.Width; x++)
                 {
                     for (int y = 0; y < caster.Inventaire.Height; y++)
                     {
                         Item it = caster.Inventaire.GetItem(x + (y * caster.Inventaire.Width));
-                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
                     }
                 }
                 for (int x = 0; x < inv.Width; x++)
@@ -150,7 +146,7 @@ namespace Minecraft
                             new Point((x * 18) + 7, 47 - (y * 18)),
                             new Point(((x + 1) * 18) + 7, 47 - (y * 18) + 18)));
                         Item it = inv.GetItem(x + (y * inv.Width));
-                        items.Add(new UI_Item(it, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5 - height / 6 - 110, itwidth, itheight, x, y + caster.Inventaire.Height));
+                        items.Add(new UI_Item(it,act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5 - height / 6 - 110, itwidth, itheight, x, y + caster.Inventaire.Height));
                     }
                 }
                 j.Close();
@@ -163,10 +159,19 @@ namespace Minecraft
             }
         }
 
-        public UI_Item GetItem(int index)
+        
+        public UI_Item GetItem(int id)
         {
-            return items[index];
+            foreach (UI_Item it in items)
+            {
+                if (it.ID == id)
+                {
+                    return it;
+                }
+            }
+            throw new KeyNotFoundException();
         }
+        
 
         public void AddItem(UI_Item item)
         {
@@ -180,14 +185,14 @@ namespace Minecraft
             canvas.Children.Remove(it);
         }
 
-        public List<KeyValuePair<UI_Item,int>> GetItem(int x,int y)
+        public List<KeyValuePair<UI_Item, int>> GetItem(int x, int y)
         {
             List<KeyValuePair<UI_Item, int>> pairs = new List<KeyValuePair<UI_Item, int>>();
-            for (int i = 0; i < items.Count;i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].x == x && items[i].y == y)
                 {
-                    pairs.Add(new KeyValuePair<UI_Item, int>(items[i],i));
+                    pairs.Add(new KeyValuePair<UI_Item, int>(items[i], i));
                 }
             }
             return pairs;

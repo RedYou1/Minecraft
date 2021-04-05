@@ -37,7 +37,7 @@ namespace BiblioMinecraft.World_System.Blocks
                 }
             });
             t.Start();
-            return this;
+            return inv;
         }
 
         public override void Update()

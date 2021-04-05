@@ -24,11 +24,6 @@ namespace Minecraft_Tests.Entities
             player.Inventaire.AddItem(steak);
             Assert.AreEqual(player.Inventaire.GetItem(0).id(),steak.id());
 
-            mer.MakeATrade(player,mer.Trades[0]);
-            Assert.AreEqual(player.Inventaire.GetItem(0).id(), new Emerald(1).id());
-            mer.MakeATrade(player, mer.Trades[1]);
-            Assert.AreEqual(player.Inventaire.GetItem(0).id(), steak.id());
-
             mer.Die();
         }
     }

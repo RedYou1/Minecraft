@@ -68,6 +68,7 @@ namespace BiblioMinecraft
             this.yaw = yaw;
         }
 
+        /*
         public virtual void ChangeWorld(float x, float y, float z, float pitch, float yaw, World world)
         {
             this.x = x;
@@ -77,10 +78,16 @@ namespace BiblioMinecraft
             this.yaw = yaw;
             this.world = world;
         }
+        */
 
         public bool Equals(Location loc)
         {
             return X == loc.X && Y == loc.Y && Z == loc.Z && Pitch == loc.Pitch && Yaw == loc.Yaw;
+        }
+
+        public bool AbsoluteEquals(Location loc)
+        {
+            return X == loc.X && Y == loc.Y && Z == loc.Z && Pitch == loc.Pitch && Yaw == loc.Yaw && world.Name == loc.world.Name;
         }
 
         public Location Clone()

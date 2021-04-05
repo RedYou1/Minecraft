@@ -18,8 +18,10 @@ namespace BiblioMinecraft.Attributes
         public override object Right_Click(Player player, object to)
         {
             player.Eat(this);
-            return null;
+            return FOOD;
         }
+
+        public static String FOOD { get => "Food Restored"; }
 
         public override string Attribute_id() { return "Food"; }
 

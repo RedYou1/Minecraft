@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HotBar.cs" />
     <Compile Include="UI_Inventaire.cs" />
     <Compile Include="UI_Item.cs" />
     <Page Include="MainWindow.xaml">

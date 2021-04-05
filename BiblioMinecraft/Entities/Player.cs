@@ -18,6 +18,8 @@ namespace BiblioMinecraft.Entities
         private Legging legging = null;
         private Boots boots = null;
 
+        public int itemSelected = 0;
+
         private float hunger = 20;
 
         private Inventaire inventaire = new Inventaire(9, 4);

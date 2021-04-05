@@ -31,6 +31,8 @@ namespace Minecraft
     public partial class MainWindow : Window
     {
         public static int selected = 0;
+        private UI_Inventaire inv;
+        public static bool open = true;
         public MainWindow()
         {
             InitializeComponent();
@@ -52,8 +54,9 @@ namespace Minecraft
             Helper.player.Inventaire.AddItem(boo);
             Helper.player.Equipe(boo);
 
-            Helper.player.Inventaire.SetItem(new Emerald(0 + 2), 0);
-            for (int i = 1; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
+            Helper.player.Inventaire.SetItem(new Back_Pack(), 0);
+            Helper.player.Inventaire.SetItem(new Emerald(0 + 2), 1);
+            for (int i = 2; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
             {
                 Helper.player.Inventaire.SetItem(new Steak(i + 2), i);
             }
@@ -101,19 +104,27 @@ namespace Minecraft
                 }
             });
             thread.Start();
+            ShowHotbar(Helper.player);
         }
 
-        private UI_Inventaire inv;
-
-        public void ShowInventory(object cont)
+        public void ShowInventory(object cont, object something)
         {
-            RemoveInventory();
+            Canvas.Children.Clear();
             selected = 0;
             Helper.Width = Width;
             Helper.Height = Height;
-            inv = new UI_Inventaire(Helper.player, cont, 32, 32, Canvas);
+            inv = new UI_Inventaire(Helper.player, cont, something, 32, 32, Canvas);
             Point t = Mouse.GetPosition(Canvas);
             inv.Move(selected, t.X, t.Y);
+        }
+
+        public void ShowHotbar(Player player)
+        {
+            Canvas.Children.Clear();
+            Helper.Width = Width;
+            Helper.Height = Height;
+            HotBar hb = new HotBar(player, 32, 32);
+            Canvas.Children.Add(hb);
         }
 
         private void ItemClickInv(object sender, MouseEventArgs e)
@@ -125,7 +136,7 @@ namespace Minecraft
             {
                 for (int i = 0; i < its.Length; i++)
                 {
-                    int h = its[i].Value;
+                    int h = inv.items[its[i].Value].ID;
                     if (h != selected)
                     {
                         UI_Item it = inv.GetItem(h);
@@ -167,7 +178,7 @@ namespace Minecraft
                                                 List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
                                                 if (l.Count == 0)
                                                 {
-                                                    inv.AddItem(new UI_Item(trade.giving(), it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
                                                 }
                                             }
                                         }
@@ -179,29 +190,34 @@ namespace Minecraft
                                     {
                                         doit = true;
                                         List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
-                                        if (l.Count > 0)
+                                        foreach (KeyValuePair<UI_Item, int> a in l)
                                         {
-                                            Item wanted = trade.wanted();
-                                            if (wanted.Quantity < l[0].Key.item.Quantity)
+                                            if (a.Key.item != null)
                                             {
-                                                inv.AddItem(new UI_Item(trade.giving(), it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
-                                            }
-                                            if (wanted.Quantity < l[0].Key.item.Quantity)
-                                            {
-                                                l[0].Key.item.Quantity -= wanted.Quantity;
-                                            }
-                                            else
-                                            {
-                                                l[0].Key.item = null;
-                                            }
-                                            uit.x = it.x;
-                                            uit.y = it.y;
-                                            inv.Move(l[0].Value, l[0].Key.pix, l[0].Key.piy);
+                                                Item wanted = trade.wanted();
 
-                                            selected = h - 1;
-                                            inv.RemoveItem(uit);
-                                            return;
+                                                if (wanted.Quantity < a.Key.item.Quantity)
+                                                {
+                                                    a.Key.item.Quantity -= wanted.Quantity;
+                                                }
+                                                else
+                                                {
+                                                    a.Key.item = null;
+                                                }
+                                                if (wanted.Quantity < a.Key.item.Quantity)
+                                                {
+                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                }
+                                                uit.x = it.x;
+                                                uit.y = it.y;
+                                                inv.Move(a.Value, a.Key.pix, a.Key.piy);
+
+                                                selected = inv.items[inv.items.IndexOf(inv.GetItem(h)) - 1].ID;
+                                                inv.RemoveItem(uit);
+                                                return;
+                                            }
                                         }
+                                        return;
                                     }
                                     else if (uit.item.id() == trade.giving().id())
                                     {
@@ -213,7 +229,7 @@ namespace Minecraft
                                             inv.RemoveItem(uit);
                                             uit.item.Quantity += giving.Quantity;
                                             inv.AddItem(uit);
-                                            selected = inv.items.Count - 2;
+                                            selected = inv.items[inv.items.Count - 2].ID;
 
                                             Item wanted = trade.wanted();
                                             List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
@@ -221,7 +237,7 @@ namespace Minecraft
                                             {
                                                 if (wanted.Quantity < l[0].Key.item.Quantity)
                                                 {
-                                                    inv.AddItem(new UI_Item(trade.giving(), it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
 
                                                     inv.RemoveItem(l[0].Key);
                                                     if (l[0].Key.item.Quantity > 1)
@@ -236,13 +252,12 @@ namespace Minecraft
                                     }
                                 }
                             }
-
                             if (inv.inv is Inventaire other)
                             {
                                 doit = true;
                                 uit.x = it.x;
                                 uit.y = it.y;
-                                other.SetItem(uit.item, it.x + ((it.y - Helper.player.Inventaire.Height) * Helper.player.Inventaire.Width));
+                                other.SetItem(uit.item, it.x + ((it.y - Helper.player.Inventaire.Height) * other.Width));
                                 if (it.item != null)
                                 {
                                     other.RemoveItem(it.item);
@@ -359,7 +374,7 @@ namespace Minecraft
                             uit.x = it.x;
                             uit.y = it.y;
                             Helper.player.Inventaire.SetItem(uit.item, it.x + (it.y * Helper.player.Inventaire.Width));
-                            if (it.item != null)
+                            if (it.item != null && Helper.player.Inventaire.Contains(it.item))
                             {
                                 Helper.player.Inventaire.RemoveItem(it.item);
                             }
@@ -368,9 +383,9 @@ namespace Minecraft
                         {
                             double x = uit.pix;
                             double y = uit.piy;
-                            inv.Move(selected, it.pix, it.piy);
+                            inv.Move(inv.items.IndexOf(inv.GetItem(selected)), it.pix, it.piy);
                             selected = h;
-                            inv.Move(selected, x, y);
+                            inv.Move(inv.items.IndexOf(inv.GetItem(selected)), x, y);
                         }
                         break;
                     }
@@ -384,7 +399,7 @@ namespace Minecraft
             if (inv != null)
             {
                 Point p = e.GetPosition(Canvas);
-                inv.Move(selected, p.X - inv.ItWidth / 2, p.Y - inv.ItHeight / 2);
+                inv.Move(inv.items.IndexOf(inv.GetItem(selected)), p.X - inv.ItWidth / 2, p.Y - inv.ItHeight / 2);
             }
         }
 
@@ -392,7 +407,7 @@ namespace Minecraft
         {
             if (inv != null)
             {
-                if (inv.inv is Chest chest)
+                if (inv.something2 is Chest chest)
                 {
                     chest.opening = false;
                     Thread t = new Thread(() =>
@@ -416,6 +431,7 @@ namespace Minecraft
 
                 inv = null;
                 Canvas.Children.Clear();
+                ShowHotbar(Helper.player);
             }
         }
 
@@ -436,8 +452,6 @@ namespace Minecraft
             world.SetBlock(new Chest(new Location(-2, 2, 0, world)));
         }
 
-        public static bool open = true;
-
         private void Game_Closing(object sender, EventArgs e)
         {
             open = false;
@@ -445,7 +459,16 @@ namespace Minecraft
 
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-
+            Helper.player.itemSelected += (e.Delta>0?1:-1);
+            if (Helper.player.itemSelected >= Helper.player.Inventaire.Width)
+            {
+                Helper.player.itemSelected -= Helper.player.Inventaire.Width;
+            }
+            if (Helper.player.itemSelected < 0)
+            {
+                Helper.player.itemSelected += Helper.player.Inventaire.Width;
+            }
+            ShowHotbar(Helper.player);
         }
 
         public void Grid_MousePress(object sender, MouseButtonEventArgs e)
@@ -457,25 +480,36 @@ namespace Minecraft
                 {
                     case MouseButton.Right:
                         {
+                            Item itSel = Helper.player.Inventaire.GetItem(Helper.player.itemSelected);
                             object qqch = Helper.player.GetInFrontOfHim(20);
+                            if (itSel != null)
+                            {
+                                object temp = itSel.Right_Click(Helper.player, qqch);
+                                if (temp is Inventaire inv)
+                                {
+                                    ShowInventory(inv, itSel);
+                                }
+                                if (temp is String s && s == Food.FOOD)
+                                {
+                                    ShowHotbar(Helper.player);
+                                }
+                            }
+
                             if (qqch != null)
                             {
                                 if (qqch is Merchand mer)
                                 {
-                                    ShowInventory(mer);
+                                    ShowInventory(mer, mer);
                                 }
                                 if (qqch is KeyValuePair<Block, Location> bl)
                                 {
                                     object ob = bl.Key.Right_Click(Helper.player, new Wooden_Block(bl.Value), bl.Value);
                                     if (ob != null)
                                     {
-                                        if (ob is Chest chest)
-                                        {
-                                            ShowInventory(chest);
-                                        }
+
                                         if (ob is Inventaire inv)
                                         {
-                                            ShowInventory(inv);
+                                            ShowInventory(inv, bl.Key);
                                         }
                                     }
                                     return;
@@ -511,18 +545,31 @@ namespace Minecraft
         {
             if (e.Key == Key.F)
             {
-                if (Canvas.Children.Count > 0)
+                if (inv != null)
                 {
                     RemoveInventory();
                 }
                 else
                 {
-                    ShowInventory(Helper.player);
+                    ShowInventory(Helper.player, Helper.player);
                 }
                 return;
             }
             if (inv == null)
             {
+                if ((int)e.Key >= (int)Key.NumPad1 && (int)e.Key <= (int)Key.NumPad9)
+                {
+                    Helper.player.itemSelected = (int)e.Key - (int)Key.NumPad1;
+                    ShowHotbar(Helper.player);
+                    return;
+                }
+                if ((int)e.Key >= (int)Key.D1 && (int)e.Key <= (int)Key.D9)
+                {
+                    Helper.player.itemSelected = (int)e.Key - (int)Key.D1;
+                    ShowHotbar(Helper.player);
+                    return;
+                }
+
                 float pitch = Helper.player.Pitch;
                 float yaw = Helper.player.Yaw;
                 Key key = e.Key;

@@ -17,8 +17,10 @@ namespace BiblioMinecraft.Items
             this.height = height;
             items = new Item[width * height];
         }
-        public Inventaire(Item[] items)
+        public Inventaire(int width, int height, Item[] items)
         {
+            this.width = width;
+            this.height = height;
             this.items = items;
         }
 
@@ -28,7 +30,7 @@ namespace BiblioMinecraft.Items
             {
                 return items[index];
             }
-            return null;
+            throw new ArgumentOutOfRangeException();
         }
 
         public void RemoveItem(Item item)
@@ -36,6 +38,10 @@ namespace BiblioMinecraft.Items
             if (Contains(item))
             {
                 SetItem(null, GetIndex(item));
+            }
+            else
+            {
+                throw new ArgumentException();
             }
         }
 
@@ -53,7 +59,8 @@ namespace BiblioMinecraft.Items
                     items[i] = item;
                     return true;
                 }
-                else {
+                else
+                {
                     if (items[i].id() == item.id() && items[i].MaxQuantity > items[i].Quantity)
                     {
                         if (items[i].MaxQuantity >= items[i].Quantity + item.Quantity)
@@ -75,14 +82,13 @@ namespace BiblioMinecraft.Items
 
         public int GetIndex(Item item)
         {
-            if (item == null) { return -1; }
             if (Contains(item))
             {
                 for (int i = 0; i < items.Length; i++)
                 {
                     if (items[i] != null)
                     {
-                        if (items[i].id() == item.id())
+                        if (items[i].id() == item.id() && items[i].Quantity == item.Quantity)
                         {
                             return i;
                         }
@@ -121,7 +127,7 @@ namespace BiblioMinecraft.Items
 
         public Inventaire Clone()
         {
-            return new Inventaire((Item[])items.Clone());
+            return new Inventaire(width, height, (Item[])items.Clone());
         }
 
         public Item[] Items
@@ -139,6 +145,8 @@ namespace BiblioMinecraft.Items
                 return a.ToArray();
             }
         }
+
+        /*
         public override String ToString()
         {
             String s = "Invertory{\n";
@@ -152,6 +160,7 @@ namespace BiblioMinecraft.Items
             s += "}";
             return s;
         }
+        */
 
         public int Length { get => width * height; }
         public int Width { get => width; }
