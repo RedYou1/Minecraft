@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using BiblioMinecraft.World_System.Models;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Models;
 using System.Windows.Media.Imaging;
 
-namespace BiblioMinecraft.World_System.Blocks
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks
 {
     public class CobbleStone_Block : Cube
     {

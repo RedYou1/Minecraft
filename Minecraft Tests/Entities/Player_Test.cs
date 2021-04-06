@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using BiblioMinecraft;
-using BiblioMinecraft.Items;
-using BiblioMinecraft.Items.Armors;
-using BiblioMinecraft.Entities;
-using BiblioMinecraft.Attributes;
-using BiblioMinecraft.Damages;
-using BiblioMinecraft.World_System;
-using BiblioMinecraft.World_System.Blocks;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items.Armors;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Damages;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks;
 using System.Collections.Generic;
 
 namespace Minecraft_Tests.Entities
@@ -47,12 +47,14 @@ namespace Minecraft_Tests.Entities
             player.Inventaire.AddItem(steak);
             Assert.AreEqual(player.Inventaire.GetIndex(steak), 0);
             player.Eat(steak);
+            player.Inventaire.RemoveItem(steak);
             Assert.AreEqual(player.Inventaire.GetIndex(steak), -1);
             Assert.AreEqual(player.Hunger, 18);
             Steak nsteak = new Steak(1);
             player.Inventaire.AddItem(nsteak);
             Assert.AreEqual(player.Inventaire.GetIndex(nsteak), 0);
             player.Eat(nsteak);
+            player.Inventaire.RemoveItem(steak);
             Assert.AreEqual(player.Inventaire.GetIndex(nsteak), -1);
             Assert.AreEqual(player.Hunger, 20);
 

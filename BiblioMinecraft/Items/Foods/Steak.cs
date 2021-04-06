@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
 
-namespace BiblioMinecraft.Items
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items
 {
     public class Steak : Food
     {

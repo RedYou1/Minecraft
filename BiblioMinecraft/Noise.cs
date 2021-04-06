@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace BiblioMinecraft
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 {
     public class Noise
     {

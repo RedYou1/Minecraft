@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiblioMinecraft.Items
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items
 {
-    public class Emerald : BiblioMinecraft.Attributes.Mineral
+    public class Emerald : CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes.Mineral
     {
         public Emerald(int quantity) : base(quantity,64)
         {

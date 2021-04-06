@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Items;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
 
-namespace BiblioMinecraft.Attributes
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes
 {
     public abstract class Attribute : Item
     {

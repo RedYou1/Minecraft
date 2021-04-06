@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Entities;
-using BiblioMinecraft.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
 
-namespace BiblioMinecraft.Items
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items
 {
-    public class Back_Pack : BiblioMinecraft.Attributes.Other
+    public class Back_Pack : CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes.Other
     {
         public Inventaire inventaire = new Inventaire(3,2);
 

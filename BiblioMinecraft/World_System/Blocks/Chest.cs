@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Items;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
-using BiblioMinecraft.World_System.Models;
-using BiblioMinecraft.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Models;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
 using System.Threading;
 
-namespace BiblioMinecraft.World_System.Blocks
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks
 {
     public class Chest : Block
     {
@@ -26,7 +26,7 @@ namespace BiblioMinecraft.World_System.Blocks
             inv = new Inventaire(9, 3);
         }
 
-        public override object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)
+        public override object Right_Click(CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities.Player player, Block block, Location loc)
         {
             opening = true;
             Thread t = new Thread(() => {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Items;
-using BiblioMinecraft.Damages;
-using BiblioMinecraft.World_System;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Damages;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System;
 using System.Windows.Media.Media3D;
 
-namespace BiblioMinecraft.Entities
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities
 {
     public abstract class Entity
     {

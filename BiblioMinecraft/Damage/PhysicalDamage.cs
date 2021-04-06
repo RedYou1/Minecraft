@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiblioMinecraft.Damages
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Damages
 {
     public class PhysicalDamage : Damage
     {

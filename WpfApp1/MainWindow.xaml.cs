@@ -11,17 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BiblioMinecraft;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting;
 using System.Windows.Media.Media3D;
-using BiblioMinecraft.World_System;
-using BiblioMinecraft.Items;
-using BiblioMinecraft.Entities;
-using BiblioMinecraft.World_System.Models;
-using BiblioMinecraft.World_System.Blocks;
-using BiblioMinecraft.Damages;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Models;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Damages;
 using System.Threading;
-using BiblioMinecraft.Items.Armors;
-using BiblioMinecraft.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items.Armors;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
 
 namespace Minecraft
 {

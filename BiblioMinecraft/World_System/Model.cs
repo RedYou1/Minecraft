@@ -9,7 +9,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 
-namespace BiblioMinecraft.World_System
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
     public class Game_Model
     {

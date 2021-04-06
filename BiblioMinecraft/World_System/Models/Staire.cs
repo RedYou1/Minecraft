@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
-namespace BiblioMinecraft.World_System.Models
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Models
 {
     public abstract class Staire : Block
     {

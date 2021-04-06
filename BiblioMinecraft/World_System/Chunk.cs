@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiblioMinecraft.World_System
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
     public class Chunk
     {

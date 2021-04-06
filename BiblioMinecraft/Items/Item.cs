@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BiblioMinecraft.Attributes;
-using BiblioMinecraft.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
 
-namespace BiblioMinecraft.Items
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items
 {
     public abstract class Item
     {
@@ -20,7 +20,7 @@ namespace BiblioMinecraft.Items
         }
 
         public abstract String id();
-        public virtual bool HaveAttribute(BiblioMinecraft.Attributes.Attribute attribute)
+        public virtual bool HaveAttribute(CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes.Attribute attribute)
         {
             return false;
         }

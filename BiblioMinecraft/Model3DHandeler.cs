@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using BiblioMinecraft;
-using BiblioMinecraft.Entities;
-using BiblioMinecraft.World_System;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System;
 
-namespace BiblioMinecraft
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 {
     public class Model3DHandeler
     {

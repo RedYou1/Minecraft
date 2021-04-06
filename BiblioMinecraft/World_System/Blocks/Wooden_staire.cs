@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
-using BiblioMinecraft.World_System.Models;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Models;
 
-namespace BiblioMinecraft.World_System.Blocks
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks
 {
     public class Wooden_staire : Staire
     {

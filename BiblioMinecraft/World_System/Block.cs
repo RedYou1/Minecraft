@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace BiblioMinecraft.World_System
+namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
     public abstract class Block : Model
     {
@@ -80,12 +80,12 @@ namespace BiblioMinecraft.World_System
             Helper.group.RemoveBlock(this);
         }
 
-        public virtual void Left_Click(BiblioMinecraft.Entities.Player player)
+        public virtual void Left_Click(CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities.Player player)
         {
             Destroy();
         }
 
-        public virtual object Right_Click(BiblioMinecraft.Entities.Player player, Block block, Location loc)
+        public virtual object Right_Click(CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities.Player player, Block block, Location loc)
         {
             float x = loc.X - X;
             float z = loc.Z - Z;
