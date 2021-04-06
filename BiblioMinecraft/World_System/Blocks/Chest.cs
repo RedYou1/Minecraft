@@ -26,7 +26,7 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System.Blocks
             inv = new Inventaire(9, 3);
         }
 
-        public override object Right_Click(CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities.Player player, Block block, Location loc)
+        public override object Right_Click(Player player, Block block, Location loc)
         {
             opening = true;
             Thread t = new Thread(() => {

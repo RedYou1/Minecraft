@@ -88,7 +88,7 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items
                 {
                     if (items[i] != null)
                     {
-                        if (items[i].id() == item.id() && items[i].Quantity == item.Quantity)
+                        if (items[i] == item)
                         {
                             return i;
                         }

@@ -16,15 +16,20 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 {
     public static class Helper
     {
-        public static double Width;
-        public static double Height;
 
         public static bool goodimage = false;
 
         public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
-        public static Model3DHandeler group;
         public static Entities.Player player = new Entities.Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
+
+
+
+
+        public static double Width;
+        public static double Height;
+
+        public static Model3DHandeler group;
 
         public static float Dist(Location loc1, Location loc2)
         {
@@ -35,6 +40,11 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
             return (float)Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(z1 - z2, 2) + Math.Pow(y1 - y2, 2));
         }
 
+        /// <summary>
+        /// transform un model 3D brute en model 3D utilisable
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static GeometryModel3D Model(Game_Model a)
         {
             MeshGeometry3D mesh = new MeshGeometry3D();

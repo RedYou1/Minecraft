@@ -29,7 +29,7 @@ namespace Minecraft
         public Player caster;
         public object something2;
         public object inv;
-        private int act = 0;
+        public int act = 0;
 
         public UI_Inventaire(Player caster, object something, object something2, double itwidth, double itheight, Canvas canvas)
         {
@@ -105,7 +105,7 @@ namespace Minecraft
                             new Point(((tx + 4) * 16) + 7, 7 + (ty * 18)),
                             new Point(((tx + 5) * 16) + 7, 7 + ((ty + 1) * 18))));
 
-                    items.Add(new UI_Item(null, act++, width / 4 + ((tx + 1) * 36) + 17, height - height / 4 - ((2 - ty) * 36) - height / 6 - 115, itwidth, itheight, 0, ty + (tx / 5) + caster.Inventaire.Height));
+                    items.Add(new UI_Item(null, act++, width / 4 + ((tx + 1) * 36) + 17, height - height / 4 - ((2 - ty) * 36) - height / 6 - 115, itwidth, itheight, 0, ty + (tx / 5 * 4) + caster.Inventaire.Height));
 
                     ty++;
                     if (ty > 3)

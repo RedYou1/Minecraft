@@ -30,6 +30,10 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes
 
         public override string Attribute_id() { return "Food"; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>the amount of food to restore</returns>
         public abstract int Food_Restored();
 
         public override bool HaveAttribute(Attribute attribute)

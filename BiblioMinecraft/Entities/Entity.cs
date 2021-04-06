@@ -29,7 +29,10 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities
             if (Helper.group != null) { Helper.group.RemoveEntity(this); }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>get the 3D model</returns>
         public virtual Game_Model Model()
         {
             Game_Model a = EntityModel();

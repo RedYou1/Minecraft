@@ -54,7 +54,7 @@ namespace Minecraft_Tests.Entities
             player.Inventaire.AddItem(nsteak);
             Assert.AreEqual(player.Inventaire.GetIndex(nsteak), 0);
             player.Eat(nsteak);
-            player.Inventaire.RemoveItem(steak);
+            player.Inventaire.RemoveItem(player.Inventaire.GetItem(0));
             Assert.AreEqual(player.Inventaire.GetIndex(nsteak), -1);
             Assert.AreEqual(player.Hunger, 20);
 

@@ -16,6 +16,10 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
             this.loc = loc;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>le model 3D</returns>
         public virtual Game_Model Model()
         {
             Game_Model a = BlockModel();
@@ -46,6 +50,9 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
             return a;
         }
 
+        /// <summary>
+        /// execute la fonction tout les ticks
+        /// </summary>
         public virtual void Update()
         {
 

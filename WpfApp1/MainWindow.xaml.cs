@@ -36,7 +36,6 @@ namespace Minecraft
         public MainWindow()
         {
             InitializeComponent();
-            Helper.ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
 
             Canvas.MouseDown += ItemClickInv;
             Helper.group = new Model3DHandeler(group);
@@ -181,7 +180,7 @@ namespace Minecraft
                                                     List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
                                                     if (l.Count == 0)
                                                     {
-                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.act++, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
                                                     }
                                                 }
                                             }
@@ -191,7 +190,6 @@ namespace Minecraft
                                     {
                                         if (uit.item == null)
                                         {
-                                            doit = true;
                                             List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
                                             foreach (KeyValuePair<UI_Item, int> a in l)
                                             {
@@ -199,24 +197,20 @@ namespace Minecraft
                                                 {
                                                     Item wanted = trade.wanted();
 
+                                                    inv.RemoveItem(a.Key);
                                                     if (wanted.Quantity < a.Key.item.Quantity)
                                                     {
                                                         a.Key.item.Quantity -= wanted.Quantity;
+                                                        inv.AddItem(a.Key);
                                                     }
-                                                    else
-                                                    {
-                                                        a.Key.item = null;
-                                                    }
-                                                    if (wanted.Quantity < a.Key.item.Quantity)
-                                                    {
-                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
-                                                    }
-                                                    uit.x = it.x;
-                                                    uit.y = it.y;
-                                                    inv.Move(a.Value, a.Key.pix, a.Key.piy);
 
-                                                    selected = inv.items[inv.items.IndexOf(inv.GetItem(h)) - 1].ID;
+                                                    selected = it.ID;
                                                     inv.RemoveItem(uit);
+
+                                                    if (wanted.Quantity <= a.Key.item.Quantity)
+                                                    {
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.act++, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    }
                                                     return;
                                                 }
                                             }
@@ -232,7 +226,6 @@ namespace Minecraft
                                                 inv.RemoveItem(uit);
                                                 uit.item.Quantity += giving.Quantity;
                                                 inv.AddItem(uit);
-                                                selected = inv.items[inv.items.Count - 2].ID;
 
                                                 Item wanted = trade.wanted();
                                                 List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
@@ -240,12 +233,12 @@ namespace Minecraft
                                                 {
                                                     if (wanted.Quantity < l[0].Key.item.Quantity)
                                                     {
-                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.act++, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
 
                                                         inv.RemoveItem(l[0].Key);
+                                                        l[0].Key.item.Quantity -= wanted.Quantity;
                                                         if (l[0].Key.item.Quantity > 1)
                                                         {
-                                                            l[0].Key.item.Quantity -= wanted.Quantity;
                                                             inv.AddItem(l[0].Key);
                                                         }
                                                     }
@@ -546,7 +539,7 @@ namespace Minecraft
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F)
+            if (e.Key == Controle.inventaire)
             {
                 if (inv != null)
                 {
@@ -560,156 +553,147 @@ namespace Minecraft
             }
             if (inv == null)
             {
-                if ((int)e.Key >= (int)Key.NumPad1 && (int)e.Key <= (int)Key.NumPad9)
-                {
-                    Helper.player.itemSelected = (int)e.Key - (int)Key.NumPad1;
-                    ShowHotbar(Helper.player);
-                    return;
-                }
-                if ((int)e.Key >= (int)Key.D1 && (int)e.Key <= (int)Key.D9)
-                {
-                    Helper.player.itemSelected = (int)e.Key - (int)Key.D1;
-                    ShowHotbar(Helper.player);
-                    return;
-                }
+                Func<int, bool> slot = (s) =>
+                 {
+                     Helper.player.itemSelected = s;
+                     ShowHotbar(Helper.player);
+                     return true;
+                 };
 
                 float pitch = Helper.player.Pitch;
                 float yaw = Helper.player.Yaw;
-                Key key = e.Key;
                 float speed = 0.12f;
                 float speedrot = 0.02f;
 
-                if (key == Key.Y)
+                switch (e.Key)
                 {
-                    Block[] b = Helper.player.Location.World.Blocks;
-                    Helper.group.RemoveBlock(b[b.Length - 1]);
-                    b[b.Length - 1].Location.Move(0, 0, 0, 0.1f, 0.1f);
-                    Helper.group.AddBlock(b[b.Length - 1]);
-                    return;
-                }
+                    case Controle.Slot1: { slot(0); return; }
+                    case Controle.Slot2: { slot(1); return; }
+                    case Controle.Slot3: { slot(2); return; }
+                    case Controle.Slot4: { slot(3); return; }
+                    case Controle.Slot5: { slot(4); return; }
+                    case Controle.Slot6: { slot(5); return; }
+                    case Controle.Slot7: { slot(6); return; }
+                    case Controle.Slot8: { slot(7); return; }
+                    case Controle.Slot9: { slot(8); return; }
 
-                if (key == Key.V)
-                {
-                    Entity[] b = Helper.player.Location.World.Entities;
-                    b[b.Length - 1].Move(0, 0, 0, 0.1f, 0);
-                    return;
-                }
-                if (key == Key.B)
-                {
-                    Entity[] b = Helper.player.Location.World.Entities;
-                    b[b.Length - 1].Move(0, 0, 0, -0.1f, 0);
-                    return;
-                }
-                if (key == Key.N)
-                {
-                    Entity[] b = Helper.player.Location.World.Entities;
-                    b[b.Length - 1].Move(0, 0, 0, 0, 0.1f);
-                    return;
-                }
-                if (key == Key.M)
-                {
-                    Entity[] b = Helper.player.Location.World.Entities;
-                    b[b.Length - 1].Move(0, 0, 0, 0, -0.1f);
-                    return;
-                }
-
-                if (key == Key.LeftCtrl)
-                {
-                    ctrl = !ctrl;
-                    if (ctrl)
-                    {
-                        button.Content = "Creative";
-                    }
-                    else
-                    {
-                        button.Content = "Spectator";
-                    }
-                    return;
-                }
-                if (ctrl)
-                {
-                    switch (key)
-                    {
-                        case Key.W:
-                            Helper.player.Move((float)Math.Sin(yaw) * speed, 0, (float)Math.Cos(yaw) * speed, 0, 0);
-                            break;
-                        case Key.S:
-                            Helper.player.Move((float)Math.Sin(yaw) * -speed, 0, (float)Math.Cos(yaw) * -speed, 0, 0);
-                            break;
-                        case Key.A:
+                    case Controle.tourneBlock_WoodenPlank:
+                        {
+                            Block[] b = Helper.player.Location.World.Blocks;
+                            Helper.group.RemoveBlock(b[b.Length - 1]);
+                            b[b.Length - 1].Location.Move(0, 0, 0, 0.1f, 0.1f);
+                            Helper.group.AddBlock(b[b.Length - 1]);
+                        }
+                        break;
+                    case Controle.marchandLeveTete:
+                        {
+                            Entity[] b = Helper.player.Location.World.Entities;
+                            b[b.Length - 1].Move(0, 0, 0, -0.1f, 0);
+                        }
+                        break;
+                    case Controle.marchandPencheTete:
+                        {
+                            Entity[] b = Helper.player.Location.World.Entities;
+                            b[b.Length - 1].Move(0, 0, 0, 0.1f, 0);
+                        }
+                        break;
+                    case Controle.marchandTourneDroitTete:
+                        {
+                            Entity[] b = Helper.player.Location.World.Entities;
+                            b[b.Length - 1].Move(0, 0, 0, 0, -0.1f);
+                        }
+                        break;
+                    case Controle.marchandTourneGaucheTete:
+                        {
+                            Entity[] b = Helper.player.Location.World.Entities;
+                            b[b.Length - 1].Move(0, 0, 0, 0, 0.1f);
+                        }
+                        break;
+                    case Controle.flyingMode:
+                        {
+                            ctrl = !ctrl;
+                            if (ctrl)
+                            {
+                                button.Content = "Creative";
+                            }
+                            else
+                            {
+                                button.Content = "Spectator";
+                            }
+                        }
+                        break;
+                    case Controle.devant:
+                        {
+                            if (ctrl)
+                            {
+                                Helper.player.Move((float)Math.Sin(yaw) * speed, 0, (float)Math.Cos(yaw) * speed, 0, 0);
+                            }
+                            else
+                            {
+                                Helper.player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * speed, (float)Math.Sin(pitch) * speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * speed, 0, 0);
+                            }
+                        }
+                        break;
+                    case Controle.derriere:
+                        {
+                            if (ctrl)
+                            {
+                                Helper.player.Move((float)Math.Sin(yaw) * -speed, 0, (float)Math.Cos(yaw) * -speed, 0, 0);
+                            }
+                            else
+                            {
+                                Helper.player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * -speed, (float)Math.Sin(pitch) * -speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * -speed, 0, 0);
+                            }
+                        }
+                        break;
+                    case Controle.gauche:
+                        {
                             Helper.player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
-                            break;
-                        case Key.D:
+                        }
+                        break;
+                    case Controle.droite:
+                        {
                             Helper.player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
-                            break;
-                        case Key.Space:
+                        }
+                        break;
+                    case Controle.dessus:
+                        {
                             Helper.player.Move(0, speed, 0, 0, 0);
-                            break;
-                        case Key.LeftShift:
+                        }
+                        break;
+                    case Controle.dessous:
+                        {
                             Helper.player.Move(0, -speed, 0, 0, 0);
-                            break;
-                        case Key.K:
+                        }
+                        break;
+                    case Controle.regardDessous:
+                        {
                             if (Helper.player.Location.Pitch - speedrot >= -Math.PI / 2)
                             {
                                 Helper.player.Move(0, 0, 0, -speedrot, 0);
                             }
-                            break;
-                        case Key.L:
+                        }
+                        break;
+                    case Controle.regardDessus:
+                        {
                             if (Helper.player.Location.Pitch + speedrot <= Math.PI / 2)
                             {
                                 Helper.player.Move(0, 0, 0, speedrot, 0);
                             }
-                            break;
-                        case Key.E:
+                        }
+                        break;
+                    case Controle.regardDroite:
+                        {
                             Helper.player.Move(0, 0, 0, 0, -speedrot);
-                            break;
-                        case Key.Q:
+                        }
+                        break;
+                    case Controle.regardGauche:
+                        {
                             Helper.player.Move(0, 0, 0, 0, speedrot);
-                            break;
-                    }
+                        }
+                        break;
                 }
-                else
-                {
-                    switch (key)
-                    {
-                        case Key.W:
-                            Helper.player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * speed, (float)Math.Sin(pitch) * speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * speed, 0, 0);
-                            break;
-                        case Key.S:
-                            Helper.player.Move((float)Math.Cos(pitch) * (float)Math.Sin(yaw) * -speed, (float)Math.Sin(pitch) * -speed, (float)Math.Cos(pitch) * (float)Math.Cos(yaw) * -speed, 0, 0);
-                            break;
-                        case Key.A:
-                            Helper.player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * speed, 0, 0);
-                            break;
-                        case Key.D:
-                            Helper.player.Move((float)Math.Sin(yaw + (Math.PI / 2)) * -speed, 0, (float)Math.Cos(yaw + (Math.PI / 2)) * -speed, 0, 0);
-                            break;
-                        case Key.Space:
-                            Helper.player.Move(0, speed, 0, 0, 0);
-                            break;
-                        case Key.LeftShift:
-                            Helper.player.Move(0, -speed, 0, 0, 0);
-                            break;
-                        case Key.K:
-                            if (Helper.player.Location.Pitch - speedrot >= -Math.PI / 2)
-                            {
-                                Helper.player.Move(0, 0, 0, -speedrot, 0);
-                            }
-                            break;
-                        case Key.L:
-                            if (Helper.player.Location.Pitch + speedrot <= Math.PI / 2)
-                            {
-                                Helper.player.Move(0, 0, 0, speedrot, 0);
-                            }
-                            break;
-                        case Key.E:
-                            Helper.player.Move(0, 0, 0, 0, -speedrot);
-                            break;
-                        case Key.Q:
-                            Helper.player.Move(0, 0, 0, 0, speedrot);
-                            break;
-                    }
-                }
+
                 camera.Position = new Point3D(
                         Helper.player.X,
                         Helper.player.Y,

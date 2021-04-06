@@ -71,10 +71,6 @@ namespace Minecraft_Tests.Items
             it = new Emerald(64);
             Assert.AreEqual(inv.AddItem(it), false);
             Assert.AreEqual(inv.GetItem(3).Quantity, 64);
-
-            it = new Emerald(64);
-            Assert.AreEqual(inv.GetIndex(it), 0);
-            Assert.AreEqual(inv.GetIndex(null), -1);
         }
     }
 }
