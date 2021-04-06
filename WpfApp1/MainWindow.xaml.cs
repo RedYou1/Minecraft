@@ -56,7 +56,8 @@ namespace Minecraft
 
             Helper.player.Inventaire.SetItem(new Back_Pack(), 0);
             Helper.player.Inventaire.SetItem(new Emerald(0 + 2), 1);
-            for (int i = 2; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
+            Helper.player.Inventaire.SetItem(new Back_Pack(), 2);
+            for (int i = 3; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
             {
                 Helper.player.Inventaire.SetItem(new Steak(i + 2), i);
             }
@@ -129,267 +130,268 @@ namespace Minecraft
 
         private void ItemClickInv(object sender, MouseEventArgs e)
         {
-            Point pos = e.GetPosition(Canvas);
-
-            KeyValuePair<UI_Item, int>[] its = inv.GetItem(pos.X, pos.Y);
-            if (its.Length > 1)
+            if (inv != null)
             {
-                for (int i = 0; i < its.Length; i++)
+                Point pos = e.GetPosition(Canvas);
+                KeyValuePair<UI_Item, int>[] its = inv.GetItem(pos.X, pos.Y);
+                if (its.Length > 1)
                 {
-                    int h = inv.items[its[i].Value].ID;
-                    if (h != selected)
+                    for (int i = 0; i < its.Length; i++)
                     {
-                        UI_Item it = inv.GetItem(h);
-                        UI_Item uit = inv.GetItem(selected);
-
-                        bool doit = false;
-                        if (it.y >= Helper.player.Inventaire.Height)
+                        int h = inv.items[its[i].Value].ID;
+                        if (h != selected)
                         {
-                            if (inv.inv is Merchand mer)
-                            {
-                                Trade trade = mer.Trades[it.y - Helper.player.Inventaire.Height];
-                                if (it.x == 0)
-                                {
-                                    Item wanted = trade.wanted();
-                                    if (uit.item == null || uit.item.id() != wanted.id() || uit.item.Quantity < wanted.Quantity)
-                                    {
-                                        List<KeyValuePair<UI_Item, int>> tl = inv.GetItem(1, it.y);
-                                        if (tl.Count >= 1)
-                                        {
-                                            inv.RemoveItem(tl[0].Key);
-                                        }
-                                    }
+                            UI_Item it = inv.GetItem(h);
+                            UI_Item uit = inv.GetItem(selected);
 
-                                    if (uit.item == null)
+                            bool doit = false;
+                            if (it.y >= Helper.player.Inventaire.Height)
+                            {
+                                if (inv.inv is Merchand mer)
+                                {
+                                    Trade trade = mer.Trades[it.y - Helper.player.Inventaire.Height];
+                                    if (it.x == 0)
                                     {
-                                        doit = true;
-                                        uit.x = it.x;
-                                        uit.y = it.y;
-                                    }
-                                    else
-                                    {
-                                        if (uit.item.id() == wanted.id())
+                                        Item wanted = trade.wanted();
+                                        if (uit.item == null || uit.item.id() != wanted.id() || uit.item.Quantity < wanted.Quantity)
+                                        {
+                                            List<KeyValuePair<UI_Item, int>> tl = inv.GetItem(1, it.y);
+                                            if (tl.Count >= 1)
+                                            {
+                                                inv.RemoveItem(tl[0].Key);
+                                            }
+                                        }
+
+                                        if (uit.item == null)
                                         {
                                             doit = true;
                                             uit.x = it.x;
                                             uit.y = it.y;
-                                            if (uit.item.Quantity >= wanted.Quantity)
-                                            {
-                                                List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
-                                                if (l.Count == 0)
-                                                {
-                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
-                                                }
-                                            }
                                         }
-                                    }
-                                }
-                                else
-                                {
-                                    if (uit.item == null)
-                                    {
-                                        doit = true;
-                                        List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
-                                        foreach (KeyValuePair<UI_Item, int> a in l)
+                                        else
                                         {
-                                            if (a.Key.item != null)
+                                            if (uit.item.id() == wanted.id())
                                             {
-                                                Item wanted = trade.wanted();
-
-                                                if (wanted.Quantity < a.Key.item.Quantity)
-                                                {
-                                                    a.Key.item.Quantity -= wanted.Quantity;
-                                                }
-                                                else
-                                                {
-                                                    a.Key.item = null;
-                                                }
-                                                if (wanted.Quantity < a.Key.item.Quantity)
-                                                {
-                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
-                                                }
+                                                doit = true;
                                                 uit.x = it.x;
                                                 uit.y = it.y;
-                                                inv.Move(a.Value, a.Key.pix, a.Key.piy);
-
-                                                selected = inv.items[inv.items.IndexOf(inv.GetItem(h)) - 1].ID;
-                                                inv.RemoveItem(uit);
-                                                return;
+                                                if (uit.item.Quantity >= wanted.Quantity)
+                                                {
+                                                    List<KeyValuePair<UI_Item, int>> l = inv.GetItem(1, it.y);
+                                                    if (l.Count == 0)
+                                                    {
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix + (3 * 36), it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    }
+                                                }
                                             }
                                         }
-                                        return;
                                     }
-                                    else if (uit.item.id() == trade.giving().id())
+                                    else
                                     {
-                                        Item giving = trade.giving();
-                                        if (uit.item.Quantity + giving.Quantity <= uit.item.MaxQuantity)
+                                        if (uit.item == null)
                                         {
-                                            inv.RemoveItem(it);
-
-                                            inv.RemoveItem(uit);
-                                            uit.item.Quantity += giving.Quantity;
-                                            inv.AddItem(uit);
-                                            selected = inv.items[inv.items.Count - 2].ID;
-
-                                            Item wanted = trade.wanted();
+                                            doit = true;
                                             List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
-                                            if (l.Count > 0)
+                                            foreach (KeyValuePair<UI_Item, int> a in l)
                                             {
-                                                if (wanted.Quantity < l[0].Key.item.Quantity)
+                                                if (a.Key.item != null)
                                                 {
-                                                    inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    Item wanted = trade.wanted();
 
-                                                    inv.RemoveItem(l[0].Key);
-                                                    if (l[0].Key.item.Quantity > 1)
+                                                    if (wanted.Quantity < a.Key.item.Quantity)
                                                     {
-                                                        l[0].Key.item.Quantity -= wanted.Quantity;
-                                                        inv.AddItem(l[0].Key);
+                                                        a.Key.item.Quantity -= wanted.Quantity;
                                                     }
+                                                    else
+                                                    {
+                                                        a.Key.item = null;
+                                                    }
+                                                    if (wanted.Quantity < a.Key.item.Quantity)
+                                                    {
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+                                                    }
+                                                    uit.x = it.x;
+                                                    uit.y = it.y;
+                                                    inv.Move(a.Value, a.Key.pix, a.Key.piy);
+
+                                                    selected = inv.items[inv.items.IndexOf(inv.GetItem(h)) - 1].ID;
+                                                    inv.RemoveItem(uit);
+                                                    return;
                                                 }
                                             }
                                             return;
                                         }
+                                        else if (uit.item.id() == trade.giving().id())
+                                        {
+                                            Item giving = trade.giving();
+                                            if (uit.item.Quantity + giving.Quantity <= uit.item.MaxQuantity)
+                                            {
+                                                inv.RemoveItem(it);
+
+                                                inv.RemoveItem(uit);
+                                                uit.item.Quantity += giving.Quantity;
+                                                inv.AddItem(uit);
+                                                selected = inv.items[inv.items.Count - 2].ID;
+
+                                                Item wanted = trade.wanted();
+                                                List<KeyValuePair<UI_Item, int>> l = inv.GetItem(0, it.y);
+                                                if (l.Count > 0)
+                                                {
+                                                    if (wanted.Quantity < l[0].Key.item.Quantity)
+                                                    {
+                                                        inv.AddItem(new UI_Item(trade.giving(), inv.items.Count, it.pix, it.piy, inv.ItWidth, inv.ItHeight, 1, it.y));
+
+                                                        inv.RemoveItem(l[0].Key);
+                                                        if (l[0].Key.item.Quantity > 1)
+                                                        {
+                                                            l[0].Key.item.Quantity -= wanted.Quantity;
+                                                            inv.AddItem(l[0].Key);
+                                                        }
+                                                    }
+                                                }
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (inv.inv is Inventaire other)
+                                {
+                                    if (!(inv.something2 is Item tit && tit == uit.item))
+                                    {
+                                        doit = true;
+                                        uit.x = it.x;
+                                        uit.y = it.y;
+                                        other.SetItem(uit.item, it.x + ((it.y - Helper.player.Inventaire.Height) * other.Width));
+                                    }
+                                }
+                                if (inv.inv is Player p)
+                                {
+                                    Item ith = inv.GetItem(selected).item;
+                                    if (ith is Armor || ith == null)
+                                    {
+                                        switch (it.y)
+                                        {
+                                            case 4:
+                                                {
+                                                    if (ith is Boots boo)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 4;
+                                                        p.Boots = boo;
+                                                        doit = true;
+                                                    }
+                                                    if (ith == null)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 4;
+                                                        p.Boots = null;
+                                                        doit = true;
+                                                    }
+                                                }
+                                                break;
+                                            case 5:
+                                                {
+                                                    if (ith is Legging le)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 5;
+                                                        p.Legging = le;
+                                                        doit = true;
+                                                    }
+                                                    if (ith == null)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 5;
+                                                        p.Legging = null;
+                                                        doit = true;
+                                                    }
+                                                }
+                                                break;
+                                            case 6:
+                                                {
+                                                    if (ith is ChestPlate ch)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 6;
+                                                        p.ChestPlate = ch;
+                                                        doit = true;
+                                                    }
+                                                    if (ith == null)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 6;
+                                                        p.ChestPlate = null;
+                                                        doit = true;
+                                                    }
+                                                }
+                                                break;
+                                            case 7:
+                                                {
+                                                    if (ith is Helmet hel)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 7;
+                                                        p.Helmet = hel;
+                                                        doit = true;
+                                                    }
+                                                    if (ith == null)
+                                                    {
+                                                        uit.x = 0;
+                                                        uit.y = 7;
+                                                        p.Helmet = null;
+                                                        doit = true;
+                                                    }
+                                                }
+                                                break;
+                                        }
                                     }
                                 }
                             }
-                            if (inv.inv is Inventaire other)
+                            else
                             {
+                                if (it.item != null && uit.item != null)
+                                {
+                                    if (it.item.id() == uit.item.id())
+                                    {
+                                        if (it.item.Quantity < it.item.MaxQuantity)
+                                        {
+                                            if (it.item.MaxQuantity >= it.item.Quantity + uit.item.Quantity)
+                                            {
+                                                it.item.Quantity += uit.item.Quantity;
+                                                uit.item = null;
+
+                                                inv.Move(h, it.pix, it.piy);
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                uit.item.Quantity -= (it.item.MaxQuantity - it.item.Quantity);
+                                                it.item.Quantity = it.item.MaxQuantity;
+                                            }
+                                        }
+                                    }
+                                }
                                 doit = true;
                                 uit.x = it.x;
                                 uit.y = it.y;
-                                other.SetItem(uit.item, it.x + ((it.y - Helper.player.Inventaire.Height) * other.Width));
-                                if (it.item != null)
+                                Helper.player.Inventaire.SetItem(uit.item, it.x + (it.y * Helper.player.Inventaire.Width));
+                                if (it.item != null && Helper.player.Inventaire.Contains(it.item))
                                 {
-                                    other.RemoveItem(it.item);
+                                    Helper.player.Inventaire.RemoveItem(it.item);
                                 }
                             }
-                            if (inv.inv is Player p)
+                            if (doit == true)
                             {
-                                Item ith = inv.GetItem(selected).item;
-                                if (ith is Armor || ith == null)
-                                {
-                                    switch (it.y)
-                                    {
-                                        case 4:
-                                            {
-                                                if (ith is Boots boo)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 4;
-                                                    p.Boots = boo;
-                                                    doit = true;
-                                                }
-                                                if (ith == null)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 4;
-                                                    p.Boots = null;
-                                                    doit = true;
-                                                }
-                                            }
-                                            break;
-                                        case 5:
-                                            {
-                                                if (ith is Legging le)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 5;
-                                                    p.Legging = le;
-                                                    doit = true;
-                                                }
-                                                if (ith == null)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 5;
-                                                    p.Legging = null;
-                                                    doit = true;
-                                                }
-                                            }
-                                            break;
-                                        case 6:
-                                            {
-                                                if (ith is ChestPlate ch)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 6;
-                                                    p.ChestPlate = ch;
-                                                    doit = true;
-                                                }
-                                                if (ith == null)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 6;
-                                                    p.ChestPlate = null;
-                                                    doit = true;
-                                                }
-                                            }
-                                            break;
-                                        case 7:
-                                            {
-                                                if (ith is Helmet hel)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 7;
-                                                    p.Helmet = hel;
-                                                    doit = true;
-                                                }
-                                                if (ith == null)
-                                                {
-                                                    uit.x = 0;
-                                                    uit.y = 7;
-                                                    p.Helmet = null;
-                                                    doit = true;
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
+                                double x = uit.pix;
+                                double y = uit.piy;
+                                inv.Move(inv.items.IndexOf(inv.GetItem(selected)), it.pix, it.piy);
+                                selected = h;
+                                inv.Move(inv.items.IndexOf(inv.GetItem(selected)), x, y);
                             }
+                            break;
                         }
-                        else
-                        {
-                            if (it.item != null && uit.item != null)
-                            {
-                                if (it.item.id() == uit.item.id())
-                                {
-                                    if (it.item.Quantity < it.item.MaxQuantity)
-                                    {
-                                        if (it.item.MaxQuantity >= it.item.Quantity + uit.item.Quantity)
-                                        {
-                                            it.item.Quantity += uit.item.Quantity;
-                                            uit.item = null;
 
-                                            inv.Move(h, it.pix, it.piy);
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            uit.item.Quantity -= (it.item.MaxQuantity - it.item.Quantity);
-                                            it.item.Quantity = it.item.MaxQuantity;
-                                        }
-                                    }
-                                }
-                            }
-                            doit = true;
-                            uit.x = it.x;
-                            uit.y = it.y;
-                            Helper.player.Inventaire.SetItem(uit.item, it.x + (it.y * Helper.player.Inventaire.Width));
-                            if (it.item != null && Helper.player.Inventaire.Contains(it.item))
-                            {
-                                Helper.player.Inventaire.RemoveItem(it.item);
-                            }
-                        }
-                        if (doit == true)
-                        {
-                            double x = uit.pix;
-                            double y = uit.piy;
-                            inv.Move(inv.items.IndexOf(inv.GetItem(selected)), it.pix, it.piy);
-                            selected = h;
-                            inv.Move(inv.items.IndexOf(inv.GetItem(selected)), x, y);
-                        }
-                        break;
                     }
-
                 }
             }
         }
@@ -459,7 +461,7 @@ namespace Minecraft
 
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Helper.player.itemSelected += (e.Delta>0?1:-1);
+            Helper.player.itemSelected += (e.Delta > 0 ? 1 : -1);
             if (Helper.player.itemSelected >= Helper.player.Inventaire.Width)
             {
                 Helper.player.itemSelected -= Helper.player.Inventaire.Width;
@@ -488,10 +490,12 @@ namespace Minecraft
                                 if (temp is Inventaire inv)
                                 {
                                     ShowInventory(inv, itSel);
+                                    return;
                                 }
                                 if (temp is String s && s == Food.FOOD)
                                 {
                                     ShowHotbar(Helper.player);
+                                    return;
                                 }
                             }
 

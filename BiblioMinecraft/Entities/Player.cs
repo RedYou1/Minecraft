@@ -165,14 +165,10 @@ namespace BiblioMinecraft.Entities
 
         public void Eat(Food food)
         {
-            if (inventaire.Contains(food))
+            hunger += food.Food_Restored();
+            if (hunger > 20)
             {
-                hunger += food.Food_Restored();
-                if (hunger > 20)
-                {
-                    hunger = 20;
-                }
-                inventaire.RemoveItem(food);
+                hunger = 20;
             }
         }
 

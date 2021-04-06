@@ -63,7 +63,10 @@ namespace Minecraft
                 drawingContext.DrawImage(image, new Rect(new Point(pix, piy), new Point(pix + width, piy + height)));
                 if (item.Quantity != 1)
                 {
-                    drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25), new Point(pix + width / 1.25f, piy + height / 2));
+                    drawingContext.DrawRectangle(Brushes.White, new Pen(),
+                            new Rect(pix + width / 1.5f, piy + height / 2f, width - width / 2f, height / 2f));
+                    drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), width / 2, Brushes.Black, 1.25),
+                        new Point(pix + width / 1.5f, piy + height / 2));
                 }
             }
         }

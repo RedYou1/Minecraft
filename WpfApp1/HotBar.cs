@@ -37,7 +37,7 @@ namespace Minecraft
             base.OnRender(drawingContext);
 
             drawingContext.DrawImage(new BitmapImage(new Uri(Helper.ImageFile + "hotbar.png")), new Rect(width / 4, height - height / 4, width / 2, height / 6));
-            drawingContext.DrawImage(new BitmapImage(new Uri(Helper.ImageFile + "Selector.png")), new Rect(width / 4 + itwidth * player.itemSelected * 1.355, height - height / 5.7-5, itwidth+20, itheight+15));
+            drawingContext.DrawImage(new BitmapImage(new Uri(Helper.ImageFile + "Selector.png")), new Rect(width / 4 + itwidth * player.itemSelected * 1.355, height - height / 5.7 - 5, itwidth + 20, itheight + 15));
             for (int i = 0; i < 9; i++)
             {
                 Item item = player.Inventaire.GetItem(i);
@@ -49,12 +49,14 @@ namespace Minecraft
                         new Rect(new Point(x, y), new Point(x + itwidth, y + itheight)));
                     if (item.Quantity != 1)
                     {
-                        drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"),width / 2, Brushes.Black, 1.25),
-                            new Point(x + width / 1.25f, y + height / 2));
+                        drawingContext.DrawRectangle(Brushes.White, new Pen(),
+                            new Rect(x + itwidth / 1.5f, y + itheight / 2f, itwidth - itwidth / 2f, itheight / 2f));
+                        drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), itwidth / 2f, Brushes.Black, 1.25),
+                            new Point(x + itwidth / 1.5f, y + itheight / 2f));
                     }
                 }
             }
-            
+
         }
     }
 }

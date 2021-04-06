@@ -18,6 +18,11 @@ namespace BiblioMinecraft.Attributes
         public override object Right_Click(Player player, object to)
         {
             player.Eat(this);
+            quantity--;
+            if (quantity <= 0)
+            {
+                player.Inventaire.RemoveItem(this);
+            }
             return FOOD;
         }
 
