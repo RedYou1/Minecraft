@@ -57,7 +57,8 @@ namespace Minecraft
             Helper.player.Inventaire.SetItem(new Back_Pack(), 0);
             Helper.player.Inventaire.SetItem(new Emerald(0 + 2), 1);
             Helper.player.Inventaire.SetItem(new Back_Pack(), 2);
-            for (int i = 3; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
+            Helper.player.Inventaire.SetItem(new Back_Pack(), 3);
+            for (int i = 4; i < Helper.player.Inventaire.Length - Helper.player.Inventaire.Width; i++)
             {
                 Helper.player.Inventaire.SetItem(new Steak(i + 2), i);
             }
@@ -375,10 +376,6 @@ namespace Minecraft
                                 uit.x = it.x;
                                 uit.y = it.y;
                                 Helper.player.Inventaire.SetItem(uit.item, it.x + (it.y * Helper.player.Inventaire.Width));
-                                if (it.item != null && Helper.player.Inventaire.Contains(it.item))
-                                {
-                                    Helper.player.Inventaire.RemoveItem(it.item);
-                                }
                             }
                             if (doit == true)
                             {
@@ -478,12 +475,12 @@ namespace Minecraft
             if (inv == null)
             {
                 MouseButton button = e.ChangedButton;
+                object qqch = Helper.player.GetInFrontOfHim(20);
                 switch (button)
                 {
                     case MouseButton.Right:
                         {
                             Item itSel = Helper.player.Inventaire.GetItem(Helper.player.itemSelected);
-                            object qqch = Helper.player.GetInFrontOfHim(20);
                             if (itSel != null)
                             {
                                 object temp = itSel.Right_Click(Helper.player, qqch);
@@ -523,7 +520,6 @@ namespace Minecraft
                         break;
                     case MouseButton.Left:
                         {
-                            object qqch = Helper.player.GetInFrontOfHim(20);
                             if (qqch != null)
                             {
                                 if (qqch is Entity ent)
@@ -538,6 +534,9 @@ namespace Minecraft
                         }
                         break;
                     case MouseButton.Middle:
+                        {
+                            //TODO: item du block
+                        }
                         break;
                 }
             }
