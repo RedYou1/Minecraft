@@ -19,11 +19,11 @@ namespace Minecraft
     public class HotBar : FrameworkElement
     {
         private Player player;
-        private int itwidth;
-        private int itheight;
-        private double width;
-        private double height;
-        public HotBar(Player player, int itwidth, int itheight)
+        public double itwidth;
+        public double itheight;
+        public double width;
+        public double height;
+        public HotBar(Player player, double itwidth, double itheight)
         {
             this.player = player;
             this.itwidth = itwidth;
@@ -45,14 +45,17 @@ namespace Minecraft
                 {
                     double x = width / 4 + 10 + itwidth * i * 1.355;
                     double y = height - height / 5.7;
-                    drawingContext.DrawImage(new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + item.id() + ".png")),
-                        new Rect(new Point(x, y), new Point(x + itwidth, y + itheight)));
-                    if (item.Quantity != 1)
+                    if (!double.IsInfinity(x) && !double.IsInfinity(y))
                     {
-                        drawingContext.DrawRectangle(Brushes.White, new Pen(),
-                            new Rect(x + itwidth / 1.5f, y + itheight / 2f, itwidth - itwidth / 2f, itheight / 2f));
-                        drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), itwidth / 2f, Brushes.Black, 1.25),
-                            new Point(x + itwidth / 1.5f, y + itheight / 2f));
+                        drawingContext.DrawImage(new BitmapImage(new Uri(Helper.ImageFile + "Items\\" + item.id() + ".png")),
+                            new Rect(new Point(x, y), new Point(x + itwidth, y + itheight)));
+                        if (item.Quantity != 1)
+                        {
+                            drawingContext.DrawRectangle(Brushes.White, new Pen(),
+                                new Rect(x + itwidth / 1.5f, y + itheight / 2f, itwidth - itwidth / 2f, itheight / 2f));
+                            drawingContext.DrawText(new FormattedText("" + item.Quantity, new System.Globalization.CultureInfo("NA"), FlowDirection, new Typeface("type"), itwidth / 2f, Brushes.Black, 1.25),
+                                new Point(x + itwidth / 1.5f, y + itheight / 2f));
+                        }
                     }
                 }
             }

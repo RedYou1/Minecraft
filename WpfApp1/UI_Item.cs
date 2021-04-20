@@ -19,8 +19,8 @@ namespace Minecraft
     {
         public Item item;
         private int id;
-        private double width;
-        private double height;
+        public double width;
+        public double height;
         public UI_Item(Item item,int id, double pix, double piy, double width, double height, int x, int y)
         {
             this.id = id;

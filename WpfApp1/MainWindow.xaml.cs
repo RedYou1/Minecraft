@@ -108,13 +108,54 @@ namespace Minecraft
             ShowHotbar(Helper.player);
         }
 
+        private void Frame_Resized(object sender, SizeChangedEventArgs e)
+        {
+            double x = e.NewSize.Width / e.PreviousSize.Width;
+            double y = e.NewSize.Height / e.PreviousSize.Height;
+            Helper.Width = e.NewSize.Width;
+            Helper.Height = e.NewSize.Height;
+            if (inv != null)
+            {
+                List<UI_Item> t = new List<UI_Item>();
+                foreach (UI_Item it in inv.items)
+                {
+                    it.pix *= x;
+                    it.piy *= y;
+                    it.width *= x;
+                    it.height *= y;
+                    t.Add(it);
+                }
+                Canvas.Children.Clear();
+                inv.ItWidth *= x;
+                inv.ItHeight *= y;
+                inv.width = e.NewSize.Width;
+                inv.height = e.NewSize.Height;
+
+                Canvas.Children.Add(inv);
+                foreach (UI_Item it in t)
+                {
+                    Canvas.Children.Add(it);
+                }
+            }
+            else
+            {
+                if (Canvas.Children[0] is HotBar bar)
+                {
+                    Canvas.Children.RemoveAt(0);
+                    bar.width = e.NewSize.Width;
+                    bar.height = e.NewSize.Height;
+                    bar.itheight = 32f;
+                    bar.itwidth = 32f;
+                    Canvas.Children.Insert(0, bar);
+                }
+            }
+        }
+
         public void ShowInventory(object cont, object something)
         {
             Canvas.Children.Clear();
             selected = 0;
-            Helper.Width = Width;
-            Helper.Height = Height;
-            inv = new UI_Inventaire(Helper.player, cont, something, 32, 32, Canvas);
+            inv = new UI_Inventaire(Helper.player, cont, something, Helper.Width, Helper.Height, 32 * Helper.Width / Width, 32 * Helper.Height / Height, Canvas);
             Point t = Mouse.GetPosition(Canvas);
             inv.Move(selected, t.X, t.Y);
         }
@@ -122,9 +163,7 @@ namespace Minecraft
         public void ShowHotbar(Player player)
         {
             Canvas.Children.Clear();
-            Helper.Width = Width;
-            Helper.Height = Height;
-            HotBar hb = new HotBar(player, 32, 32);
+            HotBar hb = new HotBar(player, 32f, 32f);
             Canvas.Children.Add(hb);
         }
 

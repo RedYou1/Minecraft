@@ -20,9 +20,9 @@ namespace Minecraft
     public class UI_Inventaire : FrameworkElement
     {
         public List<UI_Item> items;
-        private ImageSource image;
-        private double width;
-        private double height;
+        public ImageSource image;
+        public double width;
+        public double height;
         private double itwidth;
         private double itheight;
         private Canvas canvas;
@@ -31,18 +31,20 @@ namespace Minecraft
         public object inv;
         public int act = 0;
 
-        public UI_Inventaire(Player caster, object something, object something2, double itwidth, double itheight, Canvas canvas)
+        public UI_Inventaire(Player caster, object something, object something2, double canwidth, double canheight, double itwidth, double itheight, Canvas canvas)
         {
             this.something2 = something2;
             this.caster = caster;
             this.canvas = canvas;
             width = Helper.Width;
             height = Helper.Height;
+            double rasx = canwidth / width;
+            double rasy = canheight / height;
             this.itwidth = itwidth;
             this.itheight = itheight;
             items = new List<UI_Item>();
 
-            items.Add(new UI_Item(null, act++, width / 4 + (1 * 41) + 20, height - height / 4 - (1 * 41) + 5, itwidth, itheight, 0, 0));
+            items.Add(new UI_Item(null, act++, rasx * (width / 4 + (1 * 41) + 20), rasy * (height - height / 4 - (1 * 41) + 5), itwidth, itheight, 0, 0));
 
             if (something is Player player)
             {
@@ -58,13 +60,13 @@ namespace Minecraft
                     for (int y = 0; y < player.Inventaire.Height; y++)
                     {
                         Item it = player.Inventaire.GetItem(x + (y * player.Inventaire.Width));
-                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, rasx * (width / 4 + (x * 41) + 20), rasy * (height - height / 4 - (y * 41) + 5), itwidth, itheight, x, y));
                     }
                 }
-                items.Add(new UI_Item(player.Helmet, act++, width / 4 + 20, height / 6, itwidth, itheight, 0, 7));
-                items.Add(new UI_Item(player.ChestPlate, act++, width / 4 + 20, height / 6 + 34, itwidth, itheight, 0, 6));
-                items.Add(new UI_Item(player.Legging, act++, width / 4 + 20, height / 6 + 68, itwidth, itheight, 0, 5));
-                items.Add(new UI_Item(player.Boots, act++, width / 4 + 20, height / 6 + 110, itwidth, itheight, 0, 4));
+                items.Add(new UI_Item(player.Helmet, act++, rasx * (width / 4 + 20), rasy * (height / 6), itwidth, itheight, 0, 7));
+                items.Add(new UI_Item(player.ChestPlate, act++, rasx * (width / 4 + 20), rasy * (height / 6 + 34), itwidth, itheight, 0, 6));
+                items.Add(new UI_Item(player.Legging, act++, rasx * (width / 4 + 20), rasy * (height / 6 + 68), itwidth, itheight, 0, 5));
+                items.Add(new UI_Item(player.Boots, act++, rasx * (width / 4 + 20), rasy * (height / 6 + 110), itwidth, itheight, 0, 4));
             }
             if (something is Merchand mer)
             {
@@ -80,7 +82,7 @@ namespace Minecraft
                     for (int y = 0; y < caster.Inventaire.Height; y++)
                     {
                         Item it = caster.Inventaire.GetItem(x + (y * caster.Inventaire.Width));
-                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, rasx * (width / 4 + (x * 41) + 20), rasy * (height - height / 4 - (y * 41) + 5), itwidth, itheight, x, y));
                     }
                 }
 
@@ -92,20 +94,20 @@ namespace Minecraft
                     UI_Item giving = new UI_Item(trade.giving(), 0, 0, 0, itwidth, itheight, tx, ty);
 
                     j.DrawImage(wanted.GetImage(), new Rect(
-                            new Point((tx * 16) + 7, 7 + (ty * 18)),
-                            new Point(((tx + 1) * 16) + 7, 7 + ((ty + 1) * 18))));
+                            new Point(rasx * ((tx * 16) + 7), rasy * (7 + (ty * 18))),
+                            new Point(rasx * (((tx + 1) * 16) + 7), rasy * (7 + ((ty + 1) * 18)))));
                     j.DrawImage(giving.GetImage(), new Rect(
-                            new Point(((tx + 3) * 16) + 7, 7 + (ty * 18)),
-                            new Point(((tx + 4) * 16) + 7, 7 + ((ty + 1) * 18))));
+                            new Point(rasx * (((tx + 3) * 16) + 7), rasy * (7 + (ty * 18))),
+                            new Point(rasx * (((tx + 4) * 16) + 7), rasy * (7 + ((ty + 1) * 18)))));
 
                     j.DrawImage(slot, new Rect(
-                            new Point(((tx + 1) * 16) + 7, 7 + (ty * 18)),
-                            new Point(((tx + 2) * 16) + 7, 7 + ((ty + 1) * 18))));
+                            new Point(rasx * (((tx + 1) * 16) + 7), rasy * (7 + (ty * 18))),
+                            new Point(rasx * (((tx + 2) * 16) + 7), rasy * (7 + ((ty + 1) * 18)))));
                     j.DrawImage(slot, new Rect(
-                            new Point(((tx + 4) * 16) + 7, 7 + (ty * 18)),
-                            new Point(((tx + 5) * 16) + 7, 7 + ((ty + 1) * 18))));
+                            new Point(rasx * (((tx + 4) * 16) + 7), rasy * (7 + (ty * 18))),
+                            new Point(rasx * (((tx + 5) * 16) + 7), rasy * (7 + ((ty + 1) * 18)))));
 
-                    items.Add(new UI_Item(null, act++, width / 4 + ((tx + 1) * 36) + 17, height - height / 4 - ((2 - ty) * 36) - height / 6 - 115, itwidth, itheight, 0, ty + (tx / 5 * 4) + caster.Inventaire.Height));
+                    items.Add(new UI_Item(null, act++, rasx * (width / 4 + ((tx + 1) * 36) + 17), rasy * (height - height / 4 - ((2 - ty) * 36) - height / 6 - 115), itwidth, itheight, 0, ty + (tx / 5 * 4) + caster.Inventaire.Height));
 
                     ty++;
                     if (ty > 3)
@@ -135,7 +137,7 @@ namespace Minecraft
                     for (int y = 0; y < caster.Inventaire.Height; y++)
                     {
                         Item it = caster.Inventaire.GetItem(x + (y * caster.Inventaire.Width));
-                        items.Add(new UI_Item(it, act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5, itwidth, itheight, x, y));
+                        items.Add(new UI_Item(it, act++, rasx * (width / 4 + (x * 41) + 20), rasy * (height - height / 4 - (y * 41) + 5), itwidth, itheight, x, y));
                     }
                 }
                 for (int x = 0; x < inv.Width; x++)
@@ -143,10 +145,10 @@ namespace Minecraft
                     for (int y = 0; y < inv.Height; y++)
                     {
                         j.DrawImage(slot, new Rect(
-                            new Point((x * 18) + 7, 47 - (y * 18)),
-                            new Point(((x + 1) * 18) + 7, 47 - (y * 18) + 18)));
+                            new Point(rasx * ((x * 18) + 7), rasy * (47 - (y * 18))),
+                            new Point(rasx * (((x + 1) * 18) + 7), rasy * (47 - (y * 18) + 18))));
                         Item it = inv.GetItem(x + (y * inv.Width));
-                        items.Add(new UI_Item(it,act++, width / 4 + (x * 41) + 20, height - height / 4 - (y * 41) + 5 - height / 6 - 110, itwidth, itheight, x, y + caster.Inventaire.Height));
+                        items.Add(new UI_Item(it, act++, rasx * (width / 4 + (x * 41) + 20), rasy * (height - height / 4 - (y * 41) + 5 - height / 6 - 110), itwidth, itheight, x, y + caster.Inventaire.Height));
                     }
                 }
                 j.Close();
@@ -159,7 +161,7 @@ namespace Minecraft
             }
         }
 
-        
+
         public UI_Item GetItem(int id)
         {
             foreach (UI_Item it in items)
@@ -171,7 +173,7 @@ namespace Minecraft
             }
             throw new KeyNotFoundException();
         }
-        
+
 
         public void AddItem(UI_Item item)
         {
@@ -233,7 +235,7 @@ namespace Minecraft
                 new Point(width - width / 4, height - height / 8)));
         }
 
-        public double ItWidth { get => itwidth; }
-        public double ItHeight { get => itheight; }
+        public double ItWidth { get => itwidth; set => itwidth = value; }
+        public double ItHeight { get => itheight; set => itheight = value; }
     }
 }

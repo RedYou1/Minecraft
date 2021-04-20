@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.IO;
 
 namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 {
@@ -19,9 +20,8 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 
         public static bool goodimage = false;
 
-        public static String ImageFile = @"C:\Users\jcdem\source\repos\Minecraft\Images\";
-
         public static Entities.Player player = new Entities.Player(new Location(-20, 15, 20, -(float)Math.PI / 6, (float)Math.PI - (float)Math.PI / 4, new World()));
+
 
 
 
@@ -30,6 +30,8 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
         public static double Height;
 
         public static Model3DHandeler group;
+
+        public static String ImageFile = Directory.GetCurrentDirectory() + "\\Images\\";
 
         public static float Dist(Location loc1, Location loc2)
         {

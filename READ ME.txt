@@ -1,7 +1,3 @@
-À modifier avant de démarrer:
-  - modifier ImageFile dans Helper du projet BibliMinecrafting pour le nouveau repertoire des fichiers source des images
-
-
 Les option de démarage sont dans la Class Helper de le projet BibliMinecrafting
   - goodimage: boolean  pour voir les texture original (gros pixels) ou bouillie
 	(les texture originaux prennent plus de puissant bizarement)
@@ -9,3 +5,5 @@ Les option de démarage sont dans la Class Helper de le projet BibliMinecrafting
   - player: la position de démarage de la caméra (le joueur)(toi)
 
 pour modifier les controle c'est dans la class Controle dans le projet BibliMinecrafting
+
+lien du GitHub: https://github.com/RedYou1/Minecraft
