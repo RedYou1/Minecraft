@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
@@ -137,8 +132,8 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
         protected abstract Game_Model BlockModel();
 
         public Location Location { get => loc; set => loc = value; }
-        public float X { get => loc.X; }
-        public float Y { get => loc.Y; }
-        public float Z { get => loc.Z; }
+        public float X => loc.X;
+        public float Y => loc.Y;
+        public float Z => loc.Z;
     }
 }

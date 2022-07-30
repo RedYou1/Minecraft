@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
@@ -21,27 +18,29 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
             blocks = new Block[16, 16, 16];
         }
 
-        public void SetBlock(int x, int y, int z, Block block)
+        public Block this[int x, int y, int z]
         {
-            if (x >= 0 && x < 16 && y >= 0 && y < 16 && z >= 0 && z < 16)
+            get
             {
-                blocks[x, y, z] = block;
+                if (x >= 0 && x < 16 && y >= 0 && y < 16 && z >= 0 && z < 16)
+                {
+                    return blocks[x, y, z];
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("GetBlock in chunk out of array");
+                }
             }
-            else
+            set
             {
-                throw new ArgumentOutOfRangeException("SetBlock in chunk out of array");
-            }
-        }
-
-        public Block GetBlock(int x, int y, int z)
-        {
-            if (x >= 0 && x < 16 && y >= 0 && y < 16 && z >= 0 && z < 16)
-            {
-                return blocks[x, y, z];
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("GetBlock in chunk out of array");
+                if (x >= 0 && x < 16 && y >= 0 && y < 16 && z >= 0 && z < 16)
+                {
+                    blocks[x, y, z] = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("SetBlock in chunk out of array");
+                }
             }
         }
 

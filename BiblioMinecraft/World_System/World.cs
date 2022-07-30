@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Entities;
 
 namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
 {
@@ -44,75 +42,46 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.World_System
             if (x < 0) { x -= 16; }
             if (y < 0) { y -= 16; }
             if (z < 0) { z -= 16; }
-            Chunk c = GetChunk((int)(x / 16), (int)(y / 16), (int)(z / 16));
+            Chunk c = this[x / 16, y / 16, z / 16];
 
             if (c == null)
             {
-                c = new Chunk((int)(x / 16), (int)(y / 16), (int)(z / 16));
+                c = new Chunk(x / 16, y / 16, z / 16);
                 chunks.Add(c);
             }
 
-            int nx = (int)(x % 16);
-            int ny = (int)(y % 16);
-            int nz = (int)(z % 16);
+            int nx = x % 16;
+            int ny = y % 16;
+            int nz = z % 16;
             if (nx < 0) { nx *= -1; }
             if (ny < 0) { ny *= -1; }
             if (nz < 0) { nz *= -1; }
 
-            c.SetBlock(nx, ny, nz, block);
+            c[nx, ny, nz] = block;
         }
         public Block GetBlock(int x, int y, int z)
         {
             if (x < 0) { x -= 16; }
             if (y < 0) { y -= 16; }
             if (z < 0) { z -= 16; }
-            Chunk c = GetChunk((int)(x / 16), (int)(y / 16), (int)(z / 16));
+            Chunk c = this[x / 16, y / 16, z / 16];
             if (c != null)
             {
-                int nx = (int)(x % 16);
-                int ny = (int)(y % 16);
-                int nz = (int)(z % 16);
+                int nx = x % 16;
+                int ny = y % 16;
+                int nz = z % 16;
                 if (nx < 0) { nx *= -1; }
                 if (ny < 0) { ny *= -1; }
                 if (nz < 0) { nz *= -1; }
-                Block b = c.GetBlock(nx, ny, nz);
-                return b;
+                return c[nx, ny, nz];
             }
             return null;
         }
 
-        public Chunk GetChunk(int x, int y, int z)
-        {
-            foreach (Chunk chunk in chunks)
-            {
-                if (chunk.X == x && chunk.Y == y && chunk.Z == z)
-                {
-                    return chunk;
-                }
-            }
-            return null;
-        }
-
-        public String Name { get => name; }
-        public Chunk[] Chunks { get => chunks.ToArray(); }
-        public Block[] Blocks
-        {
-            get
-            {
-                List<Block> blocks = new List<Block>();
-                foreach (Chunk chunk in chunks)
-                {
-                    foreach (Block block in chunk.Blocks)
-                    {
-                        if (block != null)
-                        {
-                            blocks.Add(block);
-                        }
-                    }
-                }
-                return blocks.ToArray();
-            }
-        }
-        public Entity[] Entities { get => entities.ToArray(); }
+        public Chunk this[int x, int y, int z] => chunks.FirstOrDefault(c => c.X == x && c.Y == y && c.Z == z);
+        public String Name => name;
+        public Chunk[] Chunks => chunks.ToArray();
+        public Block[] Blocks => chunks.SelectMany(c => c.Blocks).Where(b => b != null).ToArray();
+        public Entity[] Entities => entities.ToArray();
     }
 }

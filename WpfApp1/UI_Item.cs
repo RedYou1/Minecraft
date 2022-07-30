@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
+using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
+using System;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using System.Windows.Controls;
-using System.Windows.Markup;
-using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Items;
 using System.Windows.Media.Imaging;
-using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting;
-using CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting.Attributes;
 
 namespace Minecraft
 {
@@ -21,7 +14,7 @@ namespace Minecraft
         private int id;
         public double width;
         public double height;
-        public UI_Item(Item item,int id, double pix, double piy, double width, double height, int x, int y)
+        public UI_Item(Item item, int id, double pix, double piy, double width, double height, int x, int y)
         {
             this.id = id;
             this.x = x;
