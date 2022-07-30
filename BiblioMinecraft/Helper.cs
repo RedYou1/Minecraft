@@ -24,7 +24,7 @@ namespace CegepVicto.TechInfo.H21.P2.DA2033220.Minecrafting
 
         public static Model3DHandeler group;
 
-        public static String ImageFile = Directory.GetCurrentDirectory() + "\\Images\\";
+        public static String ImageFile = Directory.GetCurrentDirectory() + "\\..\\..\\Images\\";
 
         public static float Dist(Location loc1, Location loc2)
         {
