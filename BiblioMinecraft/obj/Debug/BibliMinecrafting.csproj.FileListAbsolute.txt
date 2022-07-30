@@ -1,6 +1,0 @@
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\bin\Debug\BiblioMinecraft.dll
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\bin\Debug\BiblioMinecraft.pdb
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\obj\Debug\BibliMinecrafting.csprojAssemblyReference.cache
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\obj\Debug\BibliMinecrafting.csproj.CoreCompileInputs.cache
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\obj\Debug\BiblioMinecraft.dll
-C:\Users\jcdem\source\repos\Minecraft\BiblioMinecraft\obj\Debug\BiblioMinecraft.pdb
